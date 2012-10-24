@@ -71,5 +71,6 @@
    </properties>
   </object>
   <object type="mallet" x="338" y="170" width="19" height="20"/>
+  <object type="mace" x="208" y="167" width="27" height="30"/>
  </objectgroup>
 </map>
