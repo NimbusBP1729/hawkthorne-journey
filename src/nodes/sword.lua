@@ -18,6 +18,7 @@ Sword.sword = true
 function Sword.new(node, collider, plyr, swordItem)
     local sword = {}
     setmetatable(sword, Sword)
+    sword.name = "sword"
 
     --subclass Weapon methods and set defaults if not populated
     sword = Global.inherits(sword,Weapon)
@@ -34,7 +35,6 @@ function Sword.new(node, collider, plyr, swordItem)
     sword.velocity = {x = node.properties.velocityX, y = node.properties.velocityY}
 
     --position that the hand should be placed with respect to any frame
-    
     sword.hand_x = 24
     sword.hand_y = 30
 
@@ -53,13 +53,12 @@ function Sword.new(node, collider, plyr, swordItem)
 
     --play the sheet
     sword:initializeSheet()
+ 
+    sword.damage = 4
+    sword.dead = false
 
     --create the bounding box
     sword:initializeBoundingBox(collider)
-
-    sword.damage = 4
-    sword.dead = false
-    sword.player = plyr
 
     --set audioclips played by Weapon
     --audio clip when weapon is put away

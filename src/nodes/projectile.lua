@@ -68,8 +68,12 @@ function Projectile:collide(node, dt, mtv_x, mtv_y)
     
     local projCenterX = self.position.x + self.width/2
     local projCenterY = self.position.y + self.height/2
-    if node.isSolid then
-        self.velocity.y = -self.velocity.y
+    if node.verticalBounce and node.horizontalBounce then
+        self:bounceHorizontal()
+    elseif node.horizontalBounce then
+        self:bounceHorizontal()
+    elseif node.verticalBounce then
+        self:bounceVertical()
     elseif false then
         local boxLeftX = node.x
         local boxTopY = node.y
@@ -133,8 +137,7 @@ function Projectile:update(dt, player)
         --clip bounds
         if self.position.x < 0 then
             self.position.x = 0
-            self.rebounded = false
-            self.velocity.x = -self.velocity.x
+            self:bounceHorizontal()
         end
 
 --        if self.position.y >= self.floor then
@@ -173,6 +176,20 @@ function Projectile:pickup(player)
     self.thrown = false
     self.velocity.y = 0
     self.velocity.x = 0
+end
+
+function Projectile:bounceVertical()
+
+    self.velocity.y = -self.velocity.y * self.bounceFactor
+    self.velocity.x = self.velocity.x * self.objectFriction
+
+end
+
+function Projectile:bounceHorizontal()
+
+    self.velocity.y = self.velocity.y * self.objectFriction
+    self.velocity.x = -self.velocity.x * self.bounceFactor
+
 end
 
 function Projectile:throw(player)

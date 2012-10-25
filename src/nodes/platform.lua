@@ -3,6 +3,7 @@ local controls = require 'controls'
 
 local Platform = {}
 Platform.__index = Platform
+Platform.verticalBounce = true
 
 function Platform.new(node, collider)
     local platform = {}

@@ -1,5 +1,6 @@
 local Wall = {}
 Wall.__index = Wall
+Wall.horizontalBounce = true
 
 function Wall.new(node, collider)
     local wall = {}

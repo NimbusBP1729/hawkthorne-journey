@@ -3,6 +3,7 @@ local controls = require 'controls'
 
 local Floorspace = {}
 Floorspace.__index = Floorspace
+Floorspace.verticalBounce = true
 
 function Floorspace.new(node, collider)
     local floor = {}

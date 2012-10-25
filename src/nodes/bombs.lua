@@ -20,7 +20,6 @@ local Projectile = require 'nodes/projectile'
 local SingleBomb = {}
 --set behavior of a single bomb on collision
 
-
 local Bombs = {}
 Bombs.__index = Bombs
 Bombs.bomb = true
@@ -31,12 +30,13 @@ Bombs.bomb = true
 function Bombs.new(node, collider, plyr, bombsItem)
     local bombs = {}
     setmetatable(bombs, Bombs)
+    bombs.name = "bombs"
+    
     --subclass RangeWeapon methods and set defaults if not populated
     bombs = Global.inherits(bombs,RangeWeapon)
 
     --subclass Weapon methods and set defaults if not populated
     bombs = Global.inherits(bombs,Weapon)
-
 
     --populate data from the bombsItem
     bombs.item = bombsItem
@@ -68,25 +68,13 @@ function Bombs.new(node, collider, plyr, bombsItem)
     bombs.wield_rate = 0.09
 
     --play the sheet
-    bombs.animation = bombs:defaultAnimation()
-    bombs.wielding = false
-    bombs.action = 'wieldaction'
-
-    --create the bounding box
-    local boxTopLeft = {x = bombs.position.x,
-                        y = bombs.position.y}
-    local boxWidth = bombs.width
-    local boxHeight = bombs.height
-
-    --update the collider using the bounding box
-    bombs.bb = collider:addRectangle(boxTopLeft.x,boxTopLeft.y,boxWidth,boxHeight)
-    bombs.bb.node = bombs
-    bombs.collider = collider
-    bombs.collider:setPassive(bombs.bb)
-
+    bombs:initializeSheet()
+ 
     bombs.damage = 4
     bombs.dead = false
-    bombs.player = plyr
+
+    --create the bounding box
+    bombs:initializeBoundingBox(collider)
 
     --set audioclips played by Weapon
     --audio clip when weapon is put away
@@ -126,7 +114,9 @@ function Bombs:createNewProjectile()
                        endAnimation = anim8.newAnimation('once', h('4,1','5,1'), 0.09),
                        sheet = sheet,
                        footLocation = self.player.position.y+self.player.height,
-                       bounceFactor = 0.5,
+                       bounceFactor = 0.8,   --effect of floor on velocity y
+                                               -- -1 goes through a floor)
+                                               -- 1 is perfectly elastic bounce                                             
                        objectFriction = 0.8, --effect of floor on velocity.x
                        velocityX = 500, velocityY=-50}
     local bomb = Projectile.new(bombNode,self.collider,GS.currentState().map)

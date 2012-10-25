@@ -16,7 +16,7 @@
 ---- the only action that should play once is the animation for wielding your weapon
 -- Created by NimbusBP1729
 -----------------------------------------------
-local sound = require 'vendor/TEsound'
+--local sound = require 'vendor/TEsound'
 local anim8 = require 'vendor/anim8'
 local controls = require 'controls'
 local Global = require 'global'
@@ -96,9 +96,9 @@ function Weapon:collide(node, dt, mtv_x, mtv_y)
         node:die(self.damage)
     end
     
-    if self.hitAudioClip and node.die then
-        sound.playSfx(self.hitAudioClip)
-    end
+    --if self.hitAudioClip and node.die then
+    --    sound.playSfx(self.hitAudioClip)
+    --end
 
     --handles code for burning an object
     if self.torch and node.burn then
@@ -182,12 +182,17 @@ function Weapon:unuse(mode)
     
     --self.item.quantity = self.quantity
     
-    if mode=='sound_off' then 
+    if mode=="sound_off" then 
+        print("foo")
         return
     elseif self.unuseAudioClip then
-        sound.playSfx(self.unuseAudioClip)
+        print("bar")
+        local x=47
+        --sound.playSfx(self.unuseAudioClip)
     else
-        sound.playSfx('sword_sheathed')
+        print("baz")
+        local x =47
+        --sound.playSfx('sword_sheathed')
     end
 end
 
@@ -274,9 +279,9 @@ function Weapon:wield()
     end
     self.player.wielding = true
     self.wielding = true
-    if self.swingAudioClip then
-        sound.playSfx( self.swingAudioClip )
-    end
+    --if self.swingAudioClip then
+    --    sound.playSfx( self.swingAudioClip )
+    --end
 end
 
 function Weapon:myAnimation()

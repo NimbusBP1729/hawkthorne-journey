@@ -5,7 +5,6 @@
 -----------------------------------------------
 local anim8 = require 'vendor/anim8'
 local Weapon = require 'nodes/weapon'
-local sound = require 'vendor/TEsound'
 local Global = require 'global'
 
 local Torch = {}
@@ -18,6 +17,7 @@ Torch.torch = true
 function Torch.new(node, collider, plyr, torchItem)
     local torch = {}
     setmetatable(torch, Torch)
+    torch.name = "torch"
 
     --subclass Weapon methods and set defaults if not populated
     torch = Global.inherits(torch,Weapon)
@@ -50,16 +50,15 @@ function Torch.new(node, collider, plyr, torchItem)
 
     torch.wield_rate = 0.09
     torch.burn_rate = 0.09
-    
+
     --play the sheet
     torch:initializeSheet()
+ 
+    torch.damage = 4
+    torch.dead = false
 
     --create the bounding box
     torch:initializeBoundingBox(collider)
-
-    torch.damage = 4
-    torch.dead = false
-    torch.player = plyr
 
     --set audioclips played by Weapon
     --audio clip when weapon is put away

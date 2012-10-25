@@ -1,5 +1,7 @@
 local Block = {}
 Block.__index = Block
+Block.verticalBounce = true
+Block.horizontalBounce = true
 
 function Block.new(node, collider)
     local block = {}

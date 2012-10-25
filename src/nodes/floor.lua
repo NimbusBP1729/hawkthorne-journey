@@ -1,5 +1,6 @@
 local Floor = {}
 Floor.__index = Floor
+Floor.verticalBounce = true
 
 function Floor.new(node, collider)
     local floor = {}

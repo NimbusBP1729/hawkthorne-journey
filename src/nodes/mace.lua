@@ -5,7 +5,6 @@
 -----------------------------------------------
 local anim8 = require 'vendor/anim8'
 local Weapon = require 'nodes/weapon'
-local sound = require 'vendor/TEsound'
 local Global = require 'global'
 
 local Mace = {}
@@ -18,6 +17,7 @@ Mace.mace = true
 function Mace.new(node, collider, plyr, maceItem)
     local mace = {}
     setmetatable(mace, Mace)
+    mace.name = "mace"
 
     --subclass Weapon methods and set defaults if not populated
     mace = Global.inherits(mace,Weapon)
@@ -52,13 +52,12 @@ function Mace.new(node, collider, plyr, maceItem)
 
     --play the sheet
     mace:initializeSheet()
+ 
+    mace.damage = 4
+    mace.dead = false
 
     --create the bounding box
     mace:initializeBoundingBox(collider)
-
-    mace.damage = 4
-    mace.dead = false
-    mace.player = plyr
 
     --set audioclips played by Weapon
     --audio clip when weapon is put away

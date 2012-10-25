@@ -22,7 +22,7 @@ function BombsItem.new()
    bombsItem = Global.inherits(bombsItem,Item)
    bombsItem.image = BombsItemImage
    bombsItem.type = 'Weapon'
-   bombsItem.quantity = 5
+   bombsItem.quantity = 25
    bombsItem.nodeType = "bombs"
    bombsItem.parentNode = Bombs
    return bombsItem
