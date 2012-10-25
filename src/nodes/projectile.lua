@@ -34,8 +34,9 @@ function Projectile.new(node, collider, map)
     projectile.bounceFactor = node.properties.bounceFactor
     projectile.objectFriction = node.properties.objectFriction
 
-    projectile.floor = map.objectgroups.floor.objects[1].y - node.height
-    if not projectile.floor then
+    if map and map.objectgroups and map.objectgroups.floor and map.objectgroups.floor.objects and map.objectgroups.floor.objects[1] and map.objectgroups.floor.objects[1].y then
+        projectile.floor = map.objectgroups.floor.objects[1].y - node.height
+    else
         projectile.floor = node.properties.footLocation
     end
     projectile.thrown = true
@@ -68,7 +69,9 @@ function Projectile:collide(node, dt, mtv_x, mtv_y)
     
     local projCenterX = self.position.x + self.width/2
     local projCenterY = self.position.y + self.height/2
-    if node.verticalBounce and node.horizontalBounce then
+    if projCenterY >  self.floor and node.floorspace then
+        self:bounceVertical()
+    elseif node.verticalBounce and node.horizontalBounce then
         self:bounceHorizontal()
     elseif node.horizontalBounce then
         self:bounceHorizontal()
