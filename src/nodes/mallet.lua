@@ -5,8 +5,10 @@
 -----------------------------------------------
 local anim8 = require 'vendor/anim8'
 local Weapon = require 'nodes/weapon'
-local sound = require 'vendor/TEsound'
 local Global = require 'global'
+local GS = require 'vendor/gamestate'
+local controls = require 'controls'
+
 
 local Mallet = {}
 Mallet.__index = Mallet
@@ -73,7 +75,35 @@ function Mallet.new(node, collider, plyr, malletItem)
 
     --audio clip when weapon swing through air
     --mallet.swingAudioClip = 'fire_thrown' 
+    
+    --local h = anim8.newGrid(mallet.frameWidth,mallet.frameHeight,mallet.sheetWidth,mallet.sheetHeight)
+    --    local sheet = mallet.sheet
+    --return SingleBomb.new(self,self.collider)
 
+    -- local malletNode = {x=mallet.player.position.x, y=mallet.player.position.y,
+                    -- width = 40, height = 30}
+    -- malletNode.properties = {animationGrid = h,
+                       -- defaultAnimation = mallet:defaultAnimation(),
+                       -- endAnimation = mallet:wieldAnimation(),
+                       -- sheet = sheet,
+                       -- footLocation = mallet.player.position.y+mallet.player.height,
+                       -- bounceFactor = 0.4,   --effect of floor on velocity y
+                       ----                        -1 goes through a floor)
+                       ----                        1 is perfectly elastic bounce                                             
+                       -- objectFriction = 0.8, --effect of floor on velocity.x
+                       -- velocityX = 500, velocityY=-50}
+    -- local malletProj = Projectile.new(malletNode,mallet.collider,GS.currentState().map)
+    -- print("hello")
+    -- print(mallet.velocity.x)
+    -- mallet = Global.inherits(mallet,malletProj)
+    -- mallet.x = mallet.position.x
+    -- mallet.y = mallet.position.y
+    -- mallet.velocity = {x = malletNode.properties.velocityX,
+                       -- y = malletNode.properties.velocityY,
+                       -- }
+    -- print(mallet.velocity.x)
+    -- print("nurse")
+    
     return mallet
 end
 
@@ -84,6 +114,7 @@ function Mallet:defaultAnimation()
     end
     return self.defaultAnim
 end
+
 
 function Mallet:wieldAnimation()
      local h = anim8.newGrid(self.frameWidth,self.frameHeight,self.sheetWidth,self.sheetHeight)

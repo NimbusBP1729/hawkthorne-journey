@@ -16,7 +16,7 @@
 ---- the only action that should play once is the animation for wielding your weapon
 -- Created by NimbusBP1729
 -----------------------------------------------
---local sound = require 'vendor/TEsound'
+local sound = require 'vendor/TEsound'
 local anim8 = require 'vendor/anim8'
 local controls = require 'controls'
 local Global = require 'global'
@@ -24,7 +24,6 @@ local Global = require 'global'
 local Weapon = {}
 Weapon.__index = Weapon
 Weapon.weapon = true
-Weapon.singleton = nil
 Weapon.position = {x=0,y=0}
 
 local WeaponImage = love.graphics.newImage('images/mace.png')
@@ -96,9 +95,9 @@ function Weapon:collide(node, dt, mtv_x, mtv_y)
         node:die(self.damage)
     end
     
-    --if self.hitAudioClip and node.die then
-    --    sound.playSfx(self.hitAudioClip)
-    --end
+    if self.hitAudioClip and node.die then
+        sound.playSfx(self.hitAudioClip)
+    end
 
     --handles code for burning an object
     if self.torch and node.burn then
@@ -188,28 +187,24 @@ function Weapon:unuse(mode)
     elseif self.unuseAudioClip then
         print("bar")
         local x=47
-        --sound.playSfx(self.unuseAudioClip)
+        sound.playSfx(self.unuseAudioClip)
     else
         print("baz")
         local x =47
-        --sound.playSfx('sword_sheathed')
+        sound.playSfx('sword_sheathed')
     end
 end
 
 --default update method
 --overload this in the specific weapon if this isn't well-suited for your weapon
 function Weapon:update(dt)
-    if self.player then print("----true") else print("----false") end
+    sound.cleanup()
     if self.dead then return end
-    if self.player then print("-----true") else print("-----false") end
     if not self.player then
-        print("foo")
         if controls.isDown( 'UP' ) and self.touchedPlayer then
-            print(" bar")
             local Item = Global.retrieveItemClass(self.name)
             local item = Item.new()
             if self.touchedPlayer.inventory:addItem(item) then
-                print("  jumanji")
                 self.collider:setPassive(self.bb)
                 self.dead = true
             end
@@ -279,14 +274,13 @@ function Weapon:wield()
     end
     self.player.wielding = true
     self.wielding = true
-    --if self.swingAudioClip then
-    --    sound.playSfx( self.swingAudioClip )
-    --end
+    if self.swingAudioClip then
+        sound.playSfx( self.swingAudioClip )
+    end
 end
 
 function Weapon:myAnimation()
     return self.animation
 end
-
 
 return Weapon
