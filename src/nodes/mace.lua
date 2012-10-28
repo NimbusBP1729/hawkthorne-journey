@@ -9,7 +9,7 @@ local Global = require 'global'
 
 local Mace = {}
 Mace.__index = Mace
-Mace.mace = true
+Mace.isMace = true
 
 --
 -- Creates a new battle mace object

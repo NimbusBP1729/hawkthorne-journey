@@ -7,7 +7,7 @@ local Global = require 'global'
 local Item = require 'items/item'
 local TorchItem = {}
 TorchItem.__index = TorchItem
-TorchItem.torchItem = true
+TorchItem.isTorchItem = true
 
 local TorchItemImage = love.graphics.newImage('images/torch_item.png')
 local Torch = require 'nodes/torch'

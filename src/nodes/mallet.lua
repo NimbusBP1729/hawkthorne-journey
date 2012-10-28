@@ -12,7 +12,7 @@ local controls = require 'controls'
 
 local Mallet = {}
 Mallet.__index = Mallet
-Mallet.mallet = true
+Mallet.isMallet = true
 
 --
 -- Creates a new battle mallet object

@@ -7,7 +7,7 @@ local Global = require 'global'
 local Item = require 'items/item'
 local MaceItem = {}
 MaceItem.__index = MaceItem
-MaceItem.maceItem = true
+MaceItem.isMaceItem = true
 
 local MaceItemImage = love.graphics.newImage('images/mace_item.png')
 local Mace = require 'nodes/mace'

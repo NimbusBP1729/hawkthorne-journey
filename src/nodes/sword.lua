@@ -10,7 +10,7 @@ local Global = require 'global'
 
 local Sword = {}
 Sword.__index = Sword
-Sword.sword = true
+Sword.isSword = true
 
 --
 -- Creates a new battle sword object

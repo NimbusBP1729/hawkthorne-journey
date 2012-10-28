@@ -7,7 +7,7 @@ local Global = require 'global'
 local Item = require 'items/item'
 local MalletItem = {}
 MalletItem.__index = MalletItem
-MalletItem.malletItem = true
+MalletItem.isMalletItem = true
 
 local MalletItemImage = love.graphics.newImage('images/mallet_item.png')
 local Mallet = require 'nodes/mallet'

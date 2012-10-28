@@ -8,7 +8,7 @@ local Item = require 'items/item'
 
 local BombsItem = {}
 BombsItem.__index = BombsItem
-BombsItem.bombsItem = true
+BombsItem.isBombsItem = true
 
 local BombsItemImage = love.graphics.newImage('images/bombs_item.png')
 local Bombs = require 'nodes/bombs'

@@ -19,7 +19,7 @@ local GS = require 'vendor/gamestate'
 
 local RangeWeapon = {}
 RangeWeapon.__index = RangeWeapon
-RangeWeapon.rangeWeapon = true
+RangeWeapon.isRangeWeapon = true
 
 --launch a projectile
 function RangeWeapon:wield()

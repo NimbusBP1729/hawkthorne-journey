@@ -23,7 +23,7 @@ local Global = require 'global'
 
 local Weapon = {}
 Weapon.__index = Weapon
-Weapon.weapon = true
+Weapon.isWeapon = true
 Weapon.position = {x=0,y=0}
 
 local WeaponImage = love.graphics.newImage('images/mace.png')
@@ -100,7 +100,7 @@ function Weapon:collide(node, dt, mtv_x, mtv_y)
     end
 
     --handles code for burning an object
-    if self.torch and node.burn then
+    if self.isTorch and node.burn then
         node:burn(self.position.x,self.position.y)
     end
 end
@@ -170,7 +170,7 @@ end
 function Weapon:unuse(mode)
     self.dead = true
     self.collider:setGhost(self.bb)
-    if not self.rangeWeapon then
+    if not self.isRangeWeapon then
         self.item.quantity = 1
     end
     self.player.inventory:addItem(self.item)

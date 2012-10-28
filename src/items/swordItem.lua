@@ -7,7 +7,7 @@ local Global = require 'global'
 local Item = require 'items/item'
 local SwordItem = {}
 SwordItem.__index = SwordItem
-SwordItem.swordItem = true
+SwordItem.isSwordItem = true
 
 local SwordItemImage = love.graphics.newImage('images/sword_item.png')
 local Sword = require 'nodes/sword'

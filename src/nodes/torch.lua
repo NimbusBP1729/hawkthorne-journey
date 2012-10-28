@@ -9,7 +9,7 @@ local Global = require 'global'
 
 local Torch = {}
 Torch.__index = Torch
-Torch.torch = true
+Torch.isTorch = true
 
 --
 -- Creates a new battle torch object

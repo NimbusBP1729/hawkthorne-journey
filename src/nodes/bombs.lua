@@ -22,7 +22,7 @@ local SingleBomb = {}
 
 local Bombs = {}
 Bombs.__index = Bombs
-Bombs.bomb = true
+Bombs.isBombs = true
 
 --
 -- Creates a new battle bombs object
