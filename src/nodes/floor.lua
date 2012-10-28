@@ -40,6 +40,8 @@ function Floor.new(node, collider)
 end
 
 function Floor:collide(player, dt, mtv_x, mtv_y)
+    if not player.player then return end
+
     local _, wy1, _, wy2  = self.bb:bbox()
     local px1, py1, px2, py2 = player.bb:bbox()
     local distance = math.abs(player.velocity.y * dt) + 0.10
@@ -62,6 +64,7 @@ function Floor:collide(player, dt, mtv_x, mtv_y)
         player.position.y = (py1 - 1) + mtv_y
         updatePlayer()
         player:impactDamage()
+        player:restore_solid_ground()
         return
     end
 
@@ -78,6 +81,7 @@ function Floor:collide(player, dt, mtv_x, mtv_y)
         player.position.y = wy1 - player.height
         updatePlayer()
         player:impactDamage()
+        player:restore_solid_ground()
     end
 
 end
