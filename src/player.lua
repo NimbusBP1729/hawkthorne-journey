@@ -5,10 +5,10 @@ local window = require 'window'
 local cheat = require 'cheat'
 local sound = require 'vendor/TEsound'
 local game = require 'game'
+local PlayerAttack = require 'playerAttack'
 local controls = require 'controls'
 local Weapon = require 'nodes/weapon'
 local GS = require 'vendor/gamestate'
-local PlayerAttack = require 'playerAttack'
 local KeyboardContext = require 'keyboard_context'
 
 local healthbar = love.graphics.newImage('images/health.png')
@@ -80,6 +80,8 @@ function Player.new(collider)
     plyr:moveBoundingBox()
     plyr.bb.player = plyr -- wat
 
+    plyr.attack_box = PlayerAttack.new(plyr.collider,plyr)
+
     --for damage text
     plyr.healthText = {x=0, y=0}
     plyr.healthVel = {x=0, y=0}
@@ -145,13 +147,13 @@ function Player:refreshPlayer(collider)
     self.bb = collider:addRectangle(0,0,self.bbox_width,self.bbox_height)
     self:moveBoundingBox()
     self.bb.player = self
-    
+
     self.attack_box = PlayerAttack.new(collider,self)
-    collider:setGhost(self.attack_box.bb)
-    
+    collider:setPassive(self.attack_box.bb)
+
     table.insert(GS.currentState().nodes, self.currently_held)
 
-    
+
     --for damage text
     --self.healthText = {x=0, y=0}
     --self.healthVel = {x=0, y=0}
@@ -319,7 +321,6 @@ function Player:update( dt )
         return
     end
     
-    
     if (KEY_SHIFT and not self.grabbing) then
         if self.currently_held then
             if KEY_DOWN then
@@ -468,7 +469,7 @@ function Player:update( dt )
             self.state = self.idle_state
         elseif KEY_DOWN then
             self.state = self.crouch_state
-        elseif KEY_UP then 
+        elseif KEY_UP then
             self.state = self.gaze_state
         else
             self.state = self.idle_state --'idle'
@@ -482,7 +483,7 @@ function Player:update( dt )
 
     self.healthText.y = self.healthText.y + self.healthVel.y * dt
 
-    if KEY_SHIFT then 
+    if KEY_SHIFT then
         if (not self.prevAttackPressed) then 
             self.prevAttackPressed = true
             self:attack()
@@ -608,6 +609,8 @@ function Player:draw()
     local animation = self:animation()
     animation:draw(self.sheet, math.floor(self.position.x),
                                       math.floor(self.position.y))
+    Weapon.drawBox(self.attack_box)
+
 
     -- Set information about animation state for holdables
     self.frame = animation.frames[animation.position]
@@ -630,8 +633,9 @@ function Player:draw()
     end
 
     love.graphics.setColor(255, 255, 255)
-    
+
     love.graphics.setStencil()
+
 end
 
 ---
@@ -759,12 +763,12 @@ end
 -- @return nil
 function Player:attack()
     local currentWeapon = self.inventory:currentWeapon()
-    
+
     --use a holdable weapon
     if self.currently_held and self.currently_held.wield then
         self.currently_held:wield()
         --the specific weapon will handle wield states
-        
+
     --use a throwable weapon or take out a holdable one
     elseif currentWeapon then
         currentWeapon:use(self)
@@ -788,7 +792,7 @@ function Player:pickup()
         else
             self:setSpriteStates('holding')
         end
-        
+
         if self.currently_held.pickup then
             self.currently_held:pickup(self)
         end
@@ -798,12 +802,12 @@ end
 ---
 -- Executes the players weaponless attack (punch, kick, or something like that)
 function Player:defaultAttack()
-    if not self.attack_box then
-        self.attack_box = PlayerAttack.new(self.collider,self)
-    end
+    --if not self.attack_box then
+    --    self.attack_box = PlayerAttack.new(self.collider,self)
+    --end
 
     self.collider:setActive(self.attack_box.bb)
-    Timer.add(0.30, function() self.collider:setGhost(self.attack_box.bb) end)
+    Timer.add(0.30, function() self.collider:setPassive(self.attack_box.bb) end)
 
     --self.state = 'attack'
 end

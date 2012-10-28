@@ -37,7 +37,7 @@ function PlayerAttack:collide(node, dt, mtv_x, mtv_y)
     if node.die then
         node:die(self.damage)
         self.dead = true
-        self.collider:setGhost(self.bb)
+        self.collider:setPassive(self.bb)
     end
     if node.isSolid then
         self.dead = true
