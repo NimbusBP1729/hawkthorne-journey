@@ -14,6 +14,8 @@ Item.MaxItems = math.huge
 
 --takes out the bombs
 function Item:use(player)
+    
+    --may be faulty for autouse
     player.inventory:removeItem(player.inventory.selectedWeaponIndex, 0)
 
     local weaponNode = { 
@@ -28,7 +30,9 @@ function Item:use(player)
                         },
                        }
     local weapon = self.parentNode.new(weaponNode, GS.currentState().collider,player,self)
-    player.currently_held = weapon
+    if not player.currently_held then
+        player.currently_held = weapon
+    end
     table.insert(GS.currentState().nodes, weapon)
 end
 

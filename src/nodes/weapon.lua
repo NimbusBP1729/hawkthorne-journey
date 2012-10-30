@@ -50,7 +50,7 @@ local WeaponImage = love.graphics.newImage('images/mace.png')
 ---draw()
 ---collide()
 ---collide_end()
----unuse()
+---unuse()         --item returned to inventory
 ---animation()
 
 --set defaults:
@@ -199,14 +199,22 @@ end
 --overload this in the specific weapon if this isn't well-suited for your weapon
 function Weapon:update(dt)
     sound.cleanup()
+    
+    local animation = self.animation
+    animation:update(dt)
+
     if self.dead then return end
     if not self.player then
         if controls.isDown( 'UP' ) and self.touchedPlayer then
+            --the following invokes the constructor of the specific item's class
             local Item = Global.retrieveItemClass(self.name)
             local item = Item.new()
             if self.touchedPlayer.inventory:addItem(item) then
-                self.collider:setPassive(self.bb)
+                self.collider:setGhost(self.bb)
                 self.dead = true
+                if not self.touchedPlayer.currently_held then
+                    item:use(self.touchedPlayer)
+                end
             end
         end
         return
@@ -214,9 +222,6 @@ function Weapon:update(dt)
 
     local playerDirection = 1
     if self.player.direction == "left" then playerDirection = -1 end
-
-    local animation = self.animation
-    animation:update(dt)
 
     local player = self.player
     local plyrOffset = player.width/2

@@ -114,10 +114,13 @@ function Bombs:createNewProjectile()
                        endAnimation = anim8.newAnimation('once', h('4,1','5,1'), 0.09),
                        sheet = sheet,
                        footLocation = self.player.position.y+self.player.height,
-                       bounceFactor = 0.8,   --effect of floor on velocity y
+                       bounceFactor = 0.0,   --effect of floor on velocity y
                                                -- -1 goes through a floor)
                                                -- 1 is perfectly elastic bounce                                             
                        objectFriction = 0.8, --effect of floor on velocity.x
+                                             -- 1 means the floor has no effect on the xvelocity
+                                             -- -1 reverse direction
+                                             -- 0 stop
                        velocityX = 500, velocityY=-50}
     local bomb = Projectile.new(bombNode,self.collider,GS.currentState().map)
     bomb:throw(self.player)

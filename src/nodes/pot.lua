@@ -44,6 +44,7 @@ function Pot:draw()
 end
 
 function Pot:collide(player, dt, mtv_x, mtv_y)
+    if not player.isPlayer then return end
     player:registerHoldable(self)
 end
 

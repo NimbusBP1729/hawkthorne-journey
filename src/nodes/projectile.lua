@@ -151,7 +151,7 @@ function Projectile:update(dt, player)
         --end
 
         
-        --limit annoying minibounces
+        --limit annoying rolls
         if math.abs(self.velocity.x-5)<0 then
             self.velocity.x = 0
         end
@@ -182,6 +182,9 @@ function Projectile:pickup(player)
 end
 
 function Projectile:bounceVertical()
+    if 0 < self.velocity.y and self.velocity.y<5 then
+        self.velocity.y = 0
+    end
 
     self.velocity.y = -self.velocity.y * self.bounceFactor
     self.velocity.x = self.velocity.x * self.objectFriction

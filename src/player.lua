@@ -783,15 +783,12 @@ function Player:attack()
 end
 
 -- Picks up an object.
+-- Note: weapons are picked up directly from their item
 -- @return nil
 function Player:pickup()
     if self.holdable and self.currently_held == nil then
         self.currently_held = self.holdable
-        if self.currently_held.wield then
-            self:setSpriteStates('wielding')
-        else
-            self:setSpriteStates('holding')
-        end
+        self:setSpriteStates('holding')
 
         if self.currently_held.pickup then
             self.currently_held:pickup(self)

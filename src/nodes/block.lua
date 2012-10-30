@@ -30,6 +30,8 @@ function Block:draw()
 end
 
 function Block:collide(player, dt, mtv_x, mtv_y)
+    if not player.isPlayer then return end
+
     local _, wy1, _, wy2  = self.bb:bbox()
     local _, _, _, py2 = player.bb:bbox()
 
