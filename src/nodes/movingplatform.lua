@@ -37,8 +37,10 @@ local Platform = require 'nodes/platform'
 local Bspline = require 'vendor/bspline'
 local game = require 'game'
 
+
 local MovingPlatform = {}
 MovingPlatform.__index = MovingPlatform
+MovingPlatform.isMovingPlatform = true
 
 function MovingPlatform.new(node, collider, map, isChain)
     local mp = {}

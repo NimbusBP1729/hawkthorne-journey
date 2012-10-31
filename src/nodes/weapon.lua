@@ -20,6 +20,7 @@ local sound = require 'vendor/TEsound'
 local anim8 = require 'vendor/anim8'
 local controls = require 'controls'
 local Global = require 'global'
+local game = require 'game'
 
 local Weapon = {}
 Weapon.__index = Weapon
@@ -59,6 +60,7 @@ local WeaponImage = love.graphics.newImage('images/mace.png')
 Weapon.unuseAudioClip = 'sword_sheathed'
 Weapon.action = 'wieldaction'  --the motion sequence the player uses
 Weapon.dead = false
+Weapon.dropping = false
 
 ---
 -- Draws the weapon to the screen
@@ -85,6 +87,10 @@ end
 -- @return nil
 function Weapon:collide(node, dt, mtv_x, mtv_y)
     if not node then return end
+    
+    if self.dropping and (node.isFloor or node.floorspace or node.isPlatform) then
+        self.dropping = false
+    end
     
     if node.character then
         self.touchedPlayer = node
@@ -217,6 +223,14 @@ function Weapon:update(dt)
                 end
             end
         end
+        
+        if self.dropping then
+            self.position = {x = self.position.x + self.velocity.x*dt,
+                            y = self.position.y + self.velocity.y*dt}
+            self.velocity = {x = self.velocity.x*0.1*dt,
+                            y = self.velocity.y + game.gravity*dt}
+            self.bb:moveTo(self.position.x,self.position.y)
+        end
         return
     end
 
@@ -286,6 +300,16 @@ end
 
 function Weapon:myAnimation()
     return self.animation
+end
+
+function Weapon:drop()
+    self.dropping = true
+    self.collider:setActive(self.bb)
+    self.velocity = {x=self.player.velocity.x,
+                     y=self.player.velocity.y,
+    }
+    self.player:setSpriteStates('default')
+    self.player = nil
 end
 
 return Weapon

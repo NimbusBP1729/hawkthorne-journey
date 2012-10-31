@@ -38,12 +38,28 @@ function RangeWeapon:wield()
 end
 
 --override generic collide to do nothing
-function RangeWeapon:collide()
+function RangeWeapon:collide(node, dt, mtv_x, mtv_y)
+    if not node then return end
+    
+    if node.character then
+        self.touchedPlayer = node
+        return
+    end
+    
+    if self.dropping and (node.isFloor or node.floorspace or node.isPlatform) then
+        self.dropping = false
+    end
 end
 
 function RangeWeapon:draw()
     if self.dead then return end
     
+    if not self.player then
+        local animation = self.animation
+        animation:draw(self.sheet, math.floor(self.position.x), self.position.y, 0, 1, 1)
+        return
+    end
+
     local scalex = 1
     if self.player.direction=='left' then
         scalex = -1

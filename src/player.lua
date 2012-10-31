@@ -203,6 +203,8 @@ end
 -- Gets the current animation based on the player's state and direction
 -- @return Animation
 function Player:animation()
+    print(self.state)
+    print(self.direction)
     return self.animations[self.state][self.direction]
 end
 
@@ -440,7 +442,7 @@ function Player:update( dt )
     end
 
     if self.wielding then
-        self.state = self.currently_held.action --'wieldaction' by default, this is the attack motion for the currenr weapon
+        self.state = self.currently_held.action --'wieldaction' by default, this is the attack motion for the current weapon
         self:animation():update(dt)
 
     elseif self.velocity.y < 0 then
@@ -851,7 +853,7 @@ function Player:drop()
     if self.currently_held and self.currently_held.wield then
         local inventoryWeapon = self.currently_held
         self.currently_held = nil
-        inventoryWeapon:unuse()
+        inventoryWeapon:drop()
     elseif self.currently_held then
         self:setSpriteStates('default')
         local object_dropped = self.currently_held
