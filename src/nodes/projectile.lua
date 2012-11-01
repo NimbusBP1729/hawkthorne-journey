@@ -2,6 +2,7 @@ local anim8 = require 'vendor/anim8'
 local Helper = require 'helper'
 local game = require 'game'
 local Timer = require 'vendor/timer'
+local window = require 'window'
 
 local Projectile = {}
 Projectile.__index = Projectile
@@ -28,6 +29,7 @@ function Projectile.new(node, collider, map)
     projectile.g = node.properties.animationGrid
     projectile.animation = node.properties.defaultAnimation --anim8.newAnimation('loop', g('1-2,1'), .10)
     projectile.endAnimation = node.properties.endAnimation --anim8.newAnimation('loop', g('1-2,1'), .10)
+    projectile.name = node.properties.name --anim8.newAnimation('loop', g('1-2,1'), .10)
 
     projectile.position = { x = node.x, y = node.y }
     projectile.velocity = { x = node.properties.velocityX, y = node.properties.velocityY}
@@ -65,7 +67,6 @@ function Projectile:collide(node, dt, mtv_x, mtv_y)
         self.collider:setGhost(self.bb)
         self.animation = self.endAnimation
     end
-
     
     local projCenterX = self.position.x + self.width/2
     local projCenterY = self.position.y + self.height/2
@@ -73,44 +74,166 @@ function Projectile:collide(node, dt, mtv_x, mtv_y)
         self:bounceVertical()
     elseif node.verticalBounce and node.horizontalBounce then
         self:bounceHorizontal()
+    elseif node.isPlatform then
+        local velX,velY
+        velX,velY = Projectile.getPlatformBounceVelocity(self,node)
+        self.velocity.x = velX--*self.objectFriction
+        self.velocity.y = velY--*self.bounceFactor
     elseif node.horizontalBounce then
         self:bounceHorizontal()
     elseif node.verticalBounce then
         self:bounceVertical()
-    elseif false then
-        local boxLeftX = node.x
-        local boxTopY = node.y
-        local boxRightX = node.x + node.width
-        local boxBottomY = node.y + node.height
-        if boxLeftX < projCenterX and
-        projCenterX < boxRightY then
-            if boxTopY < projCenterY and
-            projCenterY < boxBottomY then
-                --projectile contained in box
-            elseif boxTopY < projCenterY then
-                --projectile above box
-                self.velocity.y = -self.velocity.y
-            else
-                --projectile beneath box
-                self.velocity.y = -self.velocity.y
-            end
-        elseif projCenterX < boxLeftY then
-            --projectile to the left of box
-            self.velocity.x = -self.velocity.x
-        else  --projCenterX > boxRightY
-            --projectile to the right of box
-            self.velocity.x = -self.velocity.x
-        end
-        self.rebounded = false
     end
 
 end
+
+--
+function Projectile.getPlatformBounceVelocity(projectile,platform)
+    local projPosition = projectile.position
+
+    local bb = platform.bb
+    local dists = {}
+    
+    --find out which segment you were closest to
+    if bb._type == 'polygon' then
+        local v = bb._polygon.vertices
+        for i = 2,#v do
+            dists[i-1]=distToSegment(projPosition, v[i-1], v[i])
+        end
+        if #v > 1 then
+            dists[#v]=distToSegment(projPosition, v[#v], v[1])
+        end
+
+        local minValue = math.huge
+        local minValueKey = nil
+        for key,value in pairs(dists) do
+            if value < minValue then
+                minValue = value
+                minValueKey = key
+            end
+        end
+
+        print(#v)
+        print(minValueKey)
+        print(minValue)
+        print(v[minValueKey])
+        print(v[minValueKey].x)
+        print(v[minValueKey].y)
+        print(projectile.velocity)
+        print(projectile.velocity.x)
+        print(projectile.velocity.y)
+        print()
+
+        projectile.velocity.x = projectile.velocity.x or 0
+        projectile.velocity.y = projectile.velocity.y or 0
+        
+        local velX = (v[minValueKey].x-v[(minValueKey)%(#v)+1].x)-projectile.velocity.x
+        local velY = (v[minValueKey].y-v[(minValueKey)%(#v)+1].y)-projectile.velocity.y
+        velX = -velX*projectile.objectFriction
+        velY = velY*projectile.bounceFactor
+        return velX,velY
+    end
+end
+
+function sqr(x)  
+    return x * x  
+end
+
+function dist2(v, w) 
+    return sqr(v.x - w.x) + sqr(v.y - w.y)
+end
+
+function distToSegmentSquared(p, v, w) 
+  local l2 = dist2(v, w)
+  if (l2 == 0) then return dist2(p, v) end
+  local t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2
+  if (t < 0) then return dist2(p, v) end
+  if (t > 1) then return dist2(p, w) end
+  local segment = { x = v.x + t * (w.x - v.x),
+                    y = v.y + t * (w.y - v.y) }
+  return dist2(p, segment)
+end
+function distToSegment(p, v, w) 
+ return math.sqrt(distToSegmentSquared(p, v, w))
+ end
+
+
 
 function Projectile:collide_end(node, dt)
     if node and node.character then
         node:cancelHoldable(self)
     end
 end
+
+function Projectile:updateOld(dt, player)
+    if self.animation.status == 'finished' then
+        self.dead = true
+        self.collider:setGhost(self.bb)
+    end
+
+    if self.dead then return end
+    
+    if self.held and player.currently_held == self then
+        self.position.x = math.floor(player.position.x) + player.offset_hand_right[1] + (self.width / 2) + 15
+        self.position.y = math.floor(player.position.y) + player.offset_hand_right[2] - self.height + 2
+        if player.offset_hand_right[1] == 0 then
+            print(string.format("Need hand offset for %dx%d", player.frame[1], player.frame[2]))
+        end
+        self:moveBoundingBox()
+    end
+
+    if self.thrown then
+
+        self.animation:update(dt)
+
+        if self.velocity.x < 0 then
+            self.velocity.x = math.min(self.velocity.x + self.objectFriction * dt, 0)
+        else
+            self.velocity.x = math.max(self.velocity.x - self.objectFriction * dt, 0)
+        end
+
+        self.velocity.y = self.velocity.y + game.gravity * dt
+
+        if self.velocity.y > game.max_y then
+            self.velocity.y = game.max_y
+        end
+    
+        self.position.x = self.position.x + self.velocity.x * dt
+        self.position.y = self.position.y + self.velocity.y * dt
+
+        if self.position.x < 0 then
+            self.position.x = 0
+            self.rebounded = false
+            self.velocity.x = -self.velocity.x
+        end
+
+        if self.position.x + self.width > window.width then
+            self.position.x = window.width - self.width
+            self.rebounded = false
+            self.velocity.x = -self.velocity.x
+        end
+
+        if self.thrown and self.position.y >= self.floor then
+            self.rebounded = false
+            if self.velocity.y < 25 then
+                --stop bounce
+                self.velocity.y = 0
+                self.position.y = self.floor
+                self.thrown = false
+            else
+                --bounce 
+                self.position.y = self.floor
+                self.velocity.y = -.8 * math.abs( self.velocity.y )
+            end
+        end
+    
+    end
+    
+    self:moveBoundingBox()
+end
+
+
+
 
 function Projectile:update(dt, player)
     if self.animation.status == 'finished' then
@@ -134,6 +257,10 @@ function Projectile:update(dt, player)
         self.animation:update(dt)
         
         --update position
+        self.position.x = self.position.x or 0
+        self.position.y = self.position.y or 0
+        self.velocity.x = self.velocity.x or 0
+        self.velocity.y = self.velocity.y or 0
         self.position.x = self.position.x + self.velocity.x * dt
         self.position.y = self.position.y + self.velocity.y * dt
         
@@ -142,14 +269,6 @@ function Projectile:update(dt, player)
             self.position.x = 0
             self:bounceHorizontal()
         end
-
---        if self.position.y >= self.floor then
-  --          self.position.y=self.floor
-    --        self.rebounded = false
-      --      self.velocity.y = -self.velocity.y * self.bounceFactor
-        --    self.velocity.x = self.velocity.x * self.objectFriction
-        --end
-
         
         --limit annoying rolls
         if math.abs(self.velocity.x-5)<0 then

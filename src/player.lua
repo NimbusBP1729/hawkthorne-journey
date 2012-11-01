@@ -203,8 +203,6 @@ end
 -- Gets the current animation based on the player's state and direction
 -- @return Animation
 function Player:animation()
-    print(self.state)
-    print(self.direction)
     return self.animations[self.state][self.direction]
 end
 

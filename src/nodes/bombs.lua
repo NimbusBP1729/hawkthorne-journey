@@ -123,6 +123,7 @@ function Bombs:createNewProjectile()
                                              -- 0 stop
                        velocityX = 500, velocityY=-50}
     local bomb = Projectile.new(bombNode,self.collider,GS.currentState().map)
+    
     bomb:throw(self.player)
 
     return bomb

@@ -232,90 +232,6 @@ return {
         },
         {
           name = "",
-          x = 336,
-          y = 24,
-          width = 120,
-          height = 264,
-          type = "ceiling_hippy",
-          
-          
-          properties = { 
-          },
-        },
-        {
-          name = "",
-          x = 672,
-          y = 24,
-          width = 120,
-          height = 264,
-          type = "ceiling_hippy",
-          
-          
-          properties = { 
-          },
-        },
-        {
-          name = "",
-          x = 432,
-          y = 24,
-          width = 120,
-          height = 264,
-          type = "ceiling_hippy",
-          
-          
-          properties = { 
-          },
-        },
-        {
-          name = "",
-          x = 1008,
-          y = 24,
-          width = 120,
-          height = 264,
-          type = "ceiling_hippy",
-          
-          
-          properties = { 
-          },
-        },
-        {
-          name = "",
-          x = 1680,
-          y = 24,
-          width = 120,
-          height = 264,
-          type = "ceiling_hippy",
-          
-          
-          properties = { 
-          },
-        },
-        {
-          name = "",
-          x = 2088,
-          y = 24,
-          width = 120,
-          height = 264,
-          type = "ceiling_hippy",
-          
-          
-          properties = { 
-          },
-        },
-        {
-          name = "",
-          x = 552,
-          y = 24,
-          width = 120,
-          height = 264,
-          type = "ceiling_hippy",
-          
-          
-          properties = { 
-          },
-        },
-        {
-          name = "",
           x = 72,
           y = 264,
           width = 24,
@@ -549,6 +465,90 @@ return {
           width = 25,
           height = 22,
           type = "leaf",
+          
+          
+          properties = { 
+          },
+        },
+        {
+          name = "",
+          x = 360,
+          y = 24,
+          width = 48,
+          height = 24,
+          type = "ceiling_hippy",
+          
+          
+          properties = { 
+          },
+        },
+        {
+          name = "",
+          x = 696,
+          y = 24,
+          width = 48,
+          height = 24,
+          type = "ceiling_hippy",
+          
+          
+          properties = { 
+          },
+        },
+        {
+          name = "",
+          x = 456,
+          y = 24,
+          width = 48,
+          height = 24,
+          type = "ceiling_hippy",
+          
+          
+          properties = { 
+          },
+        },
+        {
+          name = "",
+          x = 1008,
+          y = 24,
+          width = 48,
+          height = 24,
+          type = "ceiling_hippy",
+          
+          
+          properties = { 
+          },
+        },
+        {
+          name = "",
+          x = 1704,
+          y = 24,
+          width = 48,
+          height = 24,
+          type = "ceiling_hippy",
+          
+          
+          properties = { 
+          },
+        },
+        {
+          name = "",
+          x = 2112,
+          y = 24,
+          width = 48,
+          height = 24,
+          type = "ceiling_hippy",
+          
+          
+          properties = { 
+          },
+        },
+        {
+          name = "",
+          x = 576,
+          y = 24,
+          width = 48,
+          height = 24,
+          type = "ceiling_hippy",
           
           
           properties = { 

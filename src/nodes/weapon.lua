@@ -188,14 +188,11 @@ function Weapon:unuse(mode)
     --self.item.quantity = self.quantity
     
     if mode=="sound_off" then 
-        print("foo")
         return
     elseif self.unuseAudioClip then
-        print("bar")
         local x=47
         sound.playSfx(self.unuseAudioClip)
     else
-        print("baz")
         local x =47
         sound.playSfx('sword_sheathed')
     end

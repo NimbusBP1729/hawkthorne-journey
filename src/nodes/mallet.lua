@@ -21,7 +21,6 @@ function Mallet.new(node, collider, plyr, malletItem)
     local mallet = {}
     setmetatable(mallet, Mallet)
     mallet.name = "mallet"
-    print(mallet.name)
 
     --subclass Weapon methods and set defaults if not populated
     mallet = Global.inherits(mallet,Weapon)
@@ -57,14 +56,11 @@ function Mallet.new(node, collider, plyr, malletItem)
     --play the sheet
     mallet:initializeSheet()
 
-    if mallet.player then print("-true") else print("-false") end
     mallet.damage = 4
     mallet.dead = false
-    if mallet.player then print("--true") else print("--false") end
 
     --create the bounding box
     mallet:initializeBoundingBox(collider)
-    if mallet.player then print("---true") else print("---false") end
 
     --set audioclips played by Weapon
     --audio clip when weapon is put away
