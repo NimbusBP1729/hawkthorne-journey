@@ -68,6 +68,13 @@ function Projectile:collide(node, dt, mtv_x, mtv_y)
         self.animation = self.endAnimation
     end
     
+    if math.abs(self.velocity.x) < 5 then
+        self.velocity.x = 0
+    end
+    if math.abs(self.velocity.y) < 5 then
+        self.velocity.y = 0
+    end
+    
     local projCenterX = self.position.x + self.width/2
     local projCenterY = self.position.y + self.height/2
     if projCenterY >  self.floor and node.floorspace then

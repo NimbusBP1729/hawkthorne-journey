@@ -203,6 +203,7 @@ end
 -- Gets the current animation based on the player's state and direction
 -- @return Animation
 function Player:animation()
+    print(self.state)
     return self.animations[self.state][self.direction]
 end
 
@@ -489,13 +490,12 @@ function Player:update( dt )
             self:attack()
             self:setSpriteStates('attacking')
             
-            --timer indicating when you can hit again
-            Timer.add(1.0, function() 
+            --maximum timer indicating when you can hit again
+            Timer.add(5.0, function() 
                  self.prevAttackPressed = false
             end)
         end
     else
-        self.prevAttackPressed = false
         self:setSpriteStates(self.previousSpriteStates)
     end
     
@@ -670,13 +670,13 @@ function Player:setSpriteStates(presetName)
         self.jump_state   = 'holdjump'
         self.idle_state   = 'hold'
     elseif presetName == 'attacking' then --state for sustained attack
-        self.walk_state   = 'wieldwalk'
+        self.walk_state   = 'attackwalk'
         if self.isFloorspace then
         self.crouch_state = 'crouchwalk'
         self.gaze_state   = 'gazewalk'
         end
-        self.jump_state   = 'wieldjump'
-        self.idle_state   = 'wieldidle'
+        self.jump_state   = 'attackjump'
+        self.idle_state   = 'attack'
     else
         -- Default
         self.walk_state   = 'walk'
@@ -768,17 +768,24 @@ function Player:attack()
     if self.currently_held and self.currently_held.wield then
         self.currently_held:wield()
         --the specific weapon will handle wield states
+        Timer.add(1.0, function()
+            self.prevAttackPressed = false
+        end)
 
-    --use a throwable weapon or take out a holdable one
+        --use a throwable weapon or take out a holdable one
     elseif currentWeapon then
         currentWeapon:use(self)
         if self.currently_held and self.currently_held.wield then
             self:setSpriteStates('wielding')
         end
-
     --use a default attack
     else
-        self:defaultAttack()
+        self.collider:setActive(self.attack_box.bb)
+        Timer.add(1.0, function()
+            self.prevAttackPressed = false
+            self.collider:setPassive(self.attack_box.bb) 
+        end)
+        self.state = 'attack'
     end
 end
 
@@ -794,19 +801,6 @@ function Player:pickup()
             self.currently_held:pickup(self)
         end
     end
-end
-
----
--- Executes the players weaponless attack (punch, kick, or something like that)
-function Player:defaultAttack()
-    --if not self.attack_box then
-    --    self.attack_box = PlayerAttack.new(self.collider,self)
-    --end
-
-    self.collider:setActive(self.attack_box.bb)
-    Timer.add(0.30, function() self.collider:setPassive(self.attack_box.bb) end)
-
-    --self.state = 'attack'
 end
 
 -- Throws an object.
