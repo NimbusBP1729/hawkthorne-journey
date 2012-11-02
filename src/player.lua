@@ -203,7 +203,6 @@ end
 -- Gets the current animation based on the player's state and direction
 -- @return Animation
 function Player:animation()
-    print(self.state)
     return self.animations[self.state][self.direction]
 end
 
@@ -323,18 +322,26 @@ function Player:update( dt )
     end
     
     if (KEY_SHIFT and not self.grabbing) then
-        if self.currently_held then
-            if KEY_DOWN then
+        if self.currently_held and self.currently_held.wield then
+            if KEY_UP then
+                self:switch_weapon()
+            elseif KEY_DOWN then
                 self:drop()
-            elseif KEY_UP then
+            else
+                self:attack()
+            end
+        elseif self.currently_held then
+            if KEY_UP then
                 self:throw_vertical()
-            elseif self.currently_held.wield then
-                self.currently_held:wield()
+            elseif KEY_DOWN then
+                self:drop()
             else
                 self:throw()
             end
-        else
+        elseif self.holdable then
             self:pickup()
+        else
+            self:attack()
         end
     end
     self.grabbing = KEY_SHIFT
@@ -484,21 +491,6 @@ function Player:update( dt )
 
     self.healthText.y = self.healthText.y + self.healthVel.y * dt
 
-    if KEY_SHIFT then
-        if (not self.prevAttackPressed) then 
-            self.prevAttackPressed = true
-            self:attack()
-            self:setSpriteStates('attacking')
-            
-            --maximum timer indicating when you can hit again
-            Timer.add(5.0, function() 
-                 self.prevAttackPressed = false
-            end)
-        end
-    else
-        self:setSpriteStates(self.previousSpriteStates)
-    end
-    
     sound.adjustProximityVolumes()
 end
 
@@ -765,27 +757,30 @@ function Player:attack()
     local currentWeapon = self.inventory:currentWeapon()
 
     --use a holdable weapon
-    if self.currently_held and self.currently_held.wield then
+    if self.currently_held and self.currently_held.wield and not self.prevAttackPressed then
         self.currently_held:wield()
         --the specific weapon will handle wield states
+        self.prevAttackPressed = true
         Timer.add(1.0, function()
             self.prevAttackPressed = false
         end)
 
         --use a throwable weapon or take out a holdable one
-    elseif currentWeapon then
+    elseif currentWeapon and not self.prevAttackPressed then
         currentWeapon:use(self)
         if self.currently_held and self.currently_held.wield then
             self:setSpriteStates('wielding')
         end
     --use a default attack
-    else
+    elseif not self.prevAttackPressed then
         self.collider:setActive(self.attack_box.bb)
+        self.prevAttackPressed = true
         Timer.add(1.0, function()
             self.prevAttackPressed = false
             self.collider:setPassive(self.attack_box.bb) 
+            self:setSpriteStates('default')
         end)
-        self.state = 'attack'
+        self:setSpriteStates('attacking')
     end
 end
 
@@ -835,6 +830,22 @@ function Player:throw_vertical()
         if object_thrown.throw_vertical then
             object_thrown:throw_vertical(self)
         end
+    end
+end
+
+---
+-- Switches weapons. if there's nothing to switch to
+-- this switches to default attack
+-- @return nil
+function Player:switch_weapon()
+    local newWeapon = self.inventory:currentWeapon()
+    local oldWeapon = self.currently_held
+    self.currently_held = nil
+    oldWeapon:unuse()
+    
+    if newWeapon then
+        newWeapon:use(self)
+        self:setSpriteStates('wielding')
     end
 end
 

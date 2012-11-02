@@ -20,7 +20,7 @@ function PlayerAttack.new(collider,plyr)
     attack.bb = collider:addCircle(plyr.position.x+attack.width/2,(plyr.position.y+28)+attack.height/2,attack.width,attack.radius)
     attack.bb.node = attack
     attack.damage = 4
-    --attack.player = plyr
+    attack.player = plyr
 
     return attack
 end
@@ -38,6 +38,7 @@ function PlayerAttack:collide(node, dt, mtv_x, mtv_y)
         node:die(self.damage)
         self.dead = true
         self.collider:setPassive(self.bb)
+        self.player:setSpriteStates("default")
     end
     if node.isSolid then
         self.dead = true

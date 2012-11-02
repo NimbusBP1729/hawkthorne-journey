@@ -120,17 +120,6 @@ function Projectile.getPlatformBounceVelocity(projectile,platform)
             end
         end
 
-        print(#v)
-        print(minValueKey)
-        print(minValue)
-        print(v[minValueKey])
-        print(v[minValueKey].x)
-        print(v[minValueKey].y)
-        print(projectile.velocity)
-        print(projectile.velocity.x)
-        print(projectile.velocity.y)
-        print()
-
         projectile.velocity.x = projectile.velocity.x or 0
         projectile.velocity.y = projectile.velocity.y or 0
         

@@ -272,8 +272,6 @@ function Weapon:wield()
     self.dead = false
     self.collider:setActive(self.bb)
 
-    --self.player:setSpriteStates('wielding')
-
     if not self.wielding then
         local h = anim8.newGrid(self.frameWidth,self.frameHeight,self.sheetWidth,self.sheetHeight)
         local g = anim8.newGrid(48, 48, self.player.sheet:getWidth(), 
