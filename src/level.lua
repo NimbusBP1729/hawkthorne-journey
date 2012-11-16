@@ -199,7 +199,7 @@ function Level.new(name)
         end
 
         node = load_node(v.type)
-        if node and not node.isReloadable then
+        if node then
             table.insert( level.nodes, node.new( v, level.collider ) )
         end
     end
@@ -242,23 +242,11 @@ function Level:restartLevel()
                             y = self.default_position.y}
 
                             
-    for k,node in pairs(self.nodes) do
-        --remove refreshable objects
-        if node.isReloadable then
-            self.collider:setGhost(node.bb)
-            self.nodes[k] = nil
-        end
-    end
     
     for k,v in pairs(self.map.objectgroups.nodes.objects) do
         if v.type == 'floorspace' then --special cases are bad
             self.player.crouch_state = 'crouchwalk'
             self.player.gaze_state = 'gazewalk'
-        end
-        --reload refreshable objects
-        node = load_node(v.type)
-        if node and node.isReloadable then
-            table.insert( self.nodes, node.new( v, self.collider, self ) )
         end
     end
 end
