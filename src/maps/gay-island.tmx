@@ -218,6 +218,26 @@
     <property name="start" value="0"/>
    </properties>
   </object>
+  <object type="enemy" x="1580" y="288" width="48" height="48">
+   <properties>
+    <property name="enemytype" value="manicorn"/>
+   </properties>
+  </object>
+  <object type="enemy" x="1272" y="275" width="48" height="48">
+   <properties>
+    <property name="enemytype" value="manicorn"/>
+   </properties>
+  </object>
+  <object type="enemy" x="44" y="75" width="48" height="48">
+   <properties>
+    <property name="enemytype" value="manicorn"/>
+   </properties>
+  </object>
+  <object type="enemy" x="295" y="80" width="48" height="48">
+   <properties>
+    <property name="enemytype" value="manicorn"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="platform" width="220" height="22">
   <object x="264" y="168" width="72" height="24"/>
