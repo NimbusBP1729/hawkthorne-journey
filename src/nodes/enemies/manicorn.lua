@@ -72,7 +72,6 @@ return {
         if enemy.state == 'attack' then
             enemy.state = 'dyingattack'
         else
-            sound.playSfx( "manicorn_squeak" )
             enemy.state = 'dying'
         end
     end,
