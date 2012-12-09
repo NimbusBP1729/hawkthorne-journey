@@ -238,6 +238,16 @@
     <property name="enemytype" value="frog"/>
    </properties>
   </object>
+  <object type="enemy" x="1074" y="350" width="48" height="50">
+   <properties>
+    <property name="enemytype" value="tequilathrower"/>
+   </properties>
+  </object>
+  <object type="enemy" x="673" y="137" width="48" height="50">
+   <properties>
+    <property name="enemytype" value="tequilathrower"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#a41c0a" name="floor" width="302" height="22">
   <object x="0" y="432" width="216" height="96"/>
