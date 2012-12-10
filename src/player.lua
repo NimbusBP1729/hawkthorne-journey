@@ -7,6 +7,7 @@ local game = require 'game'
 local controls = require 'controls'
 local character = require 'character'
 local PlayerAttack = require 'playerAttack'
+local Gamestate = require 'vendor/gamestate'
 
 local healthbar = love.graphics.newImage('images/healthbar.png')
 healthbar:setFilter('nearest', 'nearest')
@@ -64,18 +65,35 @@ function Player.new(collider)
     plyr.money = plyr.startingMoney
     plyr.lives = 3
 
-    plyr:refreshPlayer(collider)
+    plyr.jumpQueue = Queue.new()
+    plyr.halfjumpQueue = Queue.new()
+    plyr.rebounding = false
+    plyr.damageTaken = 0
+
+    plyr.jumping = false
+    plyr.liquid_drag = false
+    plyr.flash = false
+    plyr.actions = {}
+
+    plyr.velocity = {x=0, y=0}
+    plyr.fall_damage = 0
+    plyr.since_solid_ground = 0
+    plyr.dead = false
+
+    plyr:setSpriteStates('default')
+
+    plyr.freeze = false
+    plyr.mask = nil
+    plyr.stopped = false
+
+    plyr.currently_held = nil -- Object currently being held by the player
+    plyr.holdable       = nil -- Object that would be picked up if player used grab key
+
+    plyr:enter(collider)
     return plyr
 end
 
-function Player:refreshPlayer(collider)
-    --changes that are made if you're dead
-    if self.dead then
-        self.health = self.max_health
-        self.money = 0
-        self.inventory = Inventory.new( self )
-        self.lives = self.lives - 1
-    end
+function Player:enter(collider)
     
     if self.character.changed then
         self.character.changed = false
@@ -85,36 +103,13 @@ function Player:refreshPlayer(collider)
         self.lives = 3
     end
 
-    self.invulnerable = cheat.god
-    self.jumpQueue = Queue.new()
-    self.halfjumpQueue = Queue.new()
-    self.rebounding = false
-    self.damageTaken = 0
-
-    self.jumping = false
-    self.liquid_drag = false
-    self.flash = false
-    self.actions = {}
-
-    self.velocity = {x=0, y=0}
-    self.fall_damage = 0
-    self.since_solid_ground = 0
-    self.dead = false
-
-    self:setSpriteStates('default')
-
-    self.freeze = false
-    self.mask = nil
-    self.stopped = false
-
-    self.currently_held = nil -- Object currently being held by the player
-    self.holdable       = nil -- Object that would be picked up if player used grab key
-
     if self.bb then
         self.collider:remove(self.bb)
+        self.bb = nil
     end
     if self.attack_box and self.attack_box.bb then
         self.collider:remove(self.attack_box.bb)
+        self.attack_box.bb = nil
     end
 
     self.collider = collider
@@ -122,11 +117,6 @@ function Player:refreshPlayer(collider)
     self:moveBoundingBox()
     self.bb.player = self -- wat
     self.attack_box = PlayerAttack.new(collider,self)
-
-    self.wielding = false
-    self.prevAttackPressed = false
-    self.current_hippie = nil
-    
 
 end
 
@@ -366,8 +356,7 @@ function Player:update( dt )
 
     -- falling off the bottom of the map
     if self.position.y > self.boundary.height then
-        self.health = 0
-        self.character.state = 'dead'
+        self:die(self.health)
         return
     end
 
@@ -459,12 +448,13 @@ function Player:die(damage)
         self.health = math.max(self.health - damage, 0)
     end
 
-    if self.health == 0 then -- change when damages can be more than 1
+    if self.health <= 0 then -- change when damages can be more than 1
         self.dead = true
         self.character.state = 'dead'
+        self.lives = self.lives - 1
     else
         self.hurt = true
-        self.character.state = 'hurt'
+        
     end
     
     Timer.add(0.4, function()
@@ -478,6 +468,18 @@ function Player:die(damage)
 
     self:startBlink()
 end
+
+--brings the player back to life after death
+--should only be called by Level
+function Player:revive()
+    self.health = self.max_health
+    self.dead = false
+    self.money = 0
+    self.inventory = Inventory.new( self )
+    self:stopBlink()
+    self.character:reset()
+end
+
 
 ---
 -- Call to take falling damage, and reset self.fall_damage to 0
@@ -502,6 +504,7 @@ function Player:stopBlink()
     self.flash = false
 end
 
+---
 ---
 -- Starts the player blinking every .12 seconds if they are not already blinking
 -- @return nil

@@ -147,7 +147,6 @@ function Level.new(name)
     local level = {}
     setmetatable(level, Level)
 
-    level.over = false
     level.name = name
 
     assert( love.filesystem.exists( "maps/" .. name .. ".lua" ),
@@ -232,17 +231,6 @@ function Level.new(name)
 end
 
 function Level:restartLevel()
-    self.over = false
-
-    self.player = Player.factory(self.collider)
-    self.player:refreshPlayer(self.collider)
-    self.player.boundary = {
-        width = self.map.width * self.map.tilewidth,
-        height = self.map.height * self.map.tileheight
-    }
-    
-    self.player.position = {x = self.default_position.x,
-                            y = self.default_position.y}
     Floorspaces:init()
 end
 
@@ -262,6 +250,12 @@ function Level:enter( previous, door )
         self:restartLevel()
     end
 
+    self.player = Player.factory(self.collider)
+    self.player:enter(self.collider)
+    self.player.boundary = {
+        width = self.map.width * self.map.tilewidth,
+        height = self.map.height * self.map.tileheight
+    }
     self.player:setSpriteStates('default')
 
     camera.max.x = self.map.width * self.map.tilewidth - window.width
@@ -282,7 +276,7 @@ function Level:enter( previous, door )
     end
 
     if self.doors[ door ].warpin then
-        self.player:respawn()
+        self.player.character:respawn()
     end
 
     for i,node in ipairs(self.nodes) do
@@ -302,18 +296,18 @@ function Level:update(dt)
 
     -- falling off the bottom of the map
     if self.player.position.y - self.player.height > self.map.height * self.map.tileheight then
-        self.player.health = 0
-        self.player.dead = true
+        self.player:die(self.player.health)
     end
 
     -- start death sequence
-    if self.player.dead and not self.over then
+    if self.player.dead and not self.player.death_sequence then
+        self.player.death_sequence = true
         ach:achieve('die')
         sound.stopMusic()
         sound.playSfx( 'death' )
-        self.over = true
         self.respawn = Timer.add(3, function()
-            self.player.character:reset()
+            self.player:revive()
+            self.player.death_sequence = false
             if self.player.lives <= 0 then
                 Gamestate.switch("gameover")
             else
