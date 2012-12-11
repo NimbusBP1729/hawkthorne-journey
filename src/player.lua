@@ -448,10 +448,25 @@ function Player:die(damage)
         self.health = math.max(self.health - damage, 0)
     end
 
-    if self.health <= 0 then -- change when damages can be more than 1
+    if self.health <= 0 then 
+        --the true death
         self.dead = true
         self.character.state = 'dead'
         self.lives = self.lives - 1
+        ach:achieve('die')
+        sound.stopMusic()
+        sound.playSfx( 'death' )
+            -- start death sequence
+        self.respawn = Timer.add(3, function()
+            self:revive()
+            if self.lives <= 0 then
+                Gamestate.switch("gameover")
+            else
+                Gamestate.get('overworld'):reset()
+                local spawnLevel = Gamestate.currentState().spawn
+                Gamestate.switch(spawnLevel)
+            end
+        end)
     else
         self.hurt = true
         

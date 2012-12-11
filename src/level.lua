@@ -289,29 +289,6 @@ function Level:update(dt)
     self.player:update(dt)
     ach:update(dt)
 
-    -- falling off the bottom of the map
-    if self.player.position.y - self.player.height > self.map.height * self.map.tileheight then
-        self.player:die(self.player.health)
-    end
-
-    -- start death sequence
-    if self.player.dead and not self.player.death_sequence then
-        self.player.death_sequence = true
-        ach:achieve('die')
-        sound.stopMusic()
-        sound.playSfx( 'death' )
-        self.respawn = Timer.add(3, function()
-            self.player:revive()
-            self.player.death_sequence = false
-            if self.player.lives <= 0 then
-                Gamestate.switch("gameover")
-            else
-                Gamestate.get('overworld'):reset()
-                Gamestate.switch(Level.new(self.spawn))
-            end
-        end)
-    end
-
     for i,node in ipairs(self.nodes) do
         if node.update then node:update(dt, self.player) end
     end
