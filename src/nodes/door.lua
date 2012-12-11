@@ -84,9 +84,9 @@ function Door:switch(player)
     end
 
     if self.level == 'overworld' then
-        Gamestate.switch(self.level, self.to)
+        Gamestate.switch(self.level, self.to, player)
     else
-        Gamestate.switch(self.level, self.to)
+        Gamestate.switch(self.level, self.to, player)
     end
 
 end

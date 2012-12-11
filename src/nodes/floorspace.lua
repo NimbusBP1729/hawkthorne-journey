@@ -224,8 +224,8 @@ function Floorspace:collide(node, dt, mtv_x, mtv_y)
         ) then
         fp.isBlocked = true
         Floorspaces:getPrimary().lastknown = {
-            x = Floorspaces:getPrimary().lastknown.x + mtv_x * 2,
-            y = Floorspaces:getPrimary().lastknown.y + mtv_y * 2
+            x = (Floorspaces:getPrimary().lastknown.x or fp.x) + mtv_x * 2,
+            y = (Floorspaces:getPrimary().lastknown.y or fp.y) + mtv_y * 2
         }
     end
 

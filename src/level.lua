@@ -167,7 +167,6 @@ function Level.new(name)
 
     level:panInit()
 
-    level.player = Player.factory(level.collider)
     level.boundary = {
         width =level.map.width  * level.map.tilewidth,
         height=level.map.height * level.map.tileheight
@@ -176,7 +175,6 @@ function Level.new(name)
     level.nodes = {}
     level.doors = {}
 
-    level.default_position = {x=0, y=0}
     for k,v in pairs(level.map.objectgroups.nodes.objects) do
         node = load_node(v.type)
         if node then
@@ -186,12 +184,14 @@ function Level.new(name)
         if v.type == 'door' then
             if v.name then
                 if v.name == 'main' then
+                    assert(not level.default_position,"Level "..name.." must have only one 'main' door")
                     level.default_position = {x=v.x, y=v.y}
                 end
                 level.doors[v.name] = {x=v.x, y=v.y, node=level.nodes[#level.nodes]}
             end
         end
     end
+    assert(level.default_position,"Level "..name.." has no 'main' door")
 
     if level.map.objectgroups.floor then
         for k,v in pairs(level.map.objectgroups.floor.objects) do
@@ -220,7 +220,6 @@ function Level.new(name)
         end
     end
 
-    level.player = player
     level:restartLevel()
     return level
 end
@@ -229,52 +228,48 @@ function Level:restartLevel()
     Floorspaces:init()
 end
 
-function Level:enter( previous, door )
-
+function Level:enter( previous, door , player)
+    
     ach:achieve('enter ' .. self.name)
 
-    --only restart if it's an ordinary level
-    if previous.level or previous==Gamestate.get('overworld') then
-        self.previous = previous
-        self:restartLevel()
-    end
+    -- player factory shouldn't be necessary
+    self.player = player or self.player or Player.factory(self.collider)
     if previous == Gamestate.get('overworld') then
+        door = 'main'  -- or checkpoint
         self.player.character:respawn()
     end
-    if not self.player then
-        self:restartLevel()
-    end
 
-    self.player = Player.factory(self.collider)
-    self.player:enter(self.collider)
     self.player.boundary = {
         width = self.map.width * self.map.tilewidth,
         height = self.map.height * self.map.tileheight
     }
-    self.player:setSpriteStates('default')
 
     camera.max.x = self.map.width * self.map.tilewidth - window.width
-
     setBackgroundColor(self.map)
-
     sound.playMusic( self.music )
 
+    --should be attached to a player, not the level
     self.hud = HUD.new(self)
 
+    
+    self.player:enter(self.collider)
     if door then
         self.player.position = {
             x = self.doors[ door ].x + self.doors[ door ].node.width / 2 - self.player.width / 2,
             y = self.doors[ door ].y + self.doors[ door ].node.height - self.player.height
         }
-
+        print(self.player.position.x)
+        print(self.player.position.y)
+        print(self.player.boundary.height)
+        print()
+        
         if self.doors[ door ].warpin then
-            self.player:respawn()
+            self.player.character:respawn()
         end
         if self.doors[ door ].node then
             self.doors[ door ].node:show()
             self.player.freeze = false
         end
-
     end
 
     for i,node in ipairs(self.nodes) do
@@ -309,8 +304,8 @@ function Level:update(dt)
 end
 
 function Level:quit()
-    if self.respawn ~= nil then
-        Timer.cancel(self.respawn)
+    if self.player.respawn ~= nil then
+        Timer.cancel(self.player.respawn)
     end
 end
 
@@ -427,7 +422,7 @@ function Level:keypressed( button )
 end
 
 function Level:panInit()
-    self.pan = 0
+    self.pan = 0 
     self.pan_delay = 1
     self.pan_distance = 80
     self.pan_speed = 140

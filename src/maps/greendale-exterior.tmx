@@ -185,6 +185,6 @@
   </object>
  </objectgroup>
  <objectgroup name="floor" width="220" height="18">
-  <object x="0" y="336" width="5279" height="100"/>
+  <object x="0" y="338" width="5279" height="100"/>
  </objectgroup>
 </map>

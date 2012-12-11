@@ -60,6 +60,8 @@ function Trampoline:update(dt)
     if player.position.y < -200 then
         --transition
         player.lives = player.lives + 1
+        --gamestate switches should only be invoked with an actual door
+        -- this ensures a true, easily identifiable player is attached to the switch
         Gamestate.switch('greendale-exterior')
     elseif player.position.y < self.blurHeight then
         self.whiteout = self.whiteout + 1
@@ -83,6 +85,7 @@ function Trampoline:collide_end()
 end
 
 function Trampoline:draw()
+    --obj
     if self.whiteout > 0 then
         love.graphics.setColor( 255, 255, 255, math.min( self.whiteout, 255 ) )
         love.graphics.rectangle( 'fill', 0, 0, window.width, window.height * 2 )

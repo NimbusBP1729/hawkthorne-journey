@@ -42,8 +42,6 @@ function Player.new(collider)
 
     setmetatable(plyr, Player)
     
-    plyr.haskeyboard = true
-    
     plyr.invulnerable = false
     plyr.actions = {}
     plyr.position = {x=0, y=0}
@@ -84,7 +82,6 @@ function Player.new(collider)
 
     plyr.freeze = false
     plyr.mask = nil
-    plyr.stopped = false
 
     plyr.currently_held = nil -- Object currently being held by the player
     plyr.holdable       = nil -- Object that would be picked up if player used grab key
@@ -94,7 +91,7 @@ function Player.new(collider)
 end
 
 function Player:enter(collider)
-    
+    self.jumping = false
     if self.character.changed then
         self.character.changed = false
         self.health = self.max_health
@@ -235,10 +232,10 @@ function Player:update( dt )
         return
     end
 
-    local crouching = controls.isDown( 'DOWN' )
-    local gazing = controls.isDown( 'UP' )
-    local movingLeft = controls.isDown( 'LEFT' )
-    local movingRight = controls.isDown( 'RIGHT' )
+    local DOWN_MOTION = controls.isDown( 'DOWN' )
+    local UP_MOTION = controls.isDown( 'UP' )
+    local LEFT_MOTION = controls.isDown( 'LEFT' )
+    local RIGHT_MOTION = controls.isDown( 'RIGHT' )
 
     if not self.invulnerable then
         self:stopBlink()
@@ -260,17 +257,18 @@ function Player:update( dt )
         return
     end
 
-    if ( crouching and gazing ) or ( movingLeft and movingRight ) then
-        self.stopped = true
-    else
-        self.stopped = false
+    if ( DOWN_MOTION and UP_MOTION ) or ( LEFT_MOTION and RIGHT_MOTION ) then
+        DOWN_MOTION = false
+        UP_MOTION = false
+        LEFT_MOTION = false
+        RIGHT_MOTION = false
     end
 
 
     -- taken from sonic physics http://info.sonicretro.org/SPG:Running
-    if movingLeft and not movingRight and not self.rebounding then
+    if LEFT_MOTION and not RIGHT_MOTION and not self.rebounding then
 
-        if crouching and self.crouch_state == 'crouch' then -- crouch slide
+        if DOWN_MOTION and self.crouch_state == 'crouch' then -- crouch slide
             self.velocity.x = self.velocity.x + (self:accel() * dt)
             if self.velocity.x > 0 then
                 self.velocity.x = 0
@@ -284,9 +282,9 @@ function Player:update( dt )
             end
         end
 
-    elseif movingRight and not movingLeft and not self.rebounding then
+    elseif RIGHT_MOTION and not LEFT_MOTION and not self.rebounding then
 
-        if crouching and self.crouch_state == 'crouch' then
+        if DOWN_MOTION and self.crouch_state == 'crouch' then
             self.velocity.x = self.velocity.x - (self:accel() * dt)
             if self.velocity.x < 0 then
                 self.velocity.x = 0
@@ -386,7 +384,7 @@ function Player:update( dt )
 
     elseif not self.isJumpState(self.character.state) and self.velocity.x ~= 0 then
 
-        if crouching and self.crouch_state == 'crouch' then
+        if DOWN_MOTION and self.crouch_state == 'crouch' then
             self.character.state = self.crouch_state
         else
             self.character.state = self.walk_state
@@ -396,11 +394,11 @@ function Player:update( dt )
 
     elseif not self.isJumpState(self.character.state) and self.velocity.x == 0 then
 
-        if crouching and gazing then
+        if DOWN_MOTION and UP_MOTION then
             self.character.state = self.idle_state
-        elseif crouching then
+        elseif DOWN_MOTION then
             self.character.state = self.crouch_state
-        elseif gazing then 
+        elseif UP_MOTION then 
             self.character.state = self.gaze_state
         else
             self.character.state = self.idle_state
@@ -464,7 +462,7 @@ function Player:die(damage)
             else
                 Gamestate.get('overworld'):reset()
                 local spawnLevel = Gamestate.currentState().spawn
-                Gamestate.switch(spawnLevel)
+                Gamestate.switch(spawnLevel, nil, player)
             end
         end)
     else
@@ -820,7 +818,7 @@ function Player:throw()
             object_thrown:throw(self)
         end
     end
-end
+    end
 
 ---
 -- Throws an object vertically.
