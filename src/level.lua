@@ -259,10 +259,10 @@ function Level:enter( previous, door , player)
             y = math.floor(self.doors[ door ].y + self.doors[ door ].node.height - self.player.height)
         }
         -- print(self.player.position.x)
-        print("==door")
-        print(self.player.position.y)
-        print(self.player.boundary.height)
-        print()
+        -- print("==door")
+        -- print(self.player.position.y)
+        -- print(self.player.boundary.height)
+        -- print()
         
         if self.doors[ door ].warpin then
             self.player.character:respawn()

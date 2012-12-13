@@ -232,10 +232,10 @@ function Player:update( dt )
     end
 
     if not self.has_fallen then
-        print ("--1")
-        print (self.position.y)
-        print (self.boundary.height)
-        print ()
+        -- print ("--1")
+        -- print (self.position.y)
+        -- print (self.boundary.height)
+        -- print ()
     end
     
     self.inventory:update( dt )
