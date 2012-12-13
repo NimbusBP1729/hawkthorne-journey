@@ -62,7 +62,7 @@ function Trampoline:update(dt)
         player.lives = player.lives + 1
         --gamestate switches should only be invoked with an actual door
         -- this ensures a true, easily identifiable player is attached to the switch
-        Gamestate.switch('greendale-exterior')
+        Gamestate.switch('greendale-exterior',nil,player)
     elseif player.position.y < self.blurHeight then
         self.whiteout = self.whiteout + 1
         player.blur = true

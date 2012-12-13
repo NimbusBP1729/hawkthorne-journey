@@ -255,10 +255,11 @@ function Level:enter( previous, door , player)
     self.player:enter(self.collider)
     if door then
         self.player.position = {
-            x = self.doors[ door ].x + self.doors[ door ].node.width / 2 - self.player.width / 2,
-            y = self.doors[ door ].y + self.doors[ door ].node.height - self.player.height
+            x = math.floor(self.doors[ door ].x + self.doors[ door ].node.width / 2 - self.player.width / 2),
+            y = math.floor(self.doors[ door ].y + self.doors[ door ].node.height - self.player.height)
         }
-        print(self.player.position.x)
+        -- print(self.player.position.x)
+        print("==door")
         print(self.player.position.y)
         print(self.player.boundary.height)
         print()
@@ -272,8 +273,13 @@ function Level:enter( previous, door , player)
         end
     end
 
+    local initialY = self.player.position.y
     for i,node in ipairs(self.nodes) do
         if node.enter then node:enter(previous) end
+    end
+    local finalY = self.player.position.y
+    if initialY ~= finalY then
+        print("uhoh~~~")
     end
 end
 
@@ -286,7 +292,7 @@ function Level:update(dt)
     Tween.update(dt)
     self.player:update(dt)
     ach:update(dt)
-
+ 
     for i,node in ipairs(self.nodes) do
         if node.update then node:update(dt, self.player) end
     end

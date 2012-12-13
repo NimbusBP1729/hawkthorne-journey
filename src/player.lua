@@ -224,7 +224,20 @@ end
 -- @param dt The time delta
 -- @return nil
 function Player:update( dt )
+    self.lastY = self.currentY or self.position.y
+    self.currentY =  self.position.y
+    local diff = math.floor(self.lastY-self.currentY)
+    if not diff == 0 then
+        print(math.floor(self.lastY-self.currentY))
+    end
 
+    if not self.has_fallen then
+        print ("--1")
+        print (self.position.y)
+        print (self.boundary.height)
+        print ()
+    end
+    
     self.inventory:update( dt )
     self.attack_box:update()
     
@@ -251,7 +264,7 @@ function Player:update( dt )
         self:moveBoundingBox()
         return
     end
-
+    
     if self.character.warpin then
         self.character:warpUpdate(dt)
         return
@@ -263,7 +276,6 @@ function Player:update( dt )
         LEFT_MOTION = false
         RIGHT_MOTION = false
     end
-
 
     -- taken from sonic physics http://info.sonicretro.org/SPG:Running
     if LEFT_MOTION and not RIGHT_MOTION and not self.rebounding then
@@ -306,6 +318,7 @@ function Player:update( dt )
         end
     end
 
+    
     local jumped = self.jumpQueue:flush()
     local halfjumped = self.halfjumpQueue:flush()
 
@@ -326,6 +339,7 @@ function Player:update( dt )
         sound.playSfx( "jump" )
     end
 
+    
     if halfjumped and self.velocity.y < -450 and not self.rebounding and self.jumping then
         self.velocity.y = -450
     end
@@ -350,10 +364,16 @@ function Player:update( dt )
         self.position.x = -self.width / 4
     elseif self.position.x > self.boundary.width - self.width * 3 / 4 then
         self.position.x = self.boundary.width - self.width * 3 / 4
-    end
-
+    end 
+        
     -- falling off the bottom of the map
     if self.position.y > self.boundary.height then
+        self.has_fallen = true
+        -- print("--")
+        -- print (self.position.y)
+        -- print (self.boundary.height)
+        -- print ()
+        --self.position.y = 0
         self:die(self.health)
         return
     end
