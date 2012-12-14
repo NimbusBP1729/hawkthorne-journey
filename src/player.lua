@@ -9,6 +9,14 @@ local character = require 'character'
 local PlayerAttack = require 'playerAttack'
 local Gamestate = require 'vendor/gamestate'
 
+-- to start with, we need to require the 'socket' lib (which is compiled
+-- into love). socket provides low-level networking features.
+local socket = require "socket"
+
+-- the address and port of the server
+local address, port = "localhost", 12345
+local udp = nil
+
 local healthbar = love.graphics.newImage('images/healthbar.png')
 healthbar:setFilter('nearest', 'nearest')
 
@@ -32,7 +40,10 @@ Player.startingMoney = 0
 -- single 'character' object that handles all character switching, costumes and animation
 Player.character = character
 
-local player = nil
+local players = {}
+local updaterate = 0.1
+local t = 0
+
 ---
 -- Create a new Player
 -- @param collider
@@ -121,11 +132,25 @@ end
 -- Create or look up a new Player
 -- @param collider
 -- @return Player
-function Player.factory(collider)
-    if player == nil then
-        player = Player.new(collider)
+function Player.factory(collider,index)
+    index = index or 1
+    if players[index] == nil then
+        players[index] = Player.new(collider)
+        players[index].id = 'player'..index
     end
-    return player
+    players[index].register()
+    return players[index]
+end
+
+function Player:register()
+    --setting up network
+    udp = socket.udp()
+    udp:settimeout(0)
+    udp:setpeername(address, port)
+    math.randomseed(os.time()) 
+    
+    t = 0 -- (re)set t to 0
+    --end setting up network
 end
 
 ---
@@ -430,9 +455,42 @@ function Player:update( dt )
         self.character:animation():update(dt)
     end
 
+    
+    
     self.healthText.y = self.healthText.y + self.healthVel.y * dt
     
     sound.adjustProximityVolumes()
+    
+    t = t+dt
+    if t > updaterate then
+        local levelName = Gamestate.currentState().name
+        local dg = string.format("%s %s %s %f %f", self.id, 'move', levelName, self.position.x, self.position.y)
+        udp:send(dg)
+
+        --update sprite        
+        --dg = string.format("%s %s %f %f", self.id, 'move', self.position.x, self.position.y)
+        --udp:send(dg)  
+        t = 0
+    end
+    
+    repeat
+        data, msg = udp:receive()
+        if data then 
+            local ent_id, cmd, level, parms = data:match("^(%S*) (%S*) (%S*) (.*)")
+            if cmd == 'at' then
+                local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
+                assert(x and y) -- validation is better, but asserts will serve.
+                x, y = tonumber(x), tonumber(y)
+                local node = Gamestate.currentState().nodes[ent_id]
+                node.position = {x=x, y=y}
+            else
+                print("unrecognised command:", cmd)
+            end
+        elseif msg ~= 'timeout' then 
+            error("Network error: "..tostring(msg))
+        end
+    until not data 
+
 end
 
 ---
