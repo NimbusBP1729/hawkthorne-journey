@@ -4,6 +4,7 @@ local sound = require 'vendor/TEsound'
 
 local Pot = {}
 Pot.__index = Pot
+Pot.updateable = true
 
 local potImage = love.graphics.newImage('images/pot.png')
 local potExplode= love.graphics.newImage('images/pot_asplode.png')

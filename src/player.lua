@@ -8,14 +8,14 @@ local controls = require 'controls'
 local character = require 'character'
 local PlayerAttack = require 'playerAttack'
 local Gamestate = require 'vendor/gamestate'
+require 'vendor/lube'
 
 -- to start with, we need to require the 'socket' lib (which is compiled
 -- into love). socket provides low-level networking features.
 local socket = require "socket"
-
 -- the address and port of the server
 local address, port = "localhost", 12345
-local udp = nil
+local udp = socket.udp()
 
 local healthbar = love.graphics.newImage('images/healthbar.png')
 healthbar:setFilter('nearest', 'nearest')
@@ -24,6 +24,7 @@ local Inventory = require('inventory')
 local ach = (require 'achievements').new()
 
 local healthbarq = {}
+local levels = {}
 
 for i=6,0,-1 do
     table.insert(healthbarq, love.graphics.newQuad(28 * i, 0, 28, 27,
@@ -40,8 +41,8 @@ Player.startingMoney = 0
 -- single 'character' object that handles all character switching, costumes and animation
 Player.character = character
 
-local players = {}
-local updaterate = 0.1
+local player = nil
+local updaterate = 0.01
 local t = 0
 
 ---
@@ -97,7 +98,7 @@ function Player.new(collider)
     plyr.currently_held = nil -- Object currently being held by the player
     plyr.holdable       = nil -- Object that would be picked up if player used grab key
 
-    plyr:enter(collider)
+    --plyr:enter(collider)
     return plyr
 end
 
@@ -132,14 +133,13 @@ end
 -- Create or look up a new Player
 -- @param collider
 -- @return Player
-function Player.factory(collider,index)
+function Player.factory(collider)
     index = index or 1
-    if players[index] == nil then
-        players[index] = Player.new(collider)
-        players[index].id = 'player'..index
+    if player == nil then
+        player = Player.new(collider)
     end
-    players[index].register()
-    return players[index]
+    player:register()
+    return player
 end
 
 function Player:register()
@@ -147,7 +147,10 @@ function Player:register()
     udp = socket.udp()
     udp:settimeout(0)
     udp:setpeername(address, port)
-    math.randomseed(os.time()) 
+    self.id = 'player_'..tostring(math.random(99999))
+    local dg = string.format("%s %s $", self.id, 'register')
+    udp:send(dg)
+
     
     t = 0 -- (re)set t to 0
     --end setting up network
@@ -249,19 +252,6 @@ end
 -- @param dt The time delta
 -- @return nil
 function Player:update( dt )
-    self.lastY = self.currentY or self.position.y
-    self.currentY =  self.position.y
-    local diff = math.floor(self.lastY-self.currentY)
-    if not diff == 0 then
-        print(math.floor(self.lastY-self.currentY))
-    end
-
-    if not self.has_fallen then
-        -- print ("--1")
-        -- print (self.position.y)
-        -- print (self.boundary.height)
-        -- print ()
-    end
     
     self.inventory:update( dt )
     self.attack_box:update()
@@ -464,32 +454,14 @@ function Player:update( dt )
     t = t+dt
     if t > updaterate then
         local levelName = Gamestate.currentState().name
-        local dg = string.format("%s %s %s %f %f", self.id, 'move', levelName, self.position.x, self.position.y)
+        local dg = string.format("%s %s %s %s", self.id, 'movePlayer', levelName, lube.bin:pack_node(self))
         udp:send(dg)
-
+        
         --update sprite        
-        --dg = string.format("%s %s %f %f", self.id, 'move', self.position.x, self.position.y)
-        --udp:send(dg)  
+        -- dg = string.format("%s %s %s", self.id, 'update', levelName)
+        -- udp:send(dg)
         t = 0
     end
-    
-    repeat
-        data, msg = udp:receive()
-        if data then 
-            local ent_id, cmd, level, parms = data:match("^(%S*) (%S*) (%S*) (.*)")
-            if cmd == 'at' then
-                local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
-                assert(x and y) -- validation is better, but asserts will serve.
-                x, y = tonumber(x), tonumber(y)
-                local node = Gamestate.currentState().nodes[ent_id]
-                node.position = {x=x, y=y}
-            else
-                print("unrecognised command:", cmd)
-            end
-        elseif msg ~= 'timeout' then 
-            error("Network error: "..tostring(msg))
-        end
-    until not data 
 
 end
 

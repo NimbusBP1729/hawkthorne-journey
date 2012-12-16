@@ -1,4 +1,6 @@
 local socket = require "socket"
+require 'vendor/lube'
+
 
 -- begin
 local udp = socket.udp()
@@ -27,6 +29,7 @@ udp:settimeout(0)
 udp:setsockname('*', 12345)
 
 local world = {} -- the empty world-state
+local players = {} -- table of players and levels
 
 -- We declare a whole bunch of local variables that we'll be using the in 
 -- main server loop below. you probably recognise some of them from the
@@ -36,6 +39,7 @@ local world = {} -- the empty world-state
 -- well, we're using a slightly different function this time, you'll see when we get there.
 local data, msg_or_ip, port_or_nil
 local entity, cmd, parms
+local update_ticker = 0
 -- indefinite loops are probably not something you used to if you only 
 -- know love, but they are quite common. and in fact love has one at its
 -- heart, you just don't see it.
@@ -62,30 +66,71 @@ while running do
     data, msg_or_ip, port_or_nil = udp:receivefrom()
     if data then
         -- more of these funky match paterns!
-        entity, cmd, level, parms = data:match("^(%S*) (%S*) (%S*) (.*)")
-        if not world[level] then world[level] = {} end
-        if cmd == 'move' then
-            local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
-            assert(x and y) -- validation is better, but asserts will serve.
-            -- don't forget, even if you matched a "number", the result is still a string!
-            -- thankfully conversion is easy in lua.
-            x, y = tonumber(x), tonumber(y)
-            -- and finally we stash it away
-            local ent = world[level][entity] or {x=0, y=0}
-            world[level][entity] = {x=ent.x+x, y=ent.y+y}
+        entity, cmd, parms = data:match("^(%S*) (%S*) (.*)")
+        if cmd == 'movePlayer' then
+            local level, player = parms:match("^(%S*) (.*)")
+            --print(level)
+            player = lube.bin:unpack_node(player)
+            if not world[level] then world[level] = {} end
+            players[entity] = player
+        elseif cmd == 'moveObject' then
+            local level, node = parms:match("^(%S*) (.*)")
+            --print(level)
+            --print(node)
+            node = lube.bin:unpack_node(node)
+            --print(node)
+            if not world[level] then world[level] = {} end
+            world[level][entity] = node
         elseif cmd == 'at' then
-            local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
+            print("boaz cheboiywo")
+            local level, x, y = parms:match("^(%S*) (%-?[%d.e]*) (%-?[%d.e]*)$")
+            if not world[level] then world[level] = {} end
             assert(x and y) -- validation is better, but asserts will serve.
             x, y = tonumber(x), tonumber(y)
             world[level][entity] = {x=x, y=y}
         elseif cmd == 'update' then
-            for k, v in pairs(world) do
-                udp:sendto(string.format("%s %s %s %d %d", k, 'at', level, v.x, v.y), msg_or_ip,  port_or_nil)
+            --print("update")
+            local level = parms:match("^(%S*)")
+            --print(level)
+            if not world[level] then world[level] = {} end
+            local count = 0
+            for i, node in pairs(world[level]) do
+                udp:sendto(string.format("%s %s %s %s", i, 'at', level, lube.bin:pack_node(node)), msg_or_ip,  port_or_nil)
+                count = count + 1
+            end
+            update_ticker = update_ticker + 1
+            print(update_ticker..': '..tostring(port_or_nil))
+            --print()
+       elseif cmd == 'register' then
+            print("registering a new player:", entity)
+            print("msg_or_ip:", msg_or_ip)
+            print("port_or_nil:", port_or_nil)
+            table.insert(players,entity)
+        elseif cmd == 'registerObject' then
+            local level, node = parms:match("^(%S*) (.*)")
+            local node = lube.bin:unpack_node(node)
+
+            print(level)
+            print(world[level])
+            if not world[level] then 
+                world[level] = {} 
+                print("registering a new object in a new level:", entity)
+                print(level)
+                world[level][entity] = node
+                print("level: "..level)
+                print("entity: "..entity)
+            elseif world[level][entity] then 
+                print("already registered object:", entity)
+            else
+                print("registering a new object:", entity)
+                print("level: "..level)
+                print("entity: "..entity)
+                world[level][entity] = node
             end
         elseif cmd == 'quit' then
             running = false;
         else
-            print("unrecognised command:", cmd)
+            print("unrecognized command:'", cmd,"'")
         end
     elseif msg_or_ip ~= 'timeout' then
         error("Unknown network error: "..tostring(msg))

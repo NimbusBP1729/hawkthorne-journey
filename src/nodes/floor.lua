@@ -62,7 +62,6 @@ function Floor:collide(node, dt, mtv_x, mtv_y)
 
         -- Use the MTV to keep players feet on the ground,
         -- fudge the Y a bit to prevent falling into steep angles
-        if not node.has_fallen then print("h") end
         node:floor_pushback(self, (py1 - 4) + mtv_y)
         return
     end
@@ -76,7 +75,6 @@ function Floor:collide(node, dt, mtv_x, mtv_y)
 
     if mtv_y < 0 and node.floor_pushback then
         --push back up
-        if not node.has_fallen then print("o") end
         node:floor_pushback(self, node.position.y + mtv_y + 1)
     end
 

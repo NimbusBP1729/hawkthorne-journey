@@ -13,13 +13,13 @@ lens:setFilter('nearest', 'nearest')
 chevron:setFilter('nearest', 'nearest')
 energy:setFilter('nearest', 'nearest')
 
-function HUD.new(level)
+function HUD.new(player)
     local hud = {}
     setmetatable(hud, HUD)
     
-    local character = level.player.character:current()
+    local character = player.character:current()
         
-    hud.sheet = level.player.character:sheet()
+    hud.sheet = player.character:sheet()
     hud.character_quad = love.graphics.newQuad( 0, character.offset or 5, 48, 48, hud.sheet:getWidth(), hud.sheet:getHeight() )
     
     hud.character_stencil = function( x, y )

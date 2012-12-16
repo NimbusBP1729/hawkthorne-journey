@@ -11,6 +11,7 @@ local sound = require 'vendor/TEsound'
 local controls = require 'controls'
 local HUD = require 'hud'
 local music = {}
+require 'vendor/lube'
 
 local node_cache = {}
 local tile_cache = {}
@@ -23,6 +24,14 @@ local Platform = require 'nodes/platform'
 local Wall = require 'nodes/wall'
 
 local ach = (require 'achievements').new()
+local address, port = "localhost", 12345
+local udp = socket.udp()
+udp:settimeout(0)
+udp:setpeername(address, port)
+local t = 0
+local updaterate = 0.01
+local update_ticker = 0
+
 
 local function limit( x, min, max )
     return math.min(math.max(x,min),max)
@@ -148,7 +157,7 @@ function Level.new(name)
     setmetatable(level, Level)
 
     level.name = name
-
+    print("making new level")
     assert( love.filesystem.exists( "maps/" .. name .. ".lua" ),
             "maps/" .. name .. ".lua not found.\n\n" ..
             "Have you generated your maps lately?\n\n" ..
@@ -220,6 +229,7 @@ function Level.new(name)
         end
     end
 
+    level.players = {}
     level:restartLevel()
     return level
 end
@@ -232,14 +242,14 @@ function Level:enter( previous, door , player)
     
     ach:achieve('enter ' .. self.name)
 
-    -- player factory shouldn't be necessary
-    self.player = player or self.player or Player.factory(self.collider)
+    self.players[player.id] = player
+    self.player = player
     if previous == Gamestate.get('overworld') then
         door = 'main'  -- or checkpoint
-        self.player.character:respawn()
+        player.character:respawn()
     end
 
-    self.player.boundary = {
+    player.boundary = {
         width = self.map.width * self.map.tilewidth,
         height = self.map.height * self.map.tileheight
     }
@@ -249,14 +259,14 @@ function Level:enter( previous, door , player)
     sound.playMusic( self.music )
 
     --should be attached to a player, not the level
-    self.hud = HUD.new(self)
+    self.hud = HUD.new(player)
 
     
-    self.player:enter(self.collider)
+    player:enter(self.collider)
     if door then
-        self.player.position = {
-            x = math.floor(self.doors[ door ].x + self.doors[ door ].node.width / 2 - self.player.width / 2),
-            y = math.floor(self.doors[ door ].y + self.doors[ door ].node.height - self.player.height)
+        player.position = {
+            x = math.floor(self.doors[ door ].x + self.doors[ door ].node.width / 2 - player.width / 2),
+            y = math.floor(self.doors[ door ].y + self.doors[ door ].node.height - player.height)
         }
         -- print(self.player.position.x)
         -- print("==door")
@@ -265,19 +275,26 @@ function Level:enter( previous, door , player)
         -- print()
         
         if self.doors[ door ].warpin then
-            self.player.character:respawn()
+            player.character:respawn()
         end
         if self.doors[ door ].node then
             self.doors[ door ].node:show()
-            self.player.freeze = false
+            player.freeze = false
         end
     end
 
-    local initialY = self.player.position.y
+    local initialY = player.position.y
     for i,node in ipairs(self.nodes) do
-        if node.enter then node:enter(previous) end
+        if node.enter then 
+            node:enter(previous)
+        end
+        if node.updateable then
+            local dg = string.format("%s %s %s %s", i, 'registerObject', self.name, lube.bin:pack_node(node))
+            udp:send(dg)
+        end
+
     end
-    local finalY = self.player.position.y
+    local finalY = player.position.y
     if initialY ~= finalY then
         print("uhoh~~~")
     end
@@ -295,6 +312,10 @@ function Level:update(dt)
  
     for i,node in ipairs(self.nodes) do
         if node.update then node:update(dt, self.player) end
+        if self.player.currently_held == node then
+            local dg = string.format("%s %s %s %s", i, 'moveObject', self.name, lube.bin:pack_node(node))
+            udp:send(dg)
+        end
     end
 
     self.collider:update(dt)
@@ -307,6 +328,67 @@ function Level:update(dt)
                         limit( limit(y, 0, self.offset) + self.pan, 0, self.offset ) )
 
     Timer.update(dt)
+    
+    t = t+dt
+    if t > updaterate then
+        local levelName = self.name
+        
+        --update sprite        
+        dg = string.format("%s %s %s", self.player.id, 'update', levelName)
+        udp:send(dg)
+        
+        update_ticker = update_ticker + 1
+        print(update_ticker..': '..tostring(port))
+        
+        t = 0
+    end
+    
+    repeat
+        data, msg = udp:receive()
+        if data then
+            local ent_id, cmd, parms = data:match("^(%S*) (%S*) (.*)")
+            if cmd == 'at' and string.find(ent_id,"player") then
+                print("trying to update players?")
+                print("ima get a update")
+                local level, player = parms:match("^(%S*) (.*)")
+                --print(player)
+                print(ent_id)
+                player = lube.bin:unpack_node(player)
+                local player_id = tonumber(ent_id)
+                if level == Gamestate.currentState().name then
+                    print(level)
+                    Gamestate.currentState().players[player_id].position = {
+                        x = player.position.x,
+                        y = player.position.y}
+                    Gamestate.currentState().players[player_id].velocity = {
+                        x = player.velocity.x,
+                        y = player.velocity.y}
+                    print("updated a player")
+                end
+            elseif cmd == 'at' then  --update node
+                --print("ima get a update")
+                local level, node = parms:match("^(%S*) (.*)")
+                --print(node)
+                --print(ent_id)
+                node = lube.bin:unpack_node(node)
+                local node_id = tonumber(ent_id)
+                if level == Gamestate.currentState().name then
+                    --print(level)
+                    Gamestate.currentState().nodes[node_id].position = {
+                        x = node.position.x,
+                        y = node.position.y}
+                    Gamestate.currentState().nodes[node_id].velocity = {
+                        x = node.velocity.x,
+                        y = node.velocity.y}
+                    --print("updated an object")
+                end
+            else
+                print("unrecognised command:", cmd)
+            end
+        elseif msg ~= 'timeout' then 
+            error("Network error: "..tostring(msg))
+        end
+    until not data 
 end
 
 function Level:quit()
@@ -325,7 +407,9 @@ function Level:draw()
             if node.draw and not node.foreground then node:draw() end
         end
 
-        self.player:draw()
+        for id,player in pairs(self.players) do
+            player:draw()
+        end
 
         for i,node in ipairs(self.nodes) do
             if node.draw and node.foreground then node:draw() end

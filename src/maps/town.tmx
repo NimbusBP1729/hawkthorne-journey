@@ -115,6 +115,7 @@
    </properties>
   </object>
   <object type="climbable" x="558" y="169" width="16" height="94"/>
+  <object type="baseball" x="173" y="196" width="12" height="12"/>
  </objectgroup>
  <objectgroup name="floor" width="60" height="14">
   <object x="0" y="264" width="1440" height="72"/>
