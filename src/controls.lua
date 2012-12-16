@@ -10,7 +10,7 @@ local buttonmap = datastore.get( 'buttonmap', {
     SELECT = 'v',
     START = 'escape',
     JUMP = ' ',
-    ACTION = 'lshift',
+    ACTION = 'rshift',
 } )
 
 local keymap = {}
