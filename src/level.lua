@@ -374,11 +374,11 @@ function Level:update(dt)
                 local node_id = tonumber(ent_id)
                 if level == Gamestate.currentState().name then
                     --print(level)
-                    assert("Node of type '" tostring(node.velocity,Gamestate.currentState().nodes[node_id].type).."' has no position")
+                    assert(node.position,"Node of type '"..tostring(Gamestate.currentState().nodes[node_id].type).."' has no position")
                     Gamestate.currentState().nodes[node_id].position = {
                         x = node.position.x,
                         y = node.position.y}
-                    assert(node.velocity,Gamestate.currentState().nodes[node_id].type..": has no velocity")
+                    assert(node.velocity,"Node of type '"..tostring(Gamestate.currentState().nodes[node_id].type).."' has no velocity")
                     Gamestate.currentState().nodes[node_id].velocity = {
                         x = node.velocity.x,
                         y = node.velocity.y}

@@ -67,73 +67,33 @@ while running do
     if data then
         -- more of these funky match paterns!
         entity, cmd, parms = data:match("^(%S*) (%S*) (.*)")
-        if cmd == 'movePlayer' then
-            local level, player = parms:match("^(%S*) (.*)")
-            --print(level)
-            player = lube.bin:unpack_node(player)
-            if not world[level] then world[level] = {} end
-            players[entity] = player
-        elseif cmd == 'moveObject' then
-            local level, node, last_update = parms:match("^(%S*) (%S*) (.*)")
-            last_update = tonumber(last_update)
-            print(level)
-            print(entity)
-            --print(node)
-            if not world[level] then world[level] = {} end
+        if cmd == 'keypress' then
+            local button = parms:match("^(%S*)")
+        elseif cmd == 'keyrelease' then
+            local button = parms:match("^(%S*)")
+        elseif cmd == 'keydown' then
+            local button = parms:match("^(%S*)")
             
-            if last_update > world[level][entity].last_update then
-                node = lube.bin:unpack_node(node)
-                node.last_update = last_update
-                --print(node)
-                world[level][entity] = node
-            end
-        elseif cmd == 'at' then
-            print("boaz cheboiywo")
-            local level, x, y = parms:match("^(%S*) (%-?[%d.e]*) (%-?[%d.e]*)$")
-            if not world[level] then world[level] = {} end
-            assert(x and y) -- validation is better, but asserts will serve.
-            x, y = tonumber(x), tonumber(y)
-            world[level][entity] = {x=x, y=y}
         elseif cmd == 'update' then
-            --print("update")
             local level = parms:match("^(%S*)")
-            --print(level)
-            if not world[level] then world[level] = {} end
-            local count = 0
             for i, node in pairs(world[level]) do
-                udp:sendto(string.format("%s %s %s %s", i, 'at', level, lube.bin:pack_node(node)), msg_or_ip,  port_or_nil)
-                count = count + 1
+                if node.paint then
+                    local level,x,y,state,position,direction = 
+                       node.x,node.y,node.character.position,node.foreground
+                    udp:sendto(string.format("%s %s %s %s", i, 'updateObject', level, x, y), msg_or_ip,  port_or_nil)
+                end
             end
-            update_ticker = update_ticker + 1
-            print(update_ticker..': '..tostring(port_or_nil))
-            --print()
+            udp:sendto(string.format("%s %s %s %s", i, 'at', level, lube.bin:pack_node(node)), msg_or_ip,  port_or_nil)
        elseif cmd == 'register' then
             print("registering a new player:", entity)
             print("msg_or_ip:", msg_or_ip)
             print("port_or_nil:", port_or_nil)
             table.insert(players,entity)
-        elseif cmd == 'registerObject' then
-            local level, node = parms:match("^(%S*) (.*)")
-            local node = lube.bin:unpack_node(node)
-            print(level)
-            print(world[level])
-            if not world[level] then 
-                world[level] = {}
-                print("registering a new object in a new level:", entity)
-                print(level)
-                node.last_update = tostring(os.time())
-                world[level][entity] = node
-                print("level: "..level)
-                print("entity: "..entity)
-            elseif world[level][entity] then 
-                print("already registered object:", entity)
-            else
-                print("registering a new object:", entity)
-                print("level: "..level)
-                print("entity: "..entity)
-                node.last_update = tostring(os.time())
-                world[level][entity] = node
-            end
+        elseif cmd == 'unregister' then
+            print("unregistering a player:", entity)
+            print("msg_or_ip:", msg_or_ip)
+            print("port_or_nil:", port_or_nil)
+            table.insert(players,entity)
         elseif cmd == 'quit' then
             running = false;
         else

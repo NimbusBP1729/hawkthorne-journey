@@ -68,7 +68,10 @@ end
 -- Updates the material and allows the player to pick it up.
 function Material:update()
     if not self.exists then
+        self.paint = false
         return
+    else
+        self.paint = true
     end
     if controls.isDown( 'UP' ) and self.touchedPlayer then
         local itemNode = require( 'items/materials/' .. self.name )
