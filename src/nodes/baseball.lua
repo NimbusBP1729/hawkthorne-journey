@@ -30,6 +30,7 @@ function Baseball.new(node, collider, map)
 
     baseball.width = node.width
     baseball.height = node.height
+    baseball.updateable = true
     
     return baseball
 end

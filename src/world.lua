@@ -74,13 +74,19 @@ while running do
             if not world[level] then world[level] = {} end
             players[entity] = player
         elseif cmd == 'moveObject' then
-            local level, node = parms:match("^(%S*) (.*)")
-            --print(level)
-            --print(node)
-            node = lube.bin:unpack_node(node)
+            local level, node, last_update = parms:match("^(%S*) (%S*) (.*)")
+            last_update = tonumber(last_update)
+            print(level)
+            print(entity)
             --print(node)
             if not world[level] then world[level] = {} end
-            world[level][entity] = node
+            
+            if last_update > world[level][entity].last_update then
+                node = lube.bin:unpack_node(node)
+                node.last_update = last_update
+                --print(node)
+                world[level][entity] = node
+            end
         elseif cmd == 'at' then
             print("boaz cheboiywo")
             local level, x, y = parms:match("^(%S*) (%-?[%d.e]*) (%-?[%d.e]*)$")
@@ -109,13 +115,13 @@ while running do
         elseif cmd == 'registerObject' then
             local level, node = parms:match("^(%S*) (.*)")
             local node = lube.bin:unpack_node(node)
-
             print(level)
             print(world[level])
             if not world[level] then 
-                world[level] = {} 
+                world[level] = {}
                 print("registering a new object in a new level:", entity)
                 print(level)
+                node.last_update = tostring(os.time())
                 world[level][entity] = node
                 print("level: "..level)
                 print("entity: "..entity)
@@ -125,6 +131,7 @@ while running do
                 print("registering a new object:", entity)
                 print("level: "..level)
                 print("entity: "..entity)
+                node.last_update = tostring(os.time())
                 world[level][entity] = node
             end
         elseif cmd == 'quit' then

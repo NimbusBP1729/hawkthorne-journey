@@ -288,7 +288,7 @@ function Level:enter( previous, door , player)
         if node.enter then 
             node:enter(previous)
         end
-        if node.updateable then
+        if node.position then
             local dg = string.format("%s %s %s %s", i, 'registerObject', self.name, lube.bin:pack_node(node))
             udp:send(dg)
         end
@@ -313,7 +313,7 @@ function Level:update(dt)
     for i,node in ipairs(self.nodes) do
         if node.update then node:update(dt, self.player) end
         if self.player.currently_held == node then
-            local dg = string.format("%s %s %s %s", i, 'moveObject', self.name, lube.bin:pack_node(node))
+            local dg = string.format("%s %s %s %s %s", i, 'moveObject', self.name, lube.bin:pack_node(node), os.time())
             udp:send(dg)
         end
     end
@@ -374,9 +374,11 @@ function Level:update(dt)
                 local node_id = tonumber(ent_id)
                 if level == Gamestate.currentState().name then
                     --print(level)
+                    assert("Node of type '" tostring(node.velocity,Gamestate.currentState().nodes[node_id].type).."' has no position")
                     Gamestate.currentState().nodes[node_id].position = {
                         x = node.position.x,
                         y = node.position.y}
+                    assert(node.velocity,Gamestate.currentState().nodes[node_id].type..": has no velocity")
                     Gamestate.currentState().nodes[node_id].velocity = {
                         x = node.velocity.x,
                         y = node.velocity.y}
