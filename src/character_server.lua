@@ -1,58 +1,7 @@
 local anim8 = require 'vendor/anim8'
 local Timer = require 'vendor/timer'
--- local sound = require 'vendor/TEsound'
 
 local characters = {}
-
-for i,p in pairs( love.filesystem.enumerate( 'characters' ) ) do
-    -- bring in the data from the character file
-    local character = require( 'characters/' .. p:gsub('.lua', '') )
-
-    -- build the character
-    character.beam = love.graphics.newImage( 'images/characters/' .. character.name .. '/beam.png')
-    character.beam:setFilter('nearest', 'nearest')
-    
-    character.count = 1
-
-    character.sheets = {}
-    character.sheets.base = love.graphics.newImage( 'images/characters/' .. character.name .. '/base.png')
-    character.sheets.base:setFilter('nearest', 'nearest')
-
-    character.mask = love.graphics.newQuad(0, character.offset, 48, 35, character.sheets.base:getWidth(), character.sheets.base:getHeight())
-
-    character.positions = require( 'positions/' .. character.name )
-
-    character._grid = anim8.newGrid( 48, 48, character.sheets.base:getWidth(), character.sheets.base:getHeight() )
-    character._warp = anim8.newGrid( 36, 300, character.beam:getWidth(), character.beam:getHeight() )
-
-    for state, _ in pairs( character.animations ) do
-        local data = character.animations[ state ]
-        if state == 'warp' then
-            character.animations[ state ] = anim8.newAnimation(data[1], character._warp(unpack(data[2])), data[3])
-        else
-            if type( data[1] ) == 'string' then
-                -- positionless
-                character.animations[ state ] = anim8.newAnimation(data[1], character._grid(unpack(data[2])), data[3])
-            else
-                -- positioned
-                for i, _ in pairs( data ) do
-                    character.animations[ state ][i] = anim8.newAnimation(data[i][1], character._grid(unpack(data[i][2])), data[i][3])
-                end
-            end
-        end
-    end
-    
-    character.costumemap = {}
-    character.categorytocostumes = {}
-    for _,c in pairs( character.costumes ) do
-        character.costumemap[ c.sheet ] = c
-        character.categorytocostumes[ c.category ] = character.categorytocostumes[ c.category ] or {}
-        table.insert( character.categorytocostumes[ c.category ], c )
-    end
-
-    characters[ character.name ] = character
-end
-
 local Character = {}
 Character.__index = Character
 Character.characters = characters

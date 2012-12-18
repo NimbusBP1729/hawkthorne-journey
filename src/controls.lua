@@ -1,9 +1,9 @@
-local datastore = require 'datastore'
+-- local datastore = require 'datastore'
 
 local controls = {}
 
-local buttonmap = datastore.get( 'buttonmap', {
-    UP = 'up',
+local buttonmap = {
+     UP = 'up',
     DOWN = 'down',
     LEFT = 'left',
     RIGHT = 'right',
@@ -11,7 +11,7 @@ local buttonmap = datastore.get( 'buttonmap', {
     START = 'escape',
     JUMP = ' ',
     ACTION = 'rshift',
-} )
+}
 
 local keymap = {}
 

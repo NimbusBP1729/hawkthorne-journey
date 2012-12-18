@@ -1,5 +1,5 @@
 local Gamestate = require 'vendor/gamestate'
-local Level = require 'level'
+local Level = require 'level_client'
 local window = require 'window'
 local fonts = require 'fonts'
 local background = require 'selectbackground'

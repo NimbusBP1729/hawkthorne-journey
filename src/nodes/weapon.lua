@@ -5,7 +5,7 @@
 ---- the only action that should play once is the animation for     ing your weapon
 -- Created by NimbusBP1729
 -----------------------------------------------
-local sound = require 'vendor/TEsound'
+-- local sound = require 'vendor/TEsound'
 local anim8 = require 'vendor/anim8'
 local controls = require 'controls'
 local game = require 'game'
@@ -132,7 +132,7 @@ function Weapon:collide(node, dt, mtv_x, mtv_y)
     end
     
     if self.hitAudioClip and node.hurt then
-        sound.playSfx(self.hitAudioClip)
+        -- sound.playSfx(self.hitAudioClip)
     end
 
     --handles code for burning an object
@@ -173,7 +173,7 @@ function Weapon:unuse(mode)
     if mode=="sound_off" then 
         return
     else
-        sound.playSfx(self.unuseAudioClip)
+        -- sound.playSfx(self.unuseAudioClip)
     end
 end
 
@@ -264,7 +264,7 @@ function Weapon:wield()
     self.player.character:animation():resume()
 
     if self.swingAudioClip then
-        sound.playSfx( self.swingAudioClip )
+        -- sound.playSfx( self.swingAudioClip )
     end
 
 end

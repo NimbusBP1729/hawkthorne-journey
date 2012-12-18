@@ -5,7 +5,7 @@ if correctVersion then
   require 'utils'
   local debugger = require 'debugger'
   local Gamestate = require 'vendor/gamestate'
-  local Level = require 'level'
+  local Level = require 'level_client'
   local camera = require 'camera'
   local fonts = require 'fonts'
   local sound = require 'vendor/TEsound'

@@ -1,8 +1,8 @@
 local Gamestate = require 'vendor/gamestate'
 local camera = require 'camera'
-local sound = require 'vendor/TEsound'
-local fonts = require 'fonts'
-local datastore = require 'datastore'
+--local sound = require 'vendor/TE--sound'
+-- local fonts = require 'fonts'
+-- local datastore = require 'datastore'
 local state = Gamestate.new()
 local window = require 'window'
 local controls = require 'controls'
@@ -19,13 +19,13 @@ function state:init()
     self.range_arrow = love.graphics.newImage("images/menu/small_arrow_up.png")
 
     self.option_map = {}
-    self.options = datastore.get('options', {
+    self.options = {
     --           display name          type    value
         { name = 'FULLSCREEN',         bool  = false         },
         { name = 'MUSIC VOLUME',       range = { 0, 10, 10 } },
         { name = 'SFX VOLUME',         range = { 0, 10, 10 } },
         { name = 'SHOW FPS',           bool  = false         }
-    } )
+    }
 
     for i,o in pairs( self.options ) do
         self.option_map[o.name] = self.options[i]
@@ -43,15 +43,15 @@ function state:update(dt)
 end
 
 function state:enter(previous)
-    fonts.set( 'big' )
-    sound.playMusic( "daybreak" )
+    --fonts.set( 'big' )
+    --sound.playMusic( "daybreak" )
 
     camera:setPosition(0, 0)
     self.previous = previous
 end
 
 function state:leave()
-    fonts.reset()
+    --fonts.reset()
 end
 
 function state:updateFullscreen()
@@ -72,8 +72,8 @@ function state:updateFpsSetting()
 end
 
 function state:updateSettings()
-    sound.volume('music', self.option_map['MUSIC VOLUME'].range[3] / 10)
-    sound.volume('sfx', self.option_map['SFX VOLUME'].range[3] / 10)
+    --sound.volume('music', self.option_map['MUSIC VOLUME'].range[3] / 10)
+    --sound.volume('sfx', self.option_map['SFX VOLUME'].range[3] / 10)
 end
 
 function state:keypressed( button )
@@ -86,37 +86,37 @@ function state:keypressed( button )
         if option.bool ~= nil then
             option.bool = not option.bool
             if option.name == 'FULLSCREEN' then
-                sound.playSfx( 'confirm' )
+                --sound.playSfx( 'confirm' )
                 self:updateFullscreen()
             elseif option.name == 'SHOW FPS' then
-                sound.playSfx( 'confirm' )
+                --sound.playSfx( 'confirm' )
                 self:updateFpsSetting()
             end
         end
     elseif button == 'LEFT' then
         if option.range ~= nil then
             if option.range[3] > option.range[1] then
-                sound.playSfx( 'confirm' )
+                --sound.playSfx( 'confirm' )
                 option.range[3] = option.range[3] - 1
             end
         end
     elseif button == 'RIGHT' then
         if option.range ~= nil then
             if option.range[3] < option.range[2] then
-                sound.playSfx( 'confirm' )
+                --sound.playSfx( 'confirm' )
                 option.range[3] = option.range[3] + 1
             end
         end
     elseif button == 'UP' then
-        sound.playSfx('click')
+        --sound.playSfx('click')
         self.selection = (self.selection - 1) % #self.options
     elseif button == 'DOWN' then
-        sound.playSfx('click')
+        --sound.playSfx('click')
         self.selection = (self.selection + 1) % #self.options
     end
     
     self:updateSettings()
-    datastore.set('options', self.options)
+    -- datastore.set('options', self.options)
 end
 
 function state:draw()
