@@ -2,9 +2,10 @@ local Queue = require 'queue'
 local Timer = require 'vendor/timer'
 local window = require 'window'
 local cheat = require 'cheat'
+local sound = require 'vendor/TEsound'
 local game = require 'game'
-local character = require 'character_server'
-local PlayerAttack = require 'playerAttack_server'
+local character = require 'character'
+local PlayerAttack = require 'playerAttack'
 local Gamestate = require 'vendor/gamestate'
 require 'vendor/lube'
 
@@ -15,21 +16,21 @@ local socket = require "socket"
 local address, port = "localhost", 12345
 local udp = socket.udp()
 
--- local healthbar = love.graphics.newImage('images/healthbar.png')
--- healthbar:setFilter('nearest', 'nearest')
+local healthbar = love.graphics.newImage('images/healthbar.png')
+healthbar:setFilter('nearest', 'nearest')
 
-local Inventory = require('inventory_server')
+local Inventory = require('inventory_client')
 local ach = (require 'achievements').new()
 
 local healthbarq = {}
 local levels = {}
 
--- for i=6,0,-1 do
-    -- table.insert(healthbarq, love.graphics.newQuad(28 * i, 0, 28, 27,
-                             -- healthbar:getWidth(), healthbar:getHeight()))
--- end
+for i=6,0,-1 do
+    table.insert(healthbarq, love.graphics.newQuad(28 * i, 0, 28, 27,
+                             healthbar:getWidth(), healthbar:getHeight()))
+end
 
--- local health = love.graphics.newImage('images/damage.png')
+local health = love.graphics.newImage('images/damage.png')
 
 local Player = {}
 Player.__index = Player
@@ -101,9 +102,7 @@ function Player.new(collider)
     return plyr
 end
 
-function Player:enter(level)
-    local collider = level.collider
-    self.level = level.name
+function Player:enter(collider)
     self.jumping = false
     if self.character.changed then
         self.character.changed = false
@@ -128,18 +127,6 @@ function Player:enter(level)
     self.bb.player = self -- wat
     self.attack_box = PlayerAttack.new(collider,self)
 
-end
-
----
--- Create or look up a new Player
--- @param collider
--- @return Player
-function Player.factory(collider)
-    index = index or 1
-    if player == nil then
-        player = Player.new(collider)
-    end
-    return player
 end
 
 ---
@@ -331,13 +318,13 @@ function Player:update( dt )
         else
             self.velocity.y = -670
         end
-        -- sound.playSfx( "jump" )
+        sound.playSfx( "jump" )
     elseif jumped and not self.jumping and self:solid_ground()
         and not self.rebounding and self.liquid_drag then
      -- Jumping through heavy liquid:
         self.jumping = true
         self.velocity.y = -270
-        -- sound.playSfx( "jump" )
+        sound.playSfx( "jump" )
     end
 
     
@@ -435,7 +422,7 @@ function Player:update( dt )
     
     self.healthText.y = self.healthText.y + self.healthVel.y * dt
     
-    -- sound.adjustProximityVolumes()
+    sound.adjustProximityVolumes()
     
     t = t+dt
     if t > updaterate then
@@ -469,7 +456,7 @@ function Player:die(damage)
         return
     end
 
-    -- sound.playSfx( "damage_" .. math.max(self.health, 0) )
+    sound.playSfx( "damage_" .. math.max(self.health, 0) )
     self.rebounding = true
     self.invulnerable = true
     ach:achieve('damage', damage)
@@ -488,8 +475,8 @@ function Player:die(damage)
         self.character.state = 'dead'
         self.lives = self.lives - 1
         ach:achieve('die')
-        -- sound.stopMusic()
-        -- sound.playSfx( 'death' )
+        sound.stopMusic()
+        sound.playSfx( 'death' )
             -- start death sequence
         self.respawn = Timer.add(3, function()
             self:revive()
@@ -569,11 +556,11 @@ end
 -- Draws the player to the screen
 -- @return nil
 function Player:draw()
-    -- if self.stencil then
-        -- love.graphics.setStencil( self.stencil )
-    -- else
-        -- love.graphics.setStencil( )
-    -- end
+    if self.stencil then
+        love.graphics.setStencil( self.stencil )
+    else
+        love.graphics.setStencil( )
+    end
     
     if self.character.warpin then
         local y = self.position.y - self.character:current().beam:getHeight() + self.height + 4
@@ -581,15 +568,15 @@ function Player:draw()
         return
     end
 
-    -- if self.blink then
-        -- love.graphics.drawq(healthbar, healthbarq[self.health + 1],
-                            -- math.floor(self.position.x) - 18,
-                            -- math.floor(self.position.y) - 18)
-    -- end
+    if self.blink then
+        love.graphics.drawq(healthbar, healthbarq[self.health + 1],
+                            math.floor(self.position.x) - 18,
+                            math.floor(self.position.y) - 18)
+    end
 
-    -- if self.flash then
-        -- love.graphics.setColor( 255, 0, 0, 255 )
-    -- end
+    if self.flash then
+        love.graphics.setColor( 255, 0, 0, 255 )
+    end
     
     if self.footprint and self.jumping then
         self.footprint:draw()
@@ -615,13 +602,13 @@ function Player:draw()
         self.currently_held:draw()
     end
 
-    -- if self.rebounding and self.damageTaken > 0 then
-        -- love.graphics.draw(health, self.healthText.x, self.healthText.y)
-    -- end
+    if self.rebounding and self.damageTaken > 0 then
+        love.graphics.draw(health, self.healthText.x, self.healthText.y)
+    end
 
-    -- love.graphics.setColor( 255, 255, 255, 255 )
+    love.graphics.setColor( 255, 255, 255, 255 )
     
-    -- love.graphics.setStencil()
+    love.graphics.setStencil()
     
 end
 

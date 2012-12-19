@@ -16,7 +16,7 @@ if correctVersion then
   local mixpanel = require 'vendor/mixpanel'
   local character = require 'character'
   local cheat = require 'cheat'
-  local player = require 'player'
+  local player = require 'player_client'
 
   -- XXX Hack for level loading
   Gamestate.Level = Level

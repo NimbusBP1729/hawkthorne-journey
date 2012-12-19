@@ -5,12 +5,11 @@ local Character = require 'character'
 
 local Client = {}
 Client.__index = Client
-local client_singleton = nil
+local singleton = nil
 
 
 -- love.load, hopefully you are familiar with it from the callbacks tutorial
-function Client.factory()
-    if client_singleton then return client_singleton end
+function Client.new()
 
     local client = {}
     setmetatable(client, Client)
@@ -22,24 +21,28 @@ function Client.factory()
 
     client.updaterate = 0.1 -- how long to wait, in seconds, before requesting an update
     
-    client.world = {} -- the empty world-state
-    client.players = {} -- the empty world-state
-    
     client.level = nil
-    client.button_pressed_map = {}
-    
+    --client.button_pressed_map = {}
+
+    client.world = {} -- world[level][ent_id] = objectBundle
+    client.players = {} -- players[ent_id] = playerBundle ... and player.id = ent_id
+
     math.randomseed(os.time())
-    client.entity = tostring(math.random(99999))
+    client.entity = tostring(math.random(99999)) --the id of the player I'll be attached to
     local dg = string.format("%s %s", client.entity, 'register')
     client.udp:send(dg)
+
     client.player_characters = {}
     client.player_characters[client.entity] = Character.new():reset()
 
-    Client.client_singleton = client
     return client
 end
 
-
+--returns the same client every time
+function Client.getSingleton()
+    singleton = singleton or Client.new()
+    return singleton
+end
 
 -- love.update, hopefully you are familiar with it from the callbacks tutorial
 
@@ -104,7 +107,7 @@ end
 
 -- love.draw, hopefully you are familiar with it from the callbacks tutorial
 function Client:draw()
-    if not self.level then return end
+    -- if not self.level then return end
     -- pretty simple, we just loop over the world table, and print the
     -- name (key) of everything in there, at its own stored co-ords.
 

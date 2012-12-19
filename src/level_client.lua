@@ -15,12 +15,7 @@ require 'vendor/lube'
 local node_cache = {}
 local tile_cache = {}
 
-local Player = require 'player'
-local Floor = require 'nodes/floor'
-local Floorspace = require 'nodes/floorspace'
-local Floorspaces = require 'floorspaces'
-local Platform = require 'nodes/platform'
-local Wall = require 'nodes/wall'
+local Player = require 'player_client'
 
 local ach = (require 'achievements').new()
 
@@ -49,68 +44,6 @@ local function load_node(name)
     local node = require('nodes/' .. name)
     node_cache[name] = node
     return node
-end
-
-local function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
-    local player, node, node_a, node_b
-
-    if shape_a.player then
-        player = shape_a.player
-        node = shape_b.node
-    elseif shape_b.player then
-        player = shape_b.player
-        node = shape_a.node
-    else
-        node_a = shape_a.node
-        node_b = shape_b.node
-    end
-
-    if node then
-        node.player_touched = true
-
-        if node.collide then
-            node:collide(player, dt, mtv_x, mtv_y)
-        end
-    elseif node_a then
-        if node_a.collide then
-            node_a:collide(node_b, dt, mtv_x, mtv_y)
-        end
-        if node_b.collide then
-            node_b:collide(node_a, dt, mtv_x, mtv_y)
-        end
-    end
-
-end
-
--- this is called when two shapes stop colliding
-local function collision_stop(dt, shape_a, shape_b)
-    local player, node
-
-    if shape_a.player then
-        player = shape_a.player
-        node = shape_b.node
-    elseif shape_b.player then
-        player = shape_b.player
-        node = shape_a.node
-    else
-        node_a = shape_a.node
-        node_b = shape_b.node
-    end
-
-    if node then
-        node.player_touched = false
-
-        if node.collide_end then
-            node:collide_end(player, dt)
-        end
-    else
-        if node_a.collide_end then
-            node_a:collide_end(node_b, dt)
-        end
-        if node_b.collide_end then
-            node_b:collide_end(node_a, dt)
-        end
-    end
 end
 
 local function setBackgroundColor(map)
@@ -179,21 +112,18 @@ function Level.new(name)
     level.doors = {}
 
     level.players = {}
-    level:restartLevel()
     return level
 end
 
-function Level:restartLevel()
-    Floorspaces:init()
-end
 function Level:init()
 end
 
 --handle client controls
 function Level:enter()
     self.background = load_tileset(self.name)
-    self.client = self.client or Client.factory()
-    self.client.players[self.client.entity] = Player.factory()
+    self.client = Client.getSingleton()
+    self.client.level = self.name
+    -- self.client.players[self.client.entity] = Player.factory()
     self.client.world[self.name] = self.client.world[self.name] or {}
 end
 
