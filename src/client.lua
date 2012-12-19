@@ -114,8 +114,6 @@ function Client:draw()
     if self.player and self.player.footprint then
         self:floorspaceNodeDraw()
     else
-        print(self.level)
-        print(self.world)
         for i,node in pairs(self.world[self.level]) do
             if not node.foreground then
                 self:drawObject(node)
@@ -150,6 +148,8 @@ function Client:drawObject(node)
     --love.graphics.drawq(nodeIimage, frame?, node.x, node.y, r, sx, sy, ox, oy)
 end
 function Client:drawPlayer(plyr)
+    print("drawing someone")     
+    
     --i really don't like how character was called
     -- in the old non-multiplayer code
     local character = self.player_characters[plyr.id]
