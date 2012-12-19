@@ -128,6 +128,7 @@ function Level:enter()
 end
 
 function Level:update(dt)
+    self.client:update(dt)
 end
 
 function Level:draw()

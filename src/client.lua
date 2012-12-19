@@ -1,5 +1,6 @@
 local socket = require "socket"
 local Character = require 'character'
+local controls = require 'controls'
 
 --draw data
 
@@ -7,6 +8,8 @@ local Client = {}
 Client.__index = Client
 local singleton = nil
 
+local t = 0
+local button_pressed_map = {}
 
 -- love.load, hopefully you are familiar with it from the callbacks tutorial
 function Client.new()
@@ -29,7 +32,7 @@ function Client.new()
 
     math.randomseed(os.time())
     client.entity = tostring(math.random(99999)) --the id of the player I'll be attached to
-    local dg = string.format("%s %s", client.entity, 'register')
+    local dg = string.format("%s %s $", client.entity, 'register')
     client.udp:send(dg)
 
     client.player_characters = {}
@@ -47,13 +50,16 @@ end
 -- love.update, hopefully you are familiar with it from the callbacks tutorial
 
 function Client:update(deltatime)
-
+    local udp = self.udp
+    local entity = self.entity
+    local updaterate = self.updaterate
+    
     t = t + deltatime -- increase t by the deltatime
     if t > updaterate then
         local x, y = 0, 0
         
         local dg
-        for key,button in controls.getMap() do
+        for key,button in pairs(controls.getMap()) do
             if love.keyboard.isDown(button) then
                 dg = string.format("%s %s %s", entity, 'keydown', key)
                 udp:send(dg)
@@ -69,7 +75,7 @@ function Client:update(deltatime)
             end
         end
 
-        local dg = string.format("%s %s $", entity, 'update')
+        local dg = string.format("%s %s %s", entity, 'update', self.level)
         udp:send(dg)
 
         t=t-updaterate -- set t for the next round

@@ -1,8 +1,14 @@
 local Gamestate = require 'vendor/gamestate'
 local Queue = require 'queue'
-local anim8 = require 'vendor/anim8'
+--local anim8 = require 'vendor/anim8'
 local tmx = require 'vendor/tmx'
-local HC = require 'vendor/hardoncollider/class'
+require 'vendor/hardoncollider/class'
+require 'vendor/hardoncollider/gjk'
+require 'vendor/hardoncollider/polygon'
+require 'vendor/hardoncollider/shapes'
+require 'vendor/hardoncollider/spatialhash'
+require 'vendor/hardoncollider/vector-light'
+local HC = require 'vendor/hardoncollider/init'
 local Timer = require 'vendor/timer'
 local Tween = require 'vendor/tween'
 local camera = require 'camera'
@@ -157,17 +163,10 @@ function Level.new(name)
 
     level.name = name
     print("making new level")
-    assert( love.filesystem.exists( "maps/" .. name .. ".lua" ),
-            "maps/" .. name .. ".lua not found.\n\n" ..
-            "Have you generated your maps lately?\n\n" ..
-            "LINUX / OSX: run 'make maps'\n" ..
-            "WINDOWS: use tmx2lua to generate\n\n" ..
-            "Check the documentation for more info."
-    )
 
     level.map = require("maps/" .. name)
-    level.background = load_tileset(name)
-    level.collider = HC(100, on_collision, collision_stop)
+    --level.background = load_tileset(name)
+    level.collider = HC:init(100, on_collision, collision_stop)
     level.offset = getCameraOffset(level.map)
     level.music = getSoundtrack(level.map)
     level.spawn = 'studyroom'
