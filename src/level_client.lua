@@ -15,8 +15,6 @@ require 'vendor/lube'
 local node_cache = {}
 local tile_cache = {}
 
-local Player = require 'player_client'
-
 -- local ach = (require 'achievements').new()
 
 local Client = require 'client'

@@ -16,7 +16,6 @@ if correctVersion then
   local mixpanel = require 'vendor/mixpanel'
   local character = require 'character'
   local cheat = require 'cheat'
-  local player = require 'player_client'
 
   -- XXX Hack for level loading
   Gamestate.Level = Level
@@ -79,10 +78,6 @@ if correctVersion then
       sound.volume('music',0)
     elseif args["vol-mute"] == 'sfx' then
       sound.volume('sfx',0)
-    end
-
-    if args["money"] ~= "" then
-      player.startingMoney = tonumber(args["money"])
     end
 
     
