@@ -13,7 +13,6 @@ local button_pressed_map = {}
 
 -- love.load, hopefully you are familiar with it from the callbacks tutorial
 function Client.new()
-
     local client = {}
     setmetatable(client, Client)
     
@@ -31,13 +30,15 @@ function Client.new()
     client.players = {} -- players[ent_id] = playerBundle ... and player.id = ent_id
 
     math.randomseed(os.time())
+    --later I should make sure these are assigned by the server instead
     client.entity = tostring(math.random(99999)) --the id of the player I'll be attached to
     local dg = string.format("%s %s $", client.entity, 'register')
     client.udp:send(dg)
 
     client.player_characters = {}
-    client.player_characters[client.entity] = Character.new():reset()
-    client.players[client.entity] = Character.new():reset()
+    client.player_characters[client.entity] = Character.new()
+    client.player_characters[client.entity]:reset()
+    client.players[client.entity] = nil
 
     return client
 end
@@ -98,7 +99,7 @@ function Client:update(deltatime)
                 -- if ent == self.entity then
                     -- self.level = playerBundle.level
                 -- end
-                playerBundle.id = ent
+                --playerBundle.id = ent
                 self.players[ent] = playerBundle
                 self.player_characters[ent] = self.player_characters[ent] or Character.new()
                 self.player_characters[ent].state = playerBundle.state
@@ -106,7 +107,11 @@ function Client:update(deltatime)
                 self.player_characters[ent].name = playerBundle.name
                 self.player_characters[ent].costume = playerBundle.costume
                 self.player_characters[ent].position = playerBundle.position
-                
+
+                print("id:        "..playerBundle.id)
+                print("level:     "..playerBundle.level)
+                print("x:         "..playerBundle.x)
+                print("y:         "..playerBundle.y)
                 print("state:     "..playerBundle.state)
                 print("direction: "..playerBundle.direction)
                 print("name:      "..playerBundle.name)
@@ -177,6 +182,16 @@ end
 function Client:drawPlayer(plyr)
     --i really don't like how character was called
     -- in the old non-multiplayer code
+    print("foo")
+    for k,v in pairs(self.player_characters) do
+        print(k)
+    end
+    
+    assert(plyr,"Player must not be nil")
+    assert(plyr.id,"Player needs to have an id")
+    assert(self.player_characters,"Player("..plyr.id..")must be associated with a character")
+    assert(self.player_characters[plyr.id],"Player's id("..plyr.id..")was not found in the client's self.player_characters list")
+    assert(self.player_characters[plyr.id].animation,"Character("..plyr.id..") must have a current animation")
     local character = self.player_characters[plyr.id]
     local animation = self.player_characters[plyr.id]:animation()
     animation:draw(character:sheet(), plyr.x, plyr.y)
