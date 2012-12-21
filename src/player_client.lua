@@ -3,7 +3,6 @@ local Timer = require 'vendor/timer'
 local window = require 'window'
 local cheat = require 'cheat'
 local sound = require 'vendor/TEsound'
-local game = require 'game'
 local character = require 'character'
 local PlayerAttack = require 'playerAttack'
 local Gamestate = require 'vendor/gamestate'
@@ -20,7 +19,7 @@ local healthbar = love.graphics.newImage('images/healthbar.png')
 healthbar:setFilter('nearest', 'nearest')
 
 local Inventory = require('inventory_client')
-local ach = (require 'achievements').new()
+-- local ach = (require 'achievements').new()
 
 local healthbarq = {}
 local levels = {}
@@ -130,277 +129,15 @@ function Player:enter(collider)
 end
 
 function Player:keypressed( button, map )
-    if self.inventory.visible then
-        self.inventory:keypressed( button )
-        return
-    end
-    
-    if button == 'SELECT' and not self.interactive_collide then
-        if self.currently_held and self.currently_held.wield and  self.key_down[ 'DOWN' ]then
-            self.currently_held:unuse()
-        elseif self.currently_held and self.currently_held.wield and self.key_down[ 'UP' ] then
-            self:switchWeapon()
-        else
-            self.inventory:open( )
-            self.freeze = true
-        end
-    end
-
-    if button == 'ACTION' and not self.interactive_collide then
-        if self.currently_held and not self.currently_held.wield then
-            if self.key_down[ 'DOWN' ] then
-                self:drop()
-            elseif self.key_down[ 'UP' ] then
-                self:throw_vertical()
-            else
-                self:throw()
-            end
-        elseif self.holdable and not self.currently_held then
-            self:pickup()
-        else
-            self:attack()
-        end
-    end
-        
-    -- taken from sonic physics http://info.sonicretro.org/SPG:Jumping
-    if button == 'JUMP' then
-        self.jumpQueue:push('jump')
-    end
 end
 
 function Player:keyreleased( button, map )
-    -- taken from sonic physics http://info.sonicretro.org/SPG:Jumping
-    if button == 'JUMP' then
-        self.halfjumpQueue:push('jump')
-    end
-end
-
----
--- This is the main update loop for the player, handling position updates.
--- @param dt The time delta
--- @return nil
-function Player:update( dt )
-    
-    self.inventory:update( dt )
-    self.attack_box:update()
-    
-    if self.freeze then
-        return
-    end
-
-    local DOWN_MOTION = self.key_down['DOWN']
-    local UP_MOTION = self.key_down[ 'UP' ]
-    local LEFT_MOTION = self.key_down[ 'LEFT' ]
-    local RIGHT_MOTION = self.key_down[ 'RIGHT' ]
-
-    if not self.invulnerable then
-        self:stopBlink()
-    end
-
-    if self.health <= 0 then
-        self.velocity.y = self.velocity.y + game.gravity * dt
-        if self.velocity.y > game.max_y then self.velocity.y = game.max_y end
-        self.position.y = self.position.y + self.velocity.y * dt
-        if self.currently_held and self.currently_held.unuse then
-            self.currently_held:unuse()
-        end
-        self:moveBoundingBox()
-        return
-    end
-    
-    if self.character.warpin then
-        self.character:warpUpdate(dt)
-        return
-    end
-
-    if ( DOWN_MOTION and UP_MOTION ) or ( LEFT_MOTION and RIGHT_MOTION ) then
-        DOWN_MOTION = false
-        UP_MOTION = false
-        LEFT_MOTION = false
-        RIGHT_MOTION = false
-    end
-
-    -- taken from sonic physics http://info.sonicretro.org/SPG:Running
-    if LEFT_MOTION and not RIGHT_MOTION and not self.rebounding then
-
-        if DOWN_MOTION and self.crouch_state == 'crouch' then -- crouch slide
-            self.velocity.x = self.velocity.x + (self:accel() * dt)
-            if self.velocity.x > 0 then
-                self.velocity.x = 0
-            end
-        elseif self.velocity.x > 0 then
-            self.velocity.x = self.velocity.x - (self:deccel() * dt)
-        elseif self.velocity.x > -game.max_x then
-            self.velocity.x = self.velocity.x - (self:accel() * dt)
-            if self.velocity.x < -game.max_x then
-                self.velocity.x = -game.max_x
-            end
-        end
-
-    elseif RIGHT_MOTION and not LEFT_MOTION and not self.rebounding then
-
-        if DOWN_MOTION and self.crouch_state == 'crouch' then
-            self.velocity.x = self.velocity.x - (self:accel() * dt)
-            if self.velocity.x < 0 then
-                self.velocity.x = 0
-            end
-        elseif self.velocity.x < 0 then
-            self.velocity.x = self.velocity.x + (self:deccel() * dt)
-        elseif self.velocity.x < game.max_x then
-            self.velocity.x = self.velocity.x + (self:accel() * dt)
-            if self.velocity.x > game.max_x then
-                self.velocity.x = game.max_x
-            end
-        end
-
-    else
-        if self.velocity.x < 0 then
-            self.velocity.x = math.min(self.velocity.x + game.friction * dt, 0)
-        else
-            self.velocity.x = math.max(self.velocity.x - game.friction * dt, 0)
-        end
-    end
-
-    
-    local jumped = self.jumpQueue:flush()
-    local halfjumped = self.halfjumpQueue:flush()
-
-    if jumped and not self.jumping and self:solid_ground()
-        and not self.rebounding and not self.liquid_drag then
-        self.jumping = true
-        if cheat.jump_high then
-            self.velocity.y = -970
-        else
-            self.velocity.y = -670
-        end
-        sound.playSfx( "jump" )
-    elseif jumped and not self.jumping and self:solid_ground()
-        and not self.rebounding and self.liquid_drag then
-     -- Jumping through heavy liquid:
-        self.jumping = true
-        self.velocity.y = -270
-        sound.playSfx( "jump" )
-    end
-
-    
-    if halfjumped and self.velocity.y < -450 and not self.rebounding and self.jumping then
-        self.velocity.y = -450
-    end
-    
-    if not self.footprint or self.jumping then
-        self.velocity.y = self.velocity.y + game.gravity * dt
-    end
-    self.since_solid_ground = self.since_solid_ground + dt
-
-    if self.velocity.y > game.max_y then
-        self.velocity.y = game.max_y
-        self.fall_damage = self.fall_damage + game.fall_dps * dt
-    end
-    -- end sonic physics
-    
-    self.position.x = self.position.x + self.velocity.x * dt
-    self.position.y = self.position.y + self.velocity.y * dt
-
-    -- These calculations shouldn't need to be offset, investigate
-    -- Min and max for the level
-    if self.position.x < -self.width / 4 then
-        self.position.x = -self.width / 4
-    elseif self.position.x > self.boundary.width - self.width * 3 / 4 then
-        self.position.x = self.boundary.width - self.width * 3 / 4
-    end 
-        
-    -- falling off the bottom of the map
-    if self.position.y > self.boundary.height then
-        self.has_fallen = true
-        -- print("--")
-        -- print (self.position.y)
-        -- print (self.boundary.height)
-        -- print ()
-        --self.position.y = 0
-        self:die(self.health)
-        return
-    end
-
-    action = nil
-    
-    self:moveBoundingBox()
-
-    if self.velocity.x < 0 then
-        self.character.direction = 'left'
-    elseif self.velocity.x > 0 then
-        self.character.direction = 'right'
-    end
-
-    if self.wielding or self.hurt then
-
-        self.character:animation():update(dt)
-
-    elseif self.jumping then
-    
-        self.character.state = self.jump_state
-        self.character:animation():update(dt)
-
-    elseif self.isJumpState(self.character.state) and not self.jumping then
-
-        self.character.state = self.walk_state
-        self.character:animation():update(dt)
-
-    elseif not self.isJumpState(self.character.state) and self.velocity.x ~= 0 then
-
-        if DOWN_MOTION and self.crouch_state == 'crouch' then
-            self.character.state = self.crouch_state
-        else
-            self.character.state = self.walk_state
-        end
-
-        self.character:animation():update(dt)
-
-    elseif not self.isJumpState(self.character.state) and self.velocity.x == 0 then
-
-        if DOWN_MOTION and UP_MOTION then
-            self.character.state = self.idle_state
-        elseif DOWN_MOTION then
-            self.character.state = self.crouch_state
-        elseif UP_MOTION then 
-            self.character.state = self.gaze_state
-        else
-            self.character.state = self.idle_state
-        end
-
-        self.character:animation():update(dt)
-
-    else
-        self.character:animation():update(dt)
-    end
-
-    
-    
-    self.healthText.y = self.healthText.y + self.healthVel.y * dt
-    
-    sound.adjustProximityVolumes()
-    
-    t = t+dt
-    if t > updaterate then
-        local levelName = Gamestate.currentState().name
-        local dg = string.format("%s %s %s %s", self.id, 'movePlayer', levelName, lube.bin:pack_node(self))
-        udp:send(dg)
-        
-        --update sprite        
-        -- dg = string.format("%s %s %s", self.id, 'update', levelName)
-        -- udp:send(dg)
-        t = 0
-    end
-
 end
 
 ---
 -- Call to take falling damage, and reset self.fall_damage to 0
 -- @return nil
 function Player:impactDamage()
-    if self.fall_damage > 0 then
-        self:die(self.fall_damage)
-    end
-    self.fall_damage = 0
 end
 
 ---
@@ -408,12 +145,6 @@ end
 -- flash animation
 -- @return nil
 function Player:stopBlink()
-    if self.blink then
-        Timer.cancel(self.blink)
-        self.blink = nil
-    end
-    self.damageTaken = 0
-    self.flash = false
 end
 
 ---
@@ -421,11 +152,6 @@ end
 -- Starts the player blinking every .12 seconds if they are not already blinking
 -- @return nil
 function Player:startBlink()
-    if not self.blink then
-        self.blink = Timer.addPeriodic(.12, function()
-            self.flash = not self.flash
-        end)
-    end
 end
 
 ---

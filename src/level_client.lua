@@ -17,7 +17,7 @@ local tile_cache = {}
 
 local Player = require 'player_client'
 
-local ach = (require 'achievements').new()
+-- local ach = (require 'achievements').new()
 
 local Client = require 'client'
 
@@ -122,12 +122,16 @@ end
 function Level:enter()
     self.background = load_tileset(self.name)
     self.client = Client.getSingleton()
+    print("from:"..self.client.level)
     self.client.level = self.name
+    print("to:"..self.client.level)
     -- self.client.players[self.client.entity] = Player.factory()
     self.client.world[self.name] = self.client.world[self.name] or {}
+    self.client:sendToServer(string.format("%s %s %s", self.client.entity, 'enterLevel', self.name))
 end
 
 function Level:update(dt)
+    assert(self.client.level == "town","town expected. found:"..self.client.level)
     self.client:update(dt)
 end
 
@@ -194,7 +198,7 @@ function Level:floorspaceNodeDraw()
 end
 
 function Level:leave()
-    ach:achieve('leave ' .. self.name)
+    -- ach:achieve('leave ' .. self.name)
     for i,node in ipairs(self.nodes) do
         if node.leave then node:leave() end
         if node.collide_end then
