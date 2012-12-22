@@ -118,6 +118,7 @@ end
 
 --handle client controls
 function Level:enter()
+    print("level name == "..self.name)
     self.background = load_tileset(self.name)
     self.client = Client.getSingleton()
     print("from:"..self.client.level)
@@ -125,12 +126,21 @@ function Level:enter()
     print("to:"..self.client.level)
     -- self.client.players[self.client.entity] = Player.factory()
     self.client.world[self.name] = self.client.world[self.name] or {}
+    camera.max.x = self.map.width * self.map.tilewidth - window.width
     self.client:sendToServer(string.format("%s %s %s", self.client.entity, 'enterLevel', self.name))
 end
 
 function Level:update(dt)
     assert(self.client.level == "town","town expected. found:"..self.client.level)
+    --self:updatePan(dt)
     self.client:update(dt)
+    local player = self.client.players[self.client.entity]
+    if not player then return end
+    local playerWidth = 48
+    local x = player.x + playerWidth / 2
+    local y = player.y - self.map.tilewidth * 4.5
+    camera:setPosition( math.max(x - window.width / 2, 0),
+        limit( limit(y, 0, self.offset) + self.pan, 0, self.offset ) )
 end
 
 function Level:draw()
@@ -206,9 +216,13 @@ function Level:leave()
 end
 
 function Level:keyreleased( button )
+    local dg = string.format("%s %s %s", self.client.entity, 'keyreleased', button)
+    self.client.udp:send(dg)
 end
 
 function Level:keypressed( button , player)
+    local dg = string.format("%s %s %s", self.client.entity, 'keypressed', button)
+    self.client.udp:send(dg)
 end
 
 function Level:panInit()

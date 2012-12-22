@@ -21,7 +21,7 @@ function Client.new()
     client.udp:settimeout(0)
     client.udp:setpeername(address, port)
 
-    client.updaterate = 0.1 -- how long to wait, in seconds, before requesting an update
+    client.updaterate = 0.05 -- how long to wait, in seconds, before requesting an update
     
     client.level = 'overworld'
     --client.button_pressed_map = {}
@@ -31,7 +31,7 @@ function Client.new()
 
     math.randomseed(os.time())
     --later I should make sure these are assigned by the server instead
-    client.entity = tostring(math.random(99999)) --the id of the player I'll be attached to
+    client.entity = "player"..tostring(math.random(99999)) --the ent_id of the player I'll be attached to
     local dg = string.format("%s %s $", client.entity, 'register')
     client.udp:send(dg)
 
@@ -61,24 +61,6 @@ function Client:update(deltatime)
         local x, y = 0, 0
         
         local dg
-        for key,button in pairs(controls.getMap()) do
-            if love.keyboard.isDown(button) then
-                print("Keydown: "..key)
-                dg = string.format("%s %s %s", entity, 'keydown', key)
-                udp:send(dg)
-                if not button_pressed_map[key] then
-                    print("Pressing key: "..key)
-                    button_pressed_map[key] = true
-                    dg = string.format("%s %s %s", entity, 'keypressed', key)
-                    udp:send(dg)
-                end
-            elseif button_pressed_map[key] then
-                print("Releasing key: "..key)
-                button_pressed_map[key] = false
-                dg = string.format("%s %s %s", entity, 'keyreleased', key)
-                udp:send(dg)
-            end
-        end
 
         local dg = string.format("%s %s %s", entity, 'update', self.level or '$')
         udp:send(dg)
@@ -106,17 +88,17 @@ function Client:update(deltatime)
                 self.player_characters[ent].direction = playerBundle.direction
                 self.player_characters[ent].name = playerBundle.name
                 self.player_characters[ent].costume = playerBundle.costume
-                self.player_characters[ent].position = playerBundle.position
+                self.player_characters[ent]:animation().position = playerBundle.position
 
-                print("id:        "..playerBundle.id)
-                print("level:     "..playerBundle.level)
-                print("x:         "..playerBundle.x)
-                print("y:         "..playerBundle.y)
-                print("state:     "..playerBundle.state)
-                print("direction: "..playerBundle.direction)
-                print("name:      "..playerBundle.name)
-                print("costume:   "..playerBundle.costume)
-                print()
+                -- print("id:        "..playerBundle.id)
+                -- print("x:         "..playerBundle.x)
+                -- print("y:         "..playerBundle.y)
+                -- print("position:  "..playerBundle.position)
+                -- print("state:     "..playerBundle.state)
+                -- print("direction: "..playerBundle.direction)
+                -- print("name:      "..playerBundle.name)
+                -- print("costume:   "..playerBundle.costume)
+                -- print()
             elseif cmd == 'updateObject' then
                 if not self.hasUpdatedObject then print("First object update") 
                     self.hasUpdatedObject = true
@@ -148,7 +130,7 @@ function Client:draw()
     else
         -- for i,node in pairs(self.world[self.level]) do
             -- if not node.foreground then
-                -- self:drawObject(node)
+                -- self:drawobject(node)
             -- end
         -- end
 
@@ -182,10 +164,6 @@ end
 function Client:drawPlayer(plyr)
     --i really don't like how character was called
     -- in the old non-multiplayer code
-    print("foo")
-    for k,v in pairs(self.player_characters) do
-        print(k)
-    end
     
     assert(plyr,"Player must not be nil")
     assert(plyr.id,"Player needs to have an id")
