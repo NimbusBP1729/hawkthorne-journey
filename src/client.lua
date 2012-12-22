@@ -1,6 +1,7 @@
 local socket = require "socket"
 local Character = require 'character'
 local controls = require 'controls'
+local sound = require 'vendor/TEsound'
 
 --draw data
 
@@ -128,6 +129,10 @@ function Client:update(deltatime)
                     Gamestate.currentState():serverLeave()
                     Gamestate.currentState():serverEnter(toLevel)
                 end
+            elseif cmd == 'sound' then
+                print(data)
+                local name = parms:match("^(.*)")
+                sound.playSfx( name )
             else
                 print("unrecognised command:", cmd)
             end

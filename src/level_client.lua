@@ -132,6 +132,7 @@ function Level:serverEnter(name)
     
     self.map = require("maps/" .. self.name)
     self.music = getSoundtrack(self.map)
+    sound.playMusic( self.music )
     
     --the singleton ensures i get the same exact client every single time
     self.client = Client.getSingleton()
