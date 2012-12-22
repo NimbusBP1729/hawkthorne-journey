@@ -119,15 +119,19 @@ end
 --called when player enters the level from a client gamestate
 --i.e. overword or pause screen
 function Level:enter()
-    self:serverEnter()
+    self:serverEnter(self.name)
 end
 
 --called when player enters the level from a server gamestate
 --i.e. "town" or "hallway"
-function Level:serverEnter()
+function Level:serverEnter(name)
+    self.name = name
     print("level name == "..self.name)
     setBackgroundColor(self.map)
     self.background = load_tileset(self.name)
+    
+    self.map = require("maps/" .. self.name)
+    self.music = getSoundtrack(self.map)
     
     --the singleton ensures i get the same exact client every single time
     self.client = Client.getSingleton()
@@ -140,11 +144,15 @@ function Level:serverEnter()
     self.client:sendToServer(string.format("%s %s %s", self.client.entity, 'enterLevel', self.name))
 end
 
+function Level:leave()
+    self:serverLeave()
+end
+
 function Level:serverLeave()
 end
 
 function Level:update(dt)
-    assert(self.client.level == "town","town expected. found:"..self.client.level)
+    --assert(self.client.level == "town","town expected. found:"..self.client.level)
     --self:updatePan(dt)
     self.client:update(dt)
     local player = self.client.players[self.client.entity]
@@ -216,9 +224,6 @@ function Level:floorspaceNodeDraw()
     if not player_drawn then
         self.player:draw()
     end
-end
-
-function Level:leave()
 end
 
 function Level:keyreleased( button )

@@ -11,6 +11,17 @@ Client.singleton = nil
 local t = 0
 local button_pressed_map = {}
 
+local image_cache = {}
+
+local function load_image(name)
+    if image_cache[name] then
+        return image_cache[name]
+    end
+
+    local pic = image_cache[name] or love.graphics.newImage('images/' .. name)
+    return pic
+end
+
 -- love.load, hopefully you are familiar with it from the callbacks tutorial
 --this function should only be called by Client.getSingleton() until I support multiple 
 -- players on a single IP
@@ -23,7 +34,7 @@ function Client.new()
     client.udp:settimeout(0)
     client.udp:setpeername(address, port)
 
-    client.updaterate = 0.05 -- how long to wait, in seconds, before requesting an update
+    client.updaterate = 0.01 -- how long to wait, in seconds, before requesting an update
     
     client.level = 'overworld'
     --client.button_pressed_map = {}
@@ -107,6 +118,16 @@ function Client:update(deltatime)
                 end
                 local node = lube.bin:unpack_node(parms)
                 self.world[node.level][ent] = node
+            elseif cmd == 'stateSwitch' then
+                print(data)
+                local fromLevel,toLevel = parms:match("^(%S*) (.*)")
+                if toLevel == "overworld" then
+                    Gamestate.switch("overworld", nil, ent)
+                else
+                    --will fail if not in level.lua
+                    Gamestate.currentState():serverLeave()
+                    Gamestate.currentState():serverEnter(toLevel)
+                end
             else
                 print("unrecognised command:", cmd)
             end
@@ -132,7 +153,7 @@ function Client:draw()
     else
         -- for i,node in pairs(self.world[self.level]) do
             -- if not node.foreground then
-                -- self:drawobject(node)
+                -- self:drawObject(node)
             -- end
         -- end
 
@@ -155,13 +176,14 @@ end
 
 function Client:drawObject(node)
 
-    local nodeImage = require ('images/'..node.type..'/'..node.name)
-    self.node_frames[node.type][node.name] = self.node_frames[node.type][node.name] 
-         or anim8.newGrid(node.frameWidth, node.frameHeight,
-            nodeImage:getWidth(), nodeImage:getHeight())
-    local frame = self.node_frames[node.type][node.name]
-    love.graphics.draw(nodeImage, frame, node.x, node.y)
-    --love.graphics.drawq(nodeIimage, frame?, node.x, node.y, r, sx, sy, ox, oy)
+    local nodeImage = load_image(node.type..'s/'..node.name..'.png')
+    --either draw as a quad
+    if node.quadType then
+        local quad = load_quad(nodeImage,node.quadType)
+        love.graphics.drawq(nodeImage, quad, node.x, node.y)
+        love.graphics.draw(nodeImage, node.x, node.y)
+    end
+    --love.graphics.drawq(nodeImage, frame?, node.x, node.y, r, sx, sy, ox, oy)
 end
 function Client:drawPlayer(plyr)
     --i really don't like how character was called
