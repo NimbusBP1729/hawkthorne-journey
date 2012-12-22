@@ -46,12 +46,14 @@ function Client.new()
     math.randomseed(os.time())
     --later I should make sure these are assigned by the server instead
     client.entity = "player"..tostring(math.random(99999)) --the ent_id of the player I'll be attached to
-    local dg = string.format("%s %s $", client.entity, 'register')
+    local dg = string.format("%s %s %s %s", client.entity, 'register', Character.name, Character.costume)
     client.udp:send(dg)
 
     client.player_characters = {}
     client.player_characters[client.entity] = Character.new()
     client.player_characters[client.entity]:reset()
+    client.player_characters[client.entity].name = Character.name
+    client.player_characters[client.entity].costume = Character.costume
     client.players[client.entity] = nil
 
     return client
