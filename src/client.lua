@@ -12,6 +12,8 @@ local t = 0
 local button_pressed_map = {}
 
 -- love.load, hopefully you are familiar with it from the callbacks tutorial
+--this function should only be called by Client.getSingleton() until I support multiple 
+-- players on a single IP
 function Client.new()
     local client = {}
     setmetatable(client, Client)

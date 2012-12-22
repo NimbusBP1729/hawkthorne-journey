@@ -116,10 +116,20 @@ end
 function Level:init()
 end
 
---handle client controls
+--called when player enters the level from a client gamestate
+--i.e. overword or pause screen
 function Level:enter()
+    self:serverEnter()
+end
+
+--called when player enters the level from a server gamestate
+--i.e. "town" or "hallway"
+function Level:serverEnter()
     print("level name == "..self.name)
+    setBackgroundColor(self.map)
     self.background = load_tileset(self.name)
+    
+    --the singleton ensures i get the same exact client every single time
     self.client = Client.getSingleton()
     print("from:"..self.client.level)
     self.client.level = self.name
@@ -128,6 +138,9 @@ function Level:enter()
     self.client.world[self.name] = self.client.world[self.name] or {}
     camera.max.x = self.map.width * self.map.tilewidth - window.width
     self.client:sendToServer(string.format("%s %s %s", self.client.entity, 'enterLevel', self.name))
+end
+
+function Level:serverLeave()
 end
 
 function Level:update(dt)
@@ -206,13 +219,6 @@ function Level:floorspaceNodeDraw()
 end
 
 function Level:leave()
-    -- ach:achieve('leave ' .. self.name)
-    for i,node in ipairs(self.nodes) do
-        if node.leave then node:leave() end
-        if node.collide_end then
-            node:collide_end(self.player)
-        end
-    end
 end
 
 function Level:keyreleased( button )
