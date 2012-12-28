@@ -22,8 +22,8 @@ function state:init()
     self.options = {
     --           display name          type    value
         { name = 'FULLSCREEN',         bool  = false         },
-        { name = 'MUSIC VOLUME',       range = { 0, 10, 10 } },
-        { name = 'SFX VOLUME',         range = { 0, 10, 10 } },
+        { name = 'MUSIC VOLUME',       range = { 0, 10, 2 } },
+        { name = 'SFX VOLUME',         range = { 0, 10, 2 } },
         { name = 'SHOW FPS',           bool  = false         }
     }
 

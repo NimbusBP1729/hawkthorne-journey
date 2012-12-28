@@ -2,6 +2,7 @@ local socket = require "socket"
 local Character = require 'character'
 local controls = require 'controls'
 local sound = require 'vendor/TEsound'
+local Gamestate = require 'vendor/Gamestate'
 
 --draw data
 
@@ -13,14 +14,18 @@ local t = 0
 local button_pressed_map = {}
 
 local image_cache = {}
+local quad_cache = {}
 
 local function load_image(name)
     if image_cache[name] then
         return image_cache[name]
     end
 
-    local pic = image_cache[name] or love.graphics.newImage('images/' .. name)
-    return pic
+    local image = love.graphics.newImage('images/' .. name)
+    image:setFilter('nearest', 'nearest')
+    image_cache[name] = image
+
+    return image_cache[name]
 end
 
 -- love.load, hopefully you are familiar with it from the callbacks tutorial
@@ -29,7 +34,6 @@ end
 function Client.new()
     local client = {}
     setmetatable(client, Client)
-    
     local address, port = "localhost", 12345
     client.udp = socket.udp()
     client.udp:settimeout(0)
@@ -49,7 +53,7 @@ function Client.new()
     local dg = string.format("%s %s %s %s", client.entity, 'register', Character.name, Character.costume)
     client.udp:send(dg)
 
-    client.player_characters = {}
+    client.player_characters = client.player_characters or {}
     client.player_characters[client.entity] = Character.new()
     client.player_characters[client.entity]:reset()
     client.player_characters[client.entity].name = Character.name
@@ -61,6 +65,8 @@ end
 
 --returns the same client every time
 function Client.getSingleton()
+    --require("mobdebug").start() 
+    lube.bin:setseperators("?","!")
     Client.singleton = Client.singleton or Client.new()
     return Client.singleton
 end
@@ -87,12 +93,13 @@ function Client:update(deltatime)
     repeat
         data, msg = udp:receive()
         if data then -- you remember, right? that all values in lua evaluate as true, save nil and false?
-            ent, cmd, parms = data:match("^(%S*) (%S*) (.*)")
+            ent, cmd, parms = data:match("^([%a%d]*) ([%a%d]*) (.*)")
             if cmd == 'updatePlayer' then
                 if not self.hasUpdatedPlayer then print("First player update") 
                     self.hasUpdatedPlayer = true
                 end
-                local playerBundle = lube.bin:unpack_node(parms)
+                local obj = parms:match("^(.*)")
+                local playerBundle = lube.bin:unpack_node(obj)
                 --should validate characters and costumes to default as abed.base
                 -- if ent == self.entity then
                     -- self.level = playerBundle.level
@@ -106,24 +113,16 @@ function Client:update(deltatime)
                 self.player_characters[ent].costume = playerBundle.costume
                 self.player_characters[ent]:animation().position = playerBundle.position
 
-                -- print("id:        "..playerBundle.id)
-                -- print("x:         "..playerBundle.x)
-                -- print("y:         "..playerBundle.y)
-                -- print("position:  "..playerBundle.position)
-                -- print("state:     "..playerBundle.state)
-                -- print("direction: "..playerBundle.direction)
-                -- print("name:      "..playerBundle.name)
-                -- print("costume:   "..playerBundle.costume)
-                -- print()
             elseif cmd == 'updateObject' then
+                local obj = parms:match("^(.*)")
                 if not self.hasUpdatedObject then print("First object update") 
                     self.hasUpdatedObject = true
                 end
-                local node = lube.bin:unpack_node(parms)
-                self.world[node.level][ent] = node
+                local node = lube.bin:unpack_node(obj)
+                self.world[node.level][node.id] = node
             elseif cmd == 'stateSwitch' then
                 print(data)
-                local fromLevel,toLevel = parms:match("^(%S*) (.*)")
+                local fromLevel,toLevel = parms:match("^([%a%d]*) ([%a%d]*) (.*)")
                 if toLevel == "overworld" then
                     Gamestate.switch("overworld", nil, ent)
                 else
@@ -133,7 +132,7 @@ function Client:update(deltatime)
                 end
             elseif cmd == 'sound' then
                 print(data)
-                local name = parms:match("^(.*)")
+                local name = parms:match("^([%a%d]*)")
                 sound.playSfx( name )
             else
                 print("unrecognised command:", cmd)
@@ -158,11 +157,11 @@ function Client:draw()
     if self.player and self.player.footprint then
         self:floorspaceNodeDraw()
     else
-        -- for i,node in pairs(self.world[self.level]) do
-            -- if not node.foreground then
-                -- self:drawObject(node)
-            -- end
-        -- end
+        for i,node in pairs(self.world[self.level]) do
+            if not node.foreground then
+                self:drawObject(node)
+            end
+        end
 
         for id,player in pairs(self.players) do
             if player.level == self.level then
@@ -170,25 +169,40 @@ function Client:draw()
             end
         end
 
-        -- for i,node in pairs(self.world[self.level]) do
-            -- if node.foreground then
-                -- self:drawObject(node)
-            -- end
-        -- end
+        for i,node in pairs(self.world[self.level]) do
+            if node.foreground then
+                self:drawObject(node)
+            end
+        end
     end
     -- self.player.inventory:draw(self.player.position)
     -- self.hud:draw( self.player )
     -- ach:draw()end
 end
+local function load_quad(node_image,quad_type)
+    if not quad_cache[node_image] then
+        quad_cache[node_image] = {}
+    end
+
+    if quad_cache[node_image][quad_type] then
+        return quad_cache[node_image][quad_type]
+    end
+    
+   
+    if quad_type == 'material' then
+        local quad = love.graphics.newQuad(0,node_image:getHeight()-15,15,15,node_image:getWidth(),node_image:getHeight(),nod)
+        quad_cache[node_image][quad_type] = quad
+    end
+    return quad_cache[node_image][quad_type]
+end
 
 function Client:drawObject(node)
-
+    if not node.name or not node.type then return end
     local nodeImage = load_image(node.type..'s/'..node.name..'.png')
     --either draw as a quad
-    if node.quadType then
-        local quad = load_quad(nodeImage,node.quadType)
+    if node.type then
+        local quad = load_quad(nodeImage,node.type)
         love.graphics.drawq(nodeImage, quad, node.x, node.y)
-        love.graphics.draw(nodeImage, node.x, node.y)
     end
     --love.graphics.drawq(nodeImage, frame?, node.x, node.y, r, sx, sy, ox, oy)
 end

@@ -127,10 +127,10 @@ end
 function Level:serverEnter(name)
     self.name = name
     print("level name == "..self.name)
-    setBackgroundColor(self.map)
+    self.map = require("maps/" .. self.name)
+    --setBackgroundColor(self.map)
     self.background = load_tileset(self.name)
     
-    self.map = require("maps/" .. self.name)
     self.music = getSoundtrack(self.map)
     sound.playMusic( self.music )
     
