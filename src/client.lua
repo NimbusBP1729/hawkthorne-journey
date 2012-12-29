@@ -132,7 +132,7 @@ function Client:update(deltatime)
                 end
             elseif cmd == 'sound' then
                 print(data)
-                local name = parms:match("^([%a%d]*)")
+                local name = parms:match("^([%a%d_]*)")
                 sound.playSfx( name )
             else
                 print("unrecognised command:", cmd)
