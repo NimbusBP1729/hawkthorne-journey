@@ -57,7 +57,7 @@ function GS.load(name)
 
   if love.filesystem.exists("maps/" .. name .. ".lua") then
     -- ugly hack to get around circular import
-    states[name] = GS.Level.new(name)
+    states[name] = states[name] or GS.Level.new(name)
   else
     states[name] = require(name)
   end

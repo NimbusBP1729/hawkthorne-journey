@@ -105,13 +105,13 @@ function Client:update(deltatime)
                     -- self.level = playerBundle.level
                 -- end
                 --playerBundle.id = ent
-                self.players[ent] = playerBundle
-                self.player_characters[ent] = self.player_characters[ent] or Character.new()
-                self.player_characters[ent].state = playerBundle.state
-                self.player_characters[ent].direction = playerBundle.direction
-                self.player_characters[ent].name = playerBundle.name
-                self.player_characters[ent].costume = playerBundle.costume
-                self.player_characters[ent]:animation().position = playerBundle.position
+                self.players[playerBundle.id] = playerBundle
+                self.player_characters[playerBundle.id] = self.player_characters[playerBundle.id] or Character.new()
+                self.player_characters[playerBundle.id].state = playerBundle.state
+                self.player_characters[playerBundle.id].direction = playerBundle.direction
+                self.player_characters[playerBundle.id].name = playerBundle.name
+                self.player_characters[playerBundle.id].costume = playerBundle.costume
+                self.player_characters[playerBundle.id]:animation().position = playerBundle.position
 
             elseif cmd == 'updateObject' then
                 local obj = parms:match("^(.*)")
@@ -122,13 +122,12 @@ function Client:update(deltatime)
                 self.world[node.level][node.id] = node
             elseif cmd == 'stateSwitch' then
                 print(data)
-                local fromLevel,toLevel = parms:match("^([%a%d]*) ([%a%d]*) (.*)")
+                local fromLevel,toLevel = parms:match("^([%a%d]*) (.*)")
                 if toLevel == "overworld" then
                     Gamestate.switch("overworld", nil, ent)
                 else
                     --will fail if not in level.lua
-                    Gamestate.currentState():serverLeave()
-                    Gamestate.currentState():serverEnter(toLevel)
+                    Gamestate.switch(toLevel,nil,ent)
                 end
             elseif cmd == 'sound' then
                 print(data)

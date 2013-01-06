@@ -145,6 +145,7 @@ function Level:serverEnter(name)
     self.client:sendToServer(string.format("%s %s %s", self.client.entity, 'enterLevel', self.name))
 end
 
+--not implemented
 function Level:leave()
     self:serverLeave()
 end
