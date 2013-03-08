@@ -591,6 +591,11 @@
   <object name="leaf" type="material" x="3552" y="168" width="24" height="24"/>
   <object name="leaf" type="material" x="3792" y="168" width="24" height="24"/>
   <object name="rock" type="material" x="4104" y="168" width="24" height="24"/>
+  <object name="foresttop" type="door" x="4320" y="144" width="24" height="48">
+   <properties>
+    <property name="checkpoint" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="movement" width="320" height="40">
   <object name="forest_1" x="3220" y="875">

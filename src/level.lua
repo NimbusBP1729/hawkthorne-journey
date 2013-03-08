@@ -359,14 +359,15 @@ function Level:update(dt)
             if self.player.lives <= 0 then
                 Gamestate.switch("gameover")
             else
-                local respawnLevel = Gamestate.get(self.spawn)
+                local respawnLevel = Gamestate.get(self.player.respawnLevel)
                 --usually send the character to studyroom and reset the overworld
                 -- otherwise just send the character to the respawn level and keep his
                 -- overworld progress
                 if respawnLevel == Gamestate.get('studyroom') then
                     Gamestate.get('overworld'):reset()
                 end
-                Gamestate.switch(respawnLevel)
+                print(self.player.respawnLevel,self.player.respawnDoor)
+                Gamestate.switch(respawnLevel,self.player.respawnDoor)
             end
         end)
     end
@@ -537,7 +538,7 @@ function Level:keypressed( button )
         return
     end
 
-    for i,node in pairs(self.nodes) do
+    for node,node in pairs(self.nodes) do
         if node.player_touched and node.keypressed then
             if node:keypressed( button, self.player) then
               return true
