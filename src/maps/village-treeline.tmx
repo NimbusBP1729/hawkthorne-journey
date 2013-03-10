@@ -200,8 +200,8 @@
    </properties>
   </object>
   <object name="stick" type="material" x="373" y="1833" width="23" height="27"/>
-  <object name="leaf" type="material" x="604" y="2312"/>
-  <object name="leaf" type="material" x="451" y="1525"/>
+  <object name="leaf" type="material" x="604" y="2312" width="24" height="24"/>
+  <object name="leaf" type="material" x="451" y="1525" width="24" height="24"/>
   <object type="enemy" x="611" y="1717">
    <properties>
     <property name="enemytype" value="acorn"/>
@@ -237,151 +237,151 @@
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object name="stick" type="material" x="604" y="1498"/>
-  <object name="leaf" type="material" x="905" y="1955"/>
-  <object name="leaf" type="material" x="1187" y="2029"/>
-  <object name="stick" type="material" x="1188" y="2073"/>
-  <object name="leaf" type="material" x="1120" y="1551"/>
-  <object name="stick" type="material" x="1169" y="1780"/>
-  <object name="leaf" type="material" x="1163" y="1039"/>
-  <object name="stick" type="material" x="1282" y="805"/>
-  <object type="enemy" x="930" y="1092">
+  <object name="stick" type="material" x="604" y="1498" width="24" height="24"/>
+  <object name="leaf" type="material" x="905" y="1955" width="24" height="24"/>
+  <object name="leaf" type="material" x="1187" y="2029" width="24" height="24"/>
+  <object name="stick" type="material" x="1188" y="2073" width="24" height="24"/>
+  <object name="leaf" type="material" x="1120" y="1551" width="24" height="24"/>
+  <object name="stick" type="material" x="1169" y="1780" width="24" height="24"/>
+  <object name="leaf" type="material" x="1163" y="1039" width="24" height="24"/>
+  <object name="stick" type="material" x="1282" y="805" width="24" height="24"/>
+  <object type="enemy" x="930" y="1092" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="965" y="1091">
+  <object type="enemy" x="965" y="1091" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object name="leaf" type="material" x="943" y="488"/>
-  <object name="stick" type="material" x="674" y="786"/>
-  <object type="enemy" x="234" y="972">
+  <object name="leaf" type="material" x="943" y="488" width="24" height="24"/>
+  <object name="stick" type="material" x="674" y="786" width="24" height="24"/>
+  <object type="enemy" x="234" y="972" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="282" y="973">
+  <object type="enemy" x="282" y="973" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="333" y="973">
+  <object type="enemy" x="333" y="973" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="385" y="972">
+  <object type="enemy" x="385" y="972" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="434" y="973">
+  <object type="enemy" x="434" y="973" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="485" y="973">
+  <object type="enemy" x="485" y="973" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="182" y="972">
+  <object type="enemy" x="182" y="972" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object name="leaf" type="material" x="358" y="866"/>
-  <object type="enemy" x="630" y="469">
+  <object name="leaf" type="material" x="358" y="866" width="24" height="24"/>
+  <object type="enemy" x="630" y="469" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object name="stick" type="material" x="802" y="460"/>
-  <object name="leaf" type="material" x="594" y="372"/>
-  <object type="enemy" x="1200" y="561">
+  <object name="stick" type="material" x="802" y="460" width="24" height="24"/>
+  <object name="leaf" type="material" x="594" y="372" width="24" height="24"/>
+  <object type="enemy" x="1200" y="561" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="1260" y="560">
+  <object type="enemy" x="1260" y="560" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="1299" y="563">
+  <object type="enemy" x="1299" y="563" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object name="leaf" type="material" x="1271" y="428"/>
-  <object name="rock" type="material" x="520" y="2195"/>
-  <object name="rock" type="material" x="195" y="1812"/>
-  <object name="rock" type="material" x="988" y="2124"/>
-  <object name="rock" type="material" x="772" y="1716"/>
-  <object name="rock" type="material" x="1289" y="1044"/>
-  <object name="rock" type="material" x="675" y="827"/>
-  <object name="rock" type="material" x="1231" y="562"/>
-  <object type="enemy" x="693" y="108">
+  <object name="leaf" type="material" x="1271" y="428" width="24" height="24"/>
+  <object name="rock" type="material" x="520" y="2195" width="24" height="24"/>
+  <object name="rock" type="material" x="195" y="1812" width="24" height="24"/>
+  <object name="rock" type="material" x="988" y="2124" width="24" height="24"/>
+  <object name="rock" type="material" x="772" y="1716" width="24" height="24"/>
+  <object name="rock" type="material" x="1289" y="1044" width="24" height="24"/>
+  <object name="rock" type="material" x="675" y="827" width="24" height="24"/>
+  <object name="rock" type="material" x="1231" y="562" width="24" height="24"/>
+  <object type="enemy" x="693" y="108" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="762" y="108">
+  <object type="enemy" x="762" y="108" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="829" y="109">
+  <object type="enemy" x="829" y="109" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="886" y="108">
+  <object type="enemy" x="886" y="108" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="374" y="108">
+  <object type="enemy" x="374" y="108" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="415" y="109">
+  <object type="enemy" x="415" y="109" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="442" y="109">
+  <object type="enemy" x="442" y="109" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="551" y="109">
+  <object type="enemy" x="551" y="109" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="1040" y="108">
+  <object type="enemy" x="1040" y="108" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="1147" y="109">
+  <object type="enemy" x="1147" y="109" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object type="enemy" x="1217" y="108">
+  <object type="enemy" x="1217" y="108" width="24" height="24">
    <properties>
     <property name="enemytype" value="acorn"/>
    </properties>
   </object>
-  <object name="leaf" type="material" x="1090" y="67"/>
-  <object name="stick" type="material" x="1180" y="59"/>
-  <object name="rock" type="material" x="1190" y="2194"/>
-  <object name="rock" type="material" x="1178" y="1861"/>
+  <object name="leaf" type="material" x="1090" y="67" width="24" height="24"/>
+  <object name="stick" type="material" x="1180" y="59" width="24" height="24"/>
+  <object name="rock" type="material" x="1190" y="2194" width="24" height="24"/>
+  <object name="rock" type="material" x="1178" y="1861" width="24" height="24"/>
  </objectgroup>
  <objectgroup name="block" width="56" height="100">
   <object x="3" y="2328" width="79" height="39"/>
