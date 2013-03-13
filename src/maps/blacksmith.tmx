@@ -13,7 +13,7 @@
  </layer>
  <layer name="foreground" width="24" height="14">
   <data encoding="base64" compression="zlib">
-   eJyzYaAdsGFgaLChkdnGSOYD8QJ0HMLA4ECJ2fYMtHE/zGwGGpiPbDax5gPlHxCDkcLkALr5QJyAjkOIcK87EHMBMTfULAYc5luhiWMDnkDsBcENnlCzGIFYDIjFCZjvRsB8PaC6UCAdBsEgNtgsXiQ1xLrfGhg2+PyBD1gTcD8lZiPbgW4+VJxis9HtgJlPTbOR7UBKn0SlcTJwAwCB2FB1
+   eJyzYaAdsGFgaLChkdnGSOYD8QJ0HMLA4ECJ2fYMtHE/zGwGGpiPbDax5gPlHxCDkcLkALr5QJyAjkOIcK87EPNDMcgsBhzm86GJYwOeQOwFwQ2eULMYqWS+HlBdKJAOg2AQG2wWL5IaYs23BoYNPn/gA9YEzKfEbGQ70M2HilNsNrodMPOpaTayHUjpk6g0TgZuAADiCk+n
   </data>
  </layer>
  <layer name="accent" width="24" height="14">
@@ -66,11 +66,6 @@
     <property name="primary" value="true"/>
    </properties>
    <polygon points="0,0 64,-63 133,-63 133,-56 181,-56 181,-96 432,-96 528,0"/>
-  </object>
-  <object name="blacksmith" x="212" y="233" width="42" height="3">
-   <properties>
-    <property name="blocks" value="true"/>
-   </properties>
   </object>
   <object name="hammer" x="258" y="234" width="17" height="8">
    <properties>
@@ -186,5 +181,6 @@
     <property name="width" value="63"/>
    </properties>
   </object>
+  <object name="blacksmith" type="activenpc" x="192" y="168" width="48" height="72"/>
  </objectgroup>
 </map>
