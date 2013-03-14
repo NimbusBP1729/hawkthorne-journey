@@ -45,7 +45,7 @@
    </properties>
    <polygon points="6,7 13,13 -4,13 -10,7"/>
   </object>
-  <object x="240" y="239" width="96" height="3">
+  <object x="240" y="239" width="95" height="7">
    <properties>
     <property name="blocks" value="true"/>
    </properties>
@@ -66,11 +66,6 @@
     <property name="primary" value="true"/>
    </properties>
    <polygon points="0,0 64,-63 133,-63 133,-56 181,-56 181,-96 432,-96 528,0"/>
-  </object>
-  <object name="hammer" x="258" y="234" width="17" height="8">
-   <properties>
-    <property name="blocks" value="true"/>
-   </properties>
   </object>
  </objectgroup>
  <objectgroup name="nodes" width="24" height="14">
@@ -112,10 +107,10 @@
     <property name="width" value="95"/>
    </properties>
   </object>
-  <object type="sprite" x="239" y="217" width="96" height="24">
+  <object type="sprite" x="239" y="217" width="96" height="22">
    <properties>
     <property name="depth" value="-6"/>
-    <property name="height" value="17"/>
+    <property name="height" value="8"/>
     <property name="sheet" value="images/anvil_plus.png"/>
     <property name="width" value="96"/>
    </properties>
@@ -181,6 +176,11 @@
     <property name="width" value="63"/>
    </properties>
   </object>
-  <object name="blacksmith" type="activenpc" x="192" y="168" width="48" height="72"/>
+  <object name="blacksmith" type="activenpc" x="188" y="168" width="49" height="64"/>
+  <object name="sword" type="weapon" x="228" y="195" width="43" height="54">
+   <properties>
+    <property name="rotation" value="1.570796"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

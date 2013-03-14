@@ -40,6 +40,7 @@ function Weapon.new(node, collider, plyr, weaponItem)
     --position that the hand should be placed with respect to any frame
     weapon.hand_x = props.hand_x
     weapon.hand_y = props.hand_y
+    weapon.rotation = node.properties.rotation or 0
 
     --setting up the sheet
     local colAmt = props.frameAmt
@@ -111,10 +112,15 @@ function Weapon:draw()
             scalex = -1
         end
     end
-
+ 
     local animation = self.animation
-    if not animation then return end
-    animation:draw(self.sheet, math.floor(self.position.x), self.position.y, 0, scalex, 1)
+    if self.rotation == 0 or self.player then
+        if not animation then return end
+        animation:draw(self.sheet, math.floor(self.position.x), self.position.y, 0, scalex, 1)
+    else
+        animation:draw( self.sheet,  math.floor(self.position.x)+self.bbox_offset_x, self.position.y+self.bbox_offset_y, self.rotation, 1, 1, self.hand_x, self.hand_y)
+    end
+
 end
 
 ---
