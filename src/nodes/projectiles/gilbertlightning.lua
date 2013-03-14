@@ -4,7 +4,7 @@ return{
     type = 'projectile',
     bounceFactor = -1,
     friction = 1, --0.01 * game.step,
-    width = 120,
+    width = 1391,
     height = 90 ,
     frameWidth = 120,
     frameHeight = 90,

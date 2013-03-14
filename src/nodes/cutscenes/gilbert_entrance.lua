@@ -59,12 +59,18 @@ function Script.new(scene,player,level)
         -- make buddy do his level attavk
         scene:actionCharacter("attack",scene.nodes.buddy)
         -- generate a lightning bolt
-        local node = require('nodes/projectiles/gilbertlightning')
-        node.x = scene.nodes.buddy.position.x
-        node.y = scene.nodes.buddy.position.y
+        local node = {
+            type = 'projectile',
+            name = 'gilbertlightning',
+            x = scene.nodes.buddy.position.x,
+            y = scene.nodes.buddy.position.y,
+            width = 24,
+            height = 24,
+            properties = {},
+        }
         local lightning = Projectile.new(node, level.collider)
         lightning:throw(scene.nodes.buddy)
-        table.insert(level.nodes, lightning)
+        level:addNode(lightning)
     end},
 
     {line = "Troy: he's throwing lightning",
@@ -121,15 +127,21 @@ function Script.new(scene,player,level)
                           }
                         }
         local sprite = Sprite.new(node, collider)
-        table.insert(level.nodes, sprite)
+        level:addNode(sprite)
 
         --generate a rainbowbeam
-        local lightNode = require('nodes/projectiles/rainbowbeam')
-        lightNode.x = scene.nodes.buddy.position.x
-        lightNode.y = scene.nodes.buddy.position.y
+        local lightNode = {
+            type = 'projectile',
+            name = 'gilbertlightning',
+            x = scene.nodes.buddy.position.x,
+            y = scene.nodes.buddy.position.y,
+            width = 24,
+            height = 24,
+            properties = {},
+        }
         local lightning = Projectile.new(lightNode, level.collider)
         lightning:throw(scene.nodes.buddy)
-        table.insert(level.nodes, lightning)
+        level:addNode(lightning)
     end},
 
     {line = "Jeff: I thought I could count on Britta to not screw up drinking",
@@ -149,7 +161,7 @@ function Script.new(scene,player,level)
     end,
     action = function()
         --shitty removal since no one wants  to use the other way
-        table.remove(level.nodes,#level.nodes-1)
+        --table.remove(level.nodes,#level.nodes-1)
         scene.nodes.buddy.character.state = 'holdjump'
     end},
 
