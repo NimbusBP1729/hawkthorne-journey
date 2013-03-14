@@ -70,7 +70,7 @@ function Script.new(scene,player,level)
         }
         local lightning = Projectile.new(node, level.collider)
         lightning:throw(scene.nodes.buddy)
-        table.insert(level.nodes, lightning)
+        level:addNode(lightning)
     end},
 
     {line = "Troy: he's throwing lightning",
@@ -127,7 +127,7 @@ function Script.new(scene,player,level)
                           }
                         }
         local sprite = Sprite.new(node, collider)
-        table.insert(level.nodes, sprite)
+        level:addNode(sprite)
 
         --generate a rainbowbeam
         local lightNode = {
@@ -141,7 +141,7 @@ function Script.new(scene,player,level)
         }
         local lightning = Projectile.new(lightNode, level.collider)
         lightning:throw(scene.nodes.buddy)
-        table.insert(level.nodes, lightning)
+        level:addNode(lightning)
     end},
 
     {line = "Jeff: I thought I could count on Britta to not screw up drinking",
@@ -161,7 +161,7 @@ function Script.new(scene,player,level)
     end,
     action = function()
         --shitty removal since no one wants  to use the other way
-        table.remove(level.nodes,#level.nodes-1)
+        --table.remove(level.nodes,#level.nodes-1)
         scene.nodes.buddy.character.state = 'holdjump'
     end},
 

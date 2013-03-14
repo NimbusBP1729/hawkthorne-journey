@@ -209,6 +209,8 @@ end
 function Scene:teleportCharacter(x,y,char)
     x = x or char.position.x
     y = y or char.position.y
+    self:keyreleasedCharacter('RIGHT',char)
+    self:keyreleasedCharacter('LEFT',char)
     char.position.x = math.abs(x-char.position.x) < 40 and char.position.x  or x
     char.position.y = math.abs(y-char.position.y) < 40 and char.position.y  or y
     char.position.x = x
