@@ -315,7 +315,7 @@
     <property name="enemytype" value="manicorn"/>
    </properties>
   </object>
-  <object name="cloud_1" type="movingplatform" x="2280" y="864" width="48" height="24">
+  <object name="cloud_1" type="movingplatform" x="2280" y="864" width="59" height="24">
    <properties>
     <property name="line" value="cloud_1"/>
     <property name="offset_x" value="-6"/>
