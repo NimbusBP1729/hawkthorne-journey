@@ -192,7 +192,10 @@ function Level.new(name)
             v.objectlayer = 'nodes'
             local layer = level.map.objectgroups[v.properties.cutscene]
             node = NodeClass.new( v, level.collider, layer, level )
+<<<<<<< HEAD
             node.drawHeight = v.height
+=======
+>>>>>>> cutscene_merge
             level:addNode(node)
         elseif NodeClass then
             v.objectlayer = 'nodes'
@@ -607,15 +610,19 @@ end
 
 function Level:addNode(node)
     if node.containerLevel then
-        node.containerLevel.nodes[node] = nil
+        node.containerLevel:removeNode(node)
     end
     node.containerLevel = self
-    self.nodes[node] = node
+    table.insert(self.nodes, node)
 end
 
 function Level:removeNode(node)
     node.containerLevel = nil
-    self.nodes[node] = nil
+    for k,v in pairs(self.nodes) do
+        if v == node then
+            table.remove(self.nodes,k)
+        end
+    end
 end
 
 function Level:hasNode(node)

@@ -1,5 +1,10 @@
 local store = require 'hawk/store'
 
+<<<<<<< HEAD
+=======
+local db = store.load('controls-1')
+
+>>>>>>> cutscene_merge
 local Controls = {}
 Controls.__index = Controls
 
@@ -10,9 +15,12 @@ function Controls.new()
     return controls
 end
 
+<<<<<<< HEAD
 local db = store.load('controls-1')
 local controls = {}
 
+=======
+>>>>>>> cutscene_merge
 local buttonmap = db:get('buttonmap', {
     UP = 'up',
     DOWN = 'down',
@@ -87,7 +95,7 @@ function Controls:newButton(key, button)
 
     if self:keyIsNotInUse(key) then
         buttonmap[button] = key
-        keymap = self:ggetKeymap()
+        keymap = self:getKeymap()
         db:set('buttonmap', buttonmap)
         db:flush()
         return true

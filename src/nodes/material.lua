@@ -4,7 +4,6 @@
 -- Created by HazardousPeach
 -----------------------------------------------
 
-local controls = require 'controls'
 local Item = require 'items/item'
 
 local Material = {}

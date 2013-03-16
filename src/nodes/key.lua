@@ -3,7 +3,6 @@
 -- Represents a key when it is in the world
 -----------------------------------------------
 
-local controls = require 'controls'
 local Item = require 'items/item'
 local Prompt = require 'prompt'
 
