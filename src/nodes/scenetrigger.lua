@@ -42,6 +42,7 @@ function SceneTrigger.new(node, collider, layer, level)
   if scene.isScript then
     scene = require('nodes/scene')
   end
+  assert(level)
   trigger.scene = scene.new(node, collider, layer, level)
 
   -- Figure out how to "mix this in"

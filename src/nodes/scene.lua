@@ -38,8 +38,11 @@ end
 function Scene.new(node, collider, layer, level)
   local scene = {}
   setmetatable(scene, Scene)
+  assert(level)
+  assert(level.isLevel)
   scene.x = node.x
   scene.y = node.y
+  scene.level = level
   scene.finished = false
   
   scene.nodes = nametable(layer, collider)

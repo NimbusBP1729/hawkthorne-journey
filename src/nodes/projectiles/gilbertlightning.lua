@@ -26,8 +26,7 @@ return{
         finish = {'once', {'5,1'}, 1},
     },
     collide = function(node, dt, mtv_x, mtv_y,projectile)
-        if not node.isPlayer then return end
-        if projectile.thrown then
+        if node.isPlayer then
             node:die(projectile.damage)
         end
     end,

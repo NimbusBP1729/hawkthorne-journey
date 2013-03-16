@@ -59,18 +59,32 @@ function Script.new(scene,player,level)
         -- make buddy do his level attavk
         scene:actionCharacter("attack",scene.nodes.buddy)
         -- generate a lightning bolt
-        local node = {
-            type = 'projectile',
-            name = 'gilbertlightning',
-            x = scene.nodes.buddy.position.x,
-            y = scene.nodes.buddy.position.y,
-            width = 24,
-            height = 24,
-            properties = {},
-        }
-        local lightning = Projectile.new(node, level.collider)
-        lightning:throw(scene.nodes.buddy)
-        level:addNode(lightning)
+        --FIXME: lightning nodes should be using nodeA format, not nodeB
+        local tileWidth, tileHeight = 24, 24
+        -- local nodeA = {
+            -- type = 'projectile',
+            -- name = 'gilbertlightning',
+            -- x = scene.nodes.buddy.position.x,
+            -- y = scene.nodes.buddy.position.y,
+            -- width = 120,
+            -- height = 90,
+            -- properties = {},
+        -- }
+        nodeB = require( 'nodes/projectiles/gilbertlightning' )
+        nodeB.x = scene.nodes.buddy.position.x
+        nodeB.y = scene.nodes.buddy.position.y
+        nodeB.properties = nodeB.properties or {}
+            
+        -- local lightningA = Projectile.new(nodeA, level.collider)
+        -- level:addNode(lightningA)
+        -- inspect(lightningA,2)
+
+
+        local lightningB = Projectile.new(nodeB, level.collider)
+        level:addNode(lightningB)
+        inspect(lightningB,2)
+
+        lightningB:throw(scene.nodes.buddy)
     end},
 
     {line = "Troy: he's throwing lightning",
@@ -126,19 +140,24 @@ function Script.new(scene,player,level)
                             height = 24, width = 24,
                           }
                         }
-        local sprite = Sprite.new(node, collider)
-        level:addNode(sprite)
+        scene.potionSprite = Sprite.new(node, collider)
+        level:addNode(scene.potionSprite)
 
         --generate a rainbowbeam
-        local lightNode = {
-            type = 'projectile',
-            name = 'gilbertlightning',
-            x = scene.nodes.buddy.position.x,
-            y = scene.nodes.buddy.position.y,
-            width = 24,
-            height = 24,
-            properties = {},
-        }
+        -- local lightNode = {
+            -- type = 'projectile',
+            -- name = 'gilbertlightning',
+            -- x = scene.nodes.buddy.position.x,
+            -- y = scene.nodes.buddy.position.y,
+            -- width = 24,
+            -- height = 24,
+            -- properties = {},
+        -- }
+        local lightNode =require('nodes/projectiles/rainbowbeam')
+        lightNode.x = scene.nodes.buddy.position.x
+        lightNode.y = scene.nodes.buddy.position.y
+        lightNode.properties = {}
+
         local lightning = Projectile.new(lightNode, level.collider)
         lightning:throw(scene.nodes.buddy)
         level:addNode(lightning)
@@ -170,6 +189,8 @@ function Script.new(scene,player,level)
         scene:trackCharacter("jeff")
         scene.nodes.buddy.invulnerable = false
         scene:actionCharacter("die",scene.nodes.buddy)
+        level:removeNode(scene.potionSprite)
+
     end},
 
     {line = "Jeff: Here's hoping we can count on her to screw up making potions",

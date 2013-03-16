@@ -108,7 +108,7 @@
    </properties>
   </object>
   <object name="next" type="door" x="1848" y="216" width="24" height="48"/>
-  <object type="npc" x="840" y="216" width="48" height="48">
+  <object type="npc" x="1282" y="214" width="48" height="48">
    <properties>
     <property name="person" value="townsperson"/>
    </properties>
