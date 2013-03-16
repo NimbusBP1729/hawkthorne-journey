@@ -1,4 +1,4 @@
-.PHONY: love osx clean contributors win32 win64 maps tweet post run
+.PHONY: love osx clean contributors win32 win64 maps tweet post run release
 
 UNAME := $(shell uname)
 
@@ -45,7 +45,7 @@ src/maps/%.lua: src/maps/%.tmx bin/tmx2lua
 
 bin/tmx2lua:
 	mkdir -p bin
-	$(wget) https://github.com/downloads/kyleconroy/tmx2lua/$(TMXTAR)
+	$(wget) http://hawkthorne.github.com/tmx2lua/downloads/$(TMXTAR)
 	tar -xvf $(TMXTAR)
 	rm -f $(TMXTAR)
 	mv tmx2lua bin
@@ -101,7 +101,7 @@ win32: love
 	mv hawkthorne-win-x86.zip build
 
 win32/love.exe:
-	$(wget) https://github.com/downloads/kyleconroy/hawkthorne-journey/windows-build-files.zip
+	$(wget) https://bitbucket.org/kyleconroy/love/downloads/windows-build-files.zip
 	unzip -q windows-build-files.zip
 	rm -f windows-build-files.zip
 
@@ -151,6 +151,7 @@ release: release.md
 	git push --tags
 
 release.md: venv
+	git fetch --tags
 	venv/bin/python scripts/release_markdown.py $(current_version) master $@
 
 social: venv notes post

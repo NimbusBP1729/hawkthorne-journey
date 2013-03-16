@@ -1,286 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="150" height="18" tilewidth="24" tileheight="24">
+<map version="1.0" orientation="orthogonal" width="60" height="24" tilewidth="24" tileheight="24">
  <properties>
-  <property name="offset" value="4"/>
-  <property name="soundtrack" value="daylight"/>
-  <property name="title" value="Gay Island 2"/>
+  <property name="offset" value="10"/>
+  <property name="soundtrack" value="mamma-mia"/>
  </properties>
  <tileset firstgid="1" name="gay-island" tilewidth="24" tileheight="24">
-  <image source="../images/tilesets/gay-island.png" width="624" height="816"/>
+  <image source="../images/tilesets/gay-island.png" width="624" height="936"/>
  </tileset>
- <layer name="sky" width="150" height="18">
+ <layer name="background" width="60" height="24">
   <properties>
-   <property name="parallax" value="0"/>
+   <property name="parallax" value="0.1"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzt0kERgEAQxMCdBzrQgQ50oAMVpwMd6MAEKvKadFUcZM3MAlI34im/kl+J4Fci+JUIfiWCX4nwQKnbC6VuH5S6bWFStz1M6naESd3OMKnbFSZ1u8Okbn4lgl+J8ANUZtBR
+   eJztw1ENABAAQEE2OeSQQw45pJDDtwhySCGBAt677XoMq9ufbLAVtsBm2AR7AuuGnbDDtm3bth8vdqJHsg==
   </data>
  </layer>
- <layer name="little_rainbows" width="150" height="18">
-  <properties>
-   <property name="parallax" value="0.3"/>
-  </properties>
-  <data encoding="base64" compression="zlib">
-   eJzt1jkOwkAQRNGWjwFmu4PZ7wDYwH04On9SIoKRPGr9J1U+06qgIqT6ll18FmTudyiXPZ0a7JUqu9Opm72SJOlv7Pyy96Pv5n6JMmHnl70fB3ulitj5Ze/Hw16pQSt6uSYbsiW7ZD3N/r9WHbnziZzJhVyT3T37/1o1cueJPMmLvJPdPfv/JEmSJEn69QXmmQ0h
-  </data>
- </layer>
- <layer name="little_penis" width="150" height="18">
+ <layer name="clouds2" width="60" height="24">
   <properties>
    <property name="parallax" value="0.3"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztl2EOgjAMRsfVBD2FoqdAj2/9taVxYFgbobyXLFmTjaz7XgikBAAAc5y7lC7dv08BXrTmu3b/XfY88Cosrfmu3Y9XscEr8ACvwAOd70nmvYzhx8zxCr6h873K/CZjrGSuv9Pxqs6R/3l1vpPMnzJelfvQ6y29ipZD2WO03pbYklfR3mFlP6297c1LvPLD0ivruyk99XAWr/zYsleWZ1t6/ge8sgOvco1XduBVrvHKDrzKNV7ZgVe5xis7juzVG9anXHE=
+   eJzt1skJACAMBMDYjlf/5SmWoKifGdh/WFhIBLtaiujp9xXAqTx3XGaqPS/6eEvfcJd/DQAA/houtgJH
   </data>
  </layer>
- <layer name="clouds2" width="150" height="18">
+ <layer name="clouds" width="60" height="24">
   <properties>
-   <property name="parallax" value="0.5"/>
+   <property name="parallax" value="0.4"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzt2MsJgDAMANC6jr811DHU/XewF9GDXlRaxfcg1zSUhIaGAHBNU4TQFrmrOPbm2uDLUsxWGfNXMWozDK9mVlnl6oU756aquYv5+10M5oUHjLGPpl3M+gouO3sL7DkbdwGQh/9tAABSsXvC/yxrWgkj
+   eJzt00EOgCAMRNFyOvEY4EU4uk3YsTQjFP0vmS0pTDED9I5kloecaf0sb81Q/Nw65Fp03yKcYcbbRaJ8O2AW/ume1L1F3wN1b1/Zg6e845Z7Qvat5h232vPLvgEAAHZ3A0CSFi0=
   </data>
  </layer>
- <layer name="big_penis" width="150" height="18">
+ <layer name="ocean" width="60" height="24">
   <properties>
    <property name="parallax" value="0.6"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztmEEKAyEMRZ2rtT1GO8doe/xmmU0wkeC8wn8gzEImz/gRcQwhxD9wO8a423gcV5uILgh7+rTaLxsnPFeEXnWwYx2EPX1b7Y+NL3y/CL3qYMc6CHtKcMhA9ayePzvWQegVwSED1bN6/ihXLKieVa9ofuXcm80l9IrgkIHq2ZWryrk3m0voFcEhA9WzK1eV/8zmEnpFcMhA9VSuuA4ZqJ7KFdchwt9PvSfpjVS54jpE+Pup9yS9kSpXXIcI7xZ9X41yxXWIUK7WahL6Q3CIUK7WahL6Q3CIUK7WahL6Q3CI2JWrHwrTlq8=
+   eJztw1EJACAQBbBn/xLm8MsQ5jDDYQvhNlgCAADAc0d2p6fZ1exU1Q8WeBFgFg==
   </data>
  </layer>
- <layer name="clouds" width="150" height="18">
+ <layer name="bg_penises" width="60" height="24">
   <properties>
-   <property name="parallax" value="0.7"/>
+   <property name="parallax" value="0.86"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzt2M0NwjAMhuFkBmAJ/tYAxihdJGsDF75LpSoqEoJYduB9JEs9JWmdKHZTAnycckpnxSXHWIei6Lm0GPOmuCsehnNg2aDvfFWMzvtqWoeiDI1yvtJ4a8Um280R3Vbvu1PsnfM7qc86XjsoZ0fDvEXbG9+ozzr+16x+cK+X8Dtm9YN7vQQA1nrtxaP8L8GyXntx6/8lLXqy1n3jJ2uy7l0RG/m34XEf91oD4H0e93GvNQAAAAAA1J4zNCfz
+   eJzt0UENACAQA8EiDmyAfxXwOQXwod0R0GRT6V5v0mgPhj4xT+sK6K1fU3qrk15P9Hqj1xu93ujNQC8AAECuDcx6EzM=
   </data>
  </layer>
- <layer name="leaves_background" width="150" height="18">
+ <layer name="bg_trees" width="60" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt0rEJACEQRFHtvwebsR2LuEQTE2FxObh7Dyaf4JcCAAD39Lml1bee8CW6IoOuyHDqSmdE7F3thq4IOHUFEboig67IoCsAAOCvHugJEb8=
+   eJztz7sRACAIREFKt24iEwsQE3+7Mczcy4iWMSfHbRZ+TlPZrvc+P/ZWbm/vXaH3bT/27t4AAAAAFR18sCyp
   </data>
  </layer>
- <layer name="background" width="150" height="18">
+ <layer name="bg_leaves2" width="60" height="24">
   <data encoding="base64" compression="zlib">
-   eJztl0sOgjAURR+Y+Jm4BmXkKlxbN+AinLoCZIS6Cr+rwLkPpUlDQFugqZR7kptn0BZKD49IBAAAAAAAhsI4IJoUmXHWFrIlEns+l8wiIOF21cA2vMe0LBIFds6ReOSVer/6vA7bwCszhuhVvmZ1/0yTWLou6ZWsXezJlMfbfh6q6NKrY0jiGhLdOLKqn/PKv3FOX7ySPevEdddwzsgDr9LwkzPnUgofE/J718Are6g+de3VoehNavhYCq++A6+qUb3KFKee8EoLeFVNuV/NR++ITNOrmMz2V143j0tN5otL/7v+3as710fDOX3zintUumKvOEL3PeibV237osvkDm7C31G9rYuJz1Vetk1fvNK9T333Sgd4Ve+VqX9D6Vc6wCt4Ba/glev45NUL/hsgKQ==
+   eJztljEKgEAMBJdUvsN3WPhUn3JP00ZIIV5yFrpxB9Jl4YYQLgCwGNbJgF4dfQ3kRF3Pmg0bs3fG1Tm3t989SsTvqp91xhlXn2Gd8Z1XL8O4yyO+Psc2Z/nmcvL9Nk99mf+mDNXurgiV7q4M8q1N7/4UQgghxL/ZAWKeFOM=
   </data>
  </layer>
- <layer name="foreground" width="150" height="18">
+ <layer name="bg_leaves" width="60" height="24">
   <data encoding="base64" compression="zlib">
-   eJztmetNwzAUhW0GaPqPv4xAxTZM4wGAGfgDVEzBo+WxQ0h5LMFT4jgkwgQ7iVtfl5j7SUdJU8e5lc49cVIhwjOFLqFTgrmZ/4uvr9blv7pO7oFhsGxeYbxqnkOZfeyrYXAGnUMXIpyv9DH2FaNZJa9m2M7Dl2RF1zmSQmRSqFr4rCJdnvEk5H2QkmnEa8Wg6pFSY7nuasJj89XuRvd5BXxVENVkIzVfpY7NV5n8JdXzmKC6P+l8rPeNXler9no28Nw4QgYc99RJj7wIxV97f+Va+3NedTODb+bQFXQN3UC3Eb1kkqKvYq/9fBh/P3cEz8kCHlpA99AD9Ag9DcBX21IcGvtbVLWk7CtKnuGhF+gVeoPeoQ9CX+055tbHc2zvRLkO72RS+WoTnpqwr5LBsU7+8U6nofJ7vY7eh4eaGrnni8pB5Xvtce2p2ucLY0zuMV/+JRWmOoaaHeSVzo1QWdDSJ7Z+8Rnb2mdmvzVrauu1ZXqvzzw+z88+9YX8HdToLIj53opJF0eP8P8oDMMwTFQ+ASjdjcI=
+   eJztlEsKwjAUAKM9RXfewQvkROox/KBnED/oGcT/FdSq6BX8QXWrE6ggBRcVqvalA0OzyCKTF6pUSkpK0slnlXazKvf01+eJE9N6zyhltAE36LUBW2cbtZd7msZyoJj5tNe1rNfsT+KMn62f9CZxxlF7X/fb8o/7FwqOUkUsOb8+yXco01nBKtZC1rEh7B5a9LSxg92QPewL6x3SM8IxTkLOcC6wd4073Abf1/VeWK/hQtMCl7hCD5t4xZvQ3gMe8YRnHKAvu1fTq+nV9GrTuhHcy3vWvGfNe9Ze0Ct5vv4bJfZG5QGpAF+S
   </data>
  </layer>
- <layer name="leaves" width="150" height="18">
+ <layer name="filler" width="60" height="24">
   <data encoding="base64" compression="zlib">
-   eJztmU9OwkAUxt8rdxDd9QywNx5A79CtB3CFIbPQvZ5Aluga4pbYA3iCJl0ZTTiEH05I6hDCv4GZZr5f8qXQDI+X8MtrO4iEZ4pMnOCceVSRByc4Z3x857VK8Y16iFkef9RHZRITp/ZKM5EMGarMvtQeO5mPyiQm4FHdzCe8elGp4VF9i998bp0qcK4I3Sshu3CjfzMydwOX89C9kfZwueZ+6ljXXpI2rleVylWJmbUIXs9C90faievVRyMlZ1fyYLaMSifVlvdK72qzIEWvXvFs/LYhWGNC9xmC0pk1u3gxwdqprtZJxavxFnsu48i9GtgY33UP8WpdHXr1b405eiMHcIbr073IyHddXPNqeFA0U+2x/1VZn5afN777jBHXqye8f85W1piTNbQHXTxvdblHFBVtn1c9zKpzm7yXqFt3Ef5/1Hav+nDqwibvJ+oVIYQQQgghm/gFWE6CWw==
+   eJzt0zEKgDAMheHSHMFJj+Taa3k+XT2KgjiK6ZKY+H/whkKGl0JKAQBE0V7eAL7p6Vaz3vCf9m0dmcSpJEwMciWLex9torDoP4ru3rVzQCZL9W5gaz+z1r5sgf9o9i5gjH31Dl7eFRA=
   </data>
  </layer>
- <layer name="leaves2" width="150" height="18">
+ <layer name="floor" width="60" height="24">
   <data encoding="base64" compression="zlib">
-   eJzt2LsNwkAQRdGxmzRktGBDC44pwU1ATgduwaV4RY6IVuPPOdLkL7jSShuR613ulbyB49EVNczxbWvJ3vFP10Zcyl3b7CUcSV96GsrddQVs2NjEJ3sD+/X48cbpihp0RQ1TE7fsDQAAZ/D0RwoAAOzYCopcDXo=
+   eJztlU0OgjAQRifhAv5cwL26ETdyAjcsjIlr45YI6gm60XN4FI/iUfywIQGFpNDWkaZf8lIoNJmXKYXIx8ftLIlECBYSKhPK585lB7Y1YF4wlmU0CVgpkDjiDJdJ3sMjfFKMGTjJ+0qP8d6drUhDyXt7JekTw/cGJ3g9ME5iqvqmPfctuxa+eQ8v9O7l/tM367lvsY9Vfc89981KvpF0/SIiN/u7ofr/EOaFC+fVKNBjBuYBt4V6xoE+B+/7t2lyGIBhh/2NNQJrBbdXU5rq1u257rkwtbRnTOxnW9hw5nb6tTO3jwomzwRulzYU3/Zao+fcDl0o//+e1O6au3bva9f3BcYWYjs=
   </data>
  </layer>
- <objectgroup color="#a4371c" name="block" width="150" height="18">
-  <object x="1250" y="312" width="1606" height="132"/>
-  <object x="720" y="360" width="168" height="72"/>
-  <object x="0" y="288" width="648" height="144"/>
-  <object x="2041" y="169" width="93" height="160"/>
-  <object x="3097" y="313" width="606" height="159"/>
+ <layer name="trees" width="60" height="24">
+  <data encoding="base64" compression="zlib">
+   eJztlmkOgjAQhStcwuU2+s8z6AU4gL97KFzO4ILLGURvob6madKQadOoFYT5kpeGVwjzphOCEAzTTbaJEDtoDx2SuquJzxUZS+gG3TuQ94GMT5UzFaKX1l1NfPrIOICG0MjK25Y5XxC1m7w2vjmnehHqNQEqr2/OqV6Eer8gx7uW0Apa61XiWsKXap/K65pzBdWLUC8G1foKvPMInaCzXiWuZeHJ6/OpXoR6Mcit2Zmm+lx9MjWps99Yz7ryuvZCvW9DnGeQ1L2XP8z7LmPUNbFqa1PejKhhBm/e0ryfYnJkjv7guyGrHsO4oP4LGYZhmGbzApnuWyo=
+  </data>
+ </layer>
+ <objectgroup color="#a40d0d" name="platform" width="60" height="24">
+  <object x="1416" y="480">
+   <polygon points="0,0 -384,0 -432,-24 -504,-96 -888,-96 -936,-120 -1224,-120 -1272,-96 -1416,-96 -1416,-72 -504,-72 -432,0 -384,24 0,24"/>
+  </object>
+  <object x="0" y="288">
+   <polygon points="0,0 384,0 432,24 0,24"/>
+  </object>
+  <object x="96" y="240" width="168" height="24"/>
+  <object x="120" y="144" width="120" height="24"/>
+  <object x="72" y="120" width="264" height="24"/>
+  <object x="144" y="72" width="168" height="24"/>
+  <object x="48" y="168" width="24" height="24"/>
+  <object x="24" y="192" width="24" height="24"/>
  </objectgroup>
- <objectgroup color="#4a3ea4" name="platform" width="150" height="18">
-  <object x="625" y="169" width="143" height="23"/>
-  <object x="1024" y="109" width="513" height="12"/>
-  <object x="1536" y="96" width="120" height="24"/>
-  <object x="1584" y="168" width="97" height="23"/>
-  <object x="1785" y="72" width="54" height="22"/>
-  <object x="877" y="96" width="34" height="23"/>
-  <object x="487" y="266" width="9" height="26"/>
-  <object x="341" y="266" width="11" height="26"/>
-  <object x="482" y="73" width="34" height="22"/>
-  <object x="888" y="168" width="24" height="24">
+ <objectgroup color="#000000" name="nodes" width="60" height="24">
+  <object type="liquid" x="1104" y="504" width="336" height="72">
    <properties>
-    <property name="drop" value="false"/>
-   </properties>
-  </object>
-  <object x="984" y="168" width="24" height="24">
-   <properties>
-    <property name="drop" value="false"/>
-   </properties>
-  </object>
-  <object x="720" y="168" width="168" height="24"/>
-  <object x="912" y="168" width="72" height="24"/>
-  <object x="1008" y="168" width="24" height="24"/>
-  <object x="936" y="96" width="94" height="23">
-   <properties>
-    <property name="drop" value="false"/>
-   </properties>
-  </object>
-  <object x="3214" y="170" width="245" height="11"/>
-  <object x="2713" y="217" width="142" height="23"/>
-  <object x="2761" y="121" width="92" height="22"/>
- </objectgroup>
- <objectgroup color="#2aa46d" name="nodes" width="150" height="18">
-  <object name="main" type="door" x="24" y="240" width="24" height="48"/>
-  <object type="liquid" x="648" y="371" width="72" height="72">
-   <properties>
-    <property name="death" value="true"/>
-    <property name="mask" value="true"/>
-    <property name="opacity" value="0.95"/>
-    <property name="speed" value="0.15"/>
     <property name="sprite" value="images/water.png"/>
    </properties>
   </object>
-  <object type="liquid" x="886" y="368" width="365" height="92">
+  <object name="main" type="door" x="168" y="192" width="24" height="48">
    <properties>
-    <property name="death" value="true"/>
-    <property name="mask" value="true"/>
-    <property name="opacity" value="0.95"/>
-    <property name="speed" value="0.15"/>
-    <property name="sprite" value="images/water.png"/>
+    <property name="level" value="gay-island-2"/>
+    <property name="sound" value="false"/>
+    <property name="to" value="next"/>
    </properties>
   </object>
-  <object type="door" x="3314" y="263" width="45" height="48">
+  <object type="door" x="1272" y="432" width="24" height="48">
    <properties>
-    <property name="button" value="UP"/>
-    <property name="level" value="rainbow-bar"/>
-   </properties>
-  </object>
-  <object type="enemy" x="788" y="119" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object name="leaf" type="material" x="552" y="264" width="24" height="24"/>
-  <object type="liquid" x="360" y="371" width="120" height="72">
-   <properties>
-    <property name="death" value="true"/>
-    <property name="mask" value="true"/>
-    <property name="opacity" value="0.95"/>
-    <property name="speed" value="0.15"/>
-    <property name="sprite" value="images/water.png"/>
-   </properties>
-  </object>
-  <object type="enemy" x="601" y="240" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="785" y="309" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="1511" y="263" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="1419" y="260" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="3370" y="119" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="3264" y="120" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object name="cloud1" type="movingplatform" x="323" y="161" width="58" height="22">
-   <properties>
-    <property name="line" value="cloud_1"/>
-    <property name="offset_x" value="-6"/>
-    <property name="offset_y" value="-24"/>
-    <property name="speed" value="0.8"/>
-    <property name="sprite" value="images/gaycloud.png"/>
-    <property name="start" value="0"/>
-   </properties>
-  </object>
-  <object name="cloud2" type="movingplatform" x="944" y="302" width="58" height="22">
-   <properties>
-    <property name="line" value="cloud_2"/>
-    <property name="offset_x" value="-6"/>
-    <property name="offset_y" value="-24"/>
-    <property name="speed" value="1.5"/>
-    <property name="sprite" value="images/gaycloud.png"/>
-    <property name="start" value="0"/>
-    <property name="touchstart" value="true"/>
-   </properties>
-  </object>
-  <object name="rock" type="material" x="912" y="145" width="24" height="24"/>
-  <object name="cloud3" type="movingplatform" x="1887" y="258" width="58" height="22">
-   <properties>
-    <property name="line" value="cloud_3"/>
-    <property name="offset_x" value="-6"/>
-    <property name="offset_y" value="-24"/>
-    <property name="speed" value="0.8"/>
-    <property name="sprite" value="images/gaycloud.png"/>
-    <property name="start" value="0"/>
-   </properties>
-  </object>
-  <object type="enemy" x="2165" y="260" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="liquid" x="2401" y="366" width="221" height="99">
-   <properties>
-    <property name="death" value="true"/>
-    <property name="mask" value="true"/>
-    <property name="opacity" value="0.95"/>
-    <property name="speed" value="0.15"/>
-    <property name="sprite" value="images/water.png"/>
-   </properties>
-  </object>
-  <object type="enemy" x="2757" y="261" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="3419" y="260" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="liquid" x="2854" y="366" width="248" height="95">
-   <properties>
-    <property name="death" value="true"/>
-    <property name="mask" value="true"/>
-    <property name="opacity" value="0.95"/>
-    <property name="speed" value="0.15"/>
-    <property name="sprite" value="images/water.png"/>
-   </properties>
-  </object>
-  <object type="enemy" x="2793" y="164" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="2729" y="164" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
-   </properties>
-  </object>
-  <object type="enemy" x="2795" y="71" width="48" height="48">
-   <properties>
-    <property name="enemytype" value="manicorn"/>
+    <property name="level" value="black-caverns"/>
+    <property name="to" value="main"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup name="movement" width="150" height="18">
-  <object name="cloud_2" x="944" y="314">
-   <polyline points="0,0 155,-1"/>
-  </object>
-  <object name="cloud_1" x="447" y="75">
-   <polyline points="0,0 -100,100"/>
-  </object>
-  <object name="cloud_3" x="2012" y="176">
-   <polyline points="0,0 -100,100"/>
-  </object>
+ <objectgroup color="#7ea318" name="block" width="60" height="24">
+  <object x="1416" y="0" width="24" height="576"/>
  </objectgroup>
 </map>

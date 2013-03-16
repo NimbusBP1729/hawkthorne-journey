@@ -1,4 +1,6 @@
-local datastore = require 'datastore'
+local store = require 'hawk/store'
+
+local db = store.load('controls-1')
 
 local Controls = {}
 Controls.__index = Controls
@@ -10,8 +12,7 @@ function Controls.new()
     return controls
 end
 
-
-local buttonmap = datastore.get('buttonmap', {
+local buttonmap = db:get('buttonmap', {
     UP = 'up',
     DOWN = 'down',
     LEFT = 'left',
@@ -86,7 +87,8 @@ function Controls:newButton(key, button)
     if self:keyIsNotInUse(key) then
         buttonmap[button] = key
         keymap = self:getKeymap()
-        datastore.set('buttonmap', buttonmap)
+        db:set('buttonmap', buttonmap)
+        db:flush()
         return true
     else
         return false

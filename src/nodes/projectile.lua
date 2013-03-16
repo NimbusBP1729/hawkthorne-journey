@@ -5,6 +5,7 @@ local Timer = require 'vendor/timer'
 local window = require 'window'
 local Player = require 'player'
 local sound = require 'vendor/TEsound'
+local Gamestate = require 'vendor/gamestate'
 
 local Projectile = {}
 Projectile.__index = Projectile
@@ -86,6 +87,9 @@ function Projectile:die()
     if self.holder then self.holder.currently_held = nil end
     self.holder = nil
     self.collider:remove(self.bb)
+    if self.containerLevel then
+        self.containerLevel:removeNode(self)
+    end
     self.bb = nil
 end
 
@@ -311,8 +315,7 @@ function Projectile:launch(thrower)
      Timer.add(thrower.chargeUpTime or 0, function()
         if self.holder == thrower then
             self:throw(thrower)
-        else
-            self:die()
+        --otherwise it would have already been destroyed
         end
      end)
 end

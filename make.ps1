@@ -1,3 +1,14 @@
+if($args[0] -eq "clean"){
+    rm src/maps/*.lua
+    return
+}elseif($args[0] -eq "reset"){
+    rm src/maps/*.lua
+    rm bin/
+    return
+}
+
+Write-Host "Downloading love2d..."
+
 $check = Test-Path -PathType Container bin
 if($check -eq $false){
     New-Item 'bin' -type Directory
@@ -35,7 +46,7 @@ if($check -eq $false){
 
     if($check -eq $false){
 	Write-Host "Downloading tmx2lua..."
-        $url = "https://github.com/downloads/kyleconroy/tmx2lua/tmx2lua.windows32.zip"
+        $url = "http://hawkthorne.github.com/tmx2lua/downloads/tmx2lua.windows32.zip"
         $webclient.DownloadFile($url,$filename)
     }
 
@@ -61,6 +72,7 @@ foreach($fileName in $fileEntries)
     }
 } 
 
-
-Write-Host "Running Journey to the center of Hawkthorne..."
-.\bin\love-0.8.0-win-x86\love.exe src
+if($args[0] -eq "run"){
+    Write-Host "Running Journey to the center of Hawkthorne..."
+    .\bin\love-0.8.0-win-x86\love.exe src
+}
