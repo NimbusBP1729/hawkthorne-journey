@@ -168,15 +168,7 @@
    </properties>
   </object>
   <object type="block" x="24" y="120" width="120" height="48"/>
-  <object type="sprite" x="211" y="176" width="42" height="59" visible="0">
-   <properties>
-    <property name="animation" value="1-4,1"/>
-    <property name="height" value="58"/>
-    <property name="sheet" value="images/npc/blacksmith.png"/>
-    <property name="width" value="63"/>
-   </properties>
-  </object>
-  <object name="blacksmith" type="activenpc" x="188" y="168" width="49" height="64"/>
+  <object name="blacksmith" type="activenpc" x="216" y="169" width="49" height="64"/>
   <object name="sword" type="weapon" x="228" y="195" width="43" height="54">
    <properties>
     <property name="rotation" value="1.570796"/>

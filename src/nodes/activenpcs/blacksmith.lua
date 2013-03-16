@@ -1,5 +1,5 @@
 return {
-    width = 62,
+    width = 63,
     height = 66,
     animations = {
         default = {

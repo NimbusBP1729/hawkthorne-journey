@@ -62,7 +62,6 @@ function Activenpc.new(node, collider)
     
     activenpc.animations = {}
     for state, data in pairs( activenpc.props.animations ) do
-        inspect(data,2)
         activenpc.animations[ state ] = anim8.newAnimation( data[1], g( unpack(data[2]) ), data[3])
     end
 
@@ -77,6 +76,8 @@ end
 function Activenpc:draw()
     --to access the field called "foo" of this node do the following:
     -- self.foo
+    local anim = self:animation()
+    anim:draw(self.image, self.position.x, self.position.y, 0, (self.direction=="left") and -1 or 1)
 end
 
 function Activenpc:keypressed( button, player )
