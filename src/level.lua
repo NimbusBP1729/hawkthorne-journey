@@ -192,10 +192,7 @@ function Level.new(name)
             v.objectlayer = 'nodes'
             local layer = level.map.objectgroups[v.properties.cutscene]
             node = NodeClass.new( v, level.collider, layer, level )
-<<<<<<< HEAD
             node.drawHeight = v.height
-=======
->>>>>>> cutscene_merge
             level:addNode(node)
         elseif NodeClass then
             v.objectlayer = 'nodes'
