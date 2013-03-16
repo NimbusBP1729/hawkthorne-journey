@@ -40,7 +40,7 @@ function Scene.new(node, collider, layer, level)
   setmetatable(scene, Scene)
   scene.x = node.x
   scene.y = node.y
-  scene.finised = false
+  scene.finished = false
   
   scene.nodes = nametable(layer, collider)
   inspect(scene.nodes,2)
