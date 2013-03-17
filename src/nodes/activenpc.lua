@@ -137,7 +137,6 @@ function Activenpc:update(dt)
     local x1,y1,x2,y2 = self.bb:bbox()
     self.bb:moveTo( self.position.x + (x2-x1)/2 + self.bb_offset.x,
                  self.position.y + (y2-y1)/2 + self.bb_offset.y )
-                    print(self.bb_offset.x)
 end
 
 function Activenpc:handleSounds(dt)

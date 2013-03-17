@@ -3,7 +3,6 @@ local fonts = require 'fonts'
 local controls = require 'controls'
 local window = require 'window'
 local sound = require 'vendor/TEsound'
-local Player = require 'player'
 local Item = require 'items/item'
 --instantiate this gamestate
 local state = Gamestate.new()
@@ -50,7 +49,7 @@ end
 --called when the player enters this gamestate
 --enter may take additional arguments from previous as necessary
 --@param previous the actual gamestate that the player came from (not just its name)
-function state:enter(previous, supplierName)
+function state:enter(previous, player, screenshot, supplierName)
     fonts.set( 'arial' )
     sound.playMusic( "blacksmith" )
     self.previous = previous
@@ -58,7 +57,7 @@ function state:enter(previous, supplierName)
     self.categoryHighlight = table.indexof(self.categories,"weapons")
     self.window = "categoriesWindow"
     --not necessarily the most elegant way to select one
-    self.player = Player.factory()
+    self.player = player
     self.supplierName = supplierName or "blacksmith"
     self.supplier = require ("suppliers/"..self.supplierName)
     assert(self.supplier,"supplier by the name of "..self.supplierName.." has no content")
@@ -125,8 +124,6 @@ function state:categoriesWindowKeypressed( button )
         else
             sound.playSfx('click')
         end
-        print (t)
-        print (#self.categories)
     elseif button == "UP" then
         self.categoryHighlight = nonzeroMod(self.categoryHighlight-1, #self.categories)
         local t = 1
@@ -139,8 +136,6 @@ function state:categoriesWindowKeypressed( button )
         else
             sound.playSfx('click')
         end
-        print (t)
-        print (#self.categories)
     elseif button == "ATTACK" and not self.supplier[self.categories[self.categoryHighlight]] then
         self.statusMessage = "There are no "..self.categories[self.categoryHighlight].." available"
         sound.playSfx('click')
