@@ -1,5 +1,6 @@
 local Manualcontrols = {}
 Manualcontrols.__index = Manualcontrols
+Manualcontrols.isManualcontrols = true
 
 function Manualcontrols.new()
     local manualcontrols = {}

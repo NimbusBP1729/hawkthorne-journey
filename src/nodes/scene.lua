@@ -46,7 +46,6 @@ function Scene.new(node, collider, layer, level)
   scene.finished = false
   
   scene.nodes = nametable(layer, collider)
-  inspect(scene.nodes,2)
   scene.opacity = node.properties.opacity or 255
 
   -- dummy camera to prevent tearing
@@ -71,7 +70,6 @@ function Scene:runScript(script,depth)
     local precondition = script[depth]["precondition"] or __NULL__
     local postcondition = script[depth]["postcondition"] or __NULL__
 
-    print(line,action)
     local size = #script
     --precondition()
     if(depth==size) then

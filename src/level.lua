@@ -35,6 +35,11 @@ local function load_tileset(name)
     return tileset
 end
 
+--@return true if an NPC is trying to use a door
+local function npcDoorInteracting(node, player)
+    return node.isDoor and player.isPlayer and player.controls.isManualcontrols
+end
+
 local function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
     if shape_a.player and shape_b.player then return end
     local player, node, node_a, node_b
@@ -42,14 +47,20 @@ local function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
     if shape_a.player then
         player = shape_a.player
         node = shape_b.node
-        node.player_touched = true
+        --disallow cutscene characters from interacting with doors
+        if npcDoorInteracting(node,player) then return end
+
+        node.player_touched = player
         if node.collide then
             node:collide(player, dt, mtv_x, mtv_y, shape_a)
         end
     elseif shape_b.player then
         player = shape_b.player
         node = shape_a.node
-        node.player_touched = true
+        --disallow cutscene characters from interacting with doors
+        if npcDoorInteracting(node,player) then return end
+
+        node.player_touched = player
         if node.collide then
             node:collide(player, dt, mtv_x, mtv_y, shape_b)
         end
