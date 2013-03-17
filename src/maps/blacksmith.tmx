@@ -169,10 +169,5 @@
   </object>
   <object type="block" x="24" y="120" width="120" height="48"/>
   <object name="blacksmith" type="activenpc" x="216" y="169" width="49" height="64"/>
-  <object name="sword" type="weapon" x="228" y="195" width="43" height="54">
-   <properties>
-    <property name="rotation" value="1.570796"/>
-   </properties>
-  </object>
  </objectgroup>
 </map>

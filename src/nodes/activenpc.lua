@@ -33,6 +33,9 @@ function Activenpc.new(node, collider)
     --stores all the parameters from the tmx file
     activenpc.node = node
 
+    --stores parameters from a lua file
+    activenpc.props = require('nodes/activenpcs/' .. node.name)
+
     --sets the position from the tmx file
     activenpc.position = {x = node.x, y = node.y}
     activenpc.width = node.width
@@ -40,12 +43,13 @@ function Activenpc.new(node, collider)
     
     --initialize the node's bounding box
     activenpc.collider = collider
-    activenpc.bb = collider:addRectangle(node.x, node.y, node.width, node.height)
+    activenpc.bb = collider:addRectangle(0,0,activenpc.props.bb_width,activenpc.props.bb_height)
     activenpc.bb.node = activenpc
     activenpc.collider:setPassive(activenpc.bb)
  
     --define some offsets for the bounding box that can be used each update cycle
-    activenpc.bb_offset = {x = 0,y = 0}
+    activenpc.bb_offset = {x = activenpc.props.bb_offset_x or 0,
+                           y = activenpc.props.bb_offset_y or 0}
  
     
     --add more initialization code here if you want
@@ -54,8 +58,6 @@ function Activenpc.new(node, collider)
     activenpc.state = "default"
     activenpc.direction = "right"
     
-    activenpc.props = require('nodes/activenpcs/' .. node.name)
-
     local npcImage = love.graphics.newImage('images/activenpcs/'..node.name..'.png')
     local g = anim8.newGrid(activenpc.props.width, activenpc.props.height, npcImage:getWidth(), npcImage:getHeight())
     activenpc.image = npcImage
@@ -70,17 +72,30 @@ function Activenpc.new(node, collider)
     return activenpc
 end
 
+function Activenpc:enter( previous )
+    if self.props.enter then
+        self.props.enter(self)
+    end
+end
+
 ---
 -- Draws the Activenpc to the screen
 -- @return nil
 function Activenpc:draw()
-    --to access the field called "foo" of this node do the following:
-    -- self.foo
     local anim = self:animation()
     anim:draw(self.image, self.position.x, self.position.y, 0, (self.direction=="left") and -1 or 1)
+    if self.prompt then
+        self.prompt:draw(self.position.x + 20, self.position.y - 35)
+    end
 end
 
 function Activenpc:keypressed( button, player )
+    if self.prompt then
+        return self.prompt:keypressed( button )
+    end
+    if button == "INTERACT" then
+        self.props.onInteract(self, player)
+    end
 end
 
 ---
@@ -108,6 +123,7 @@ end
 -- Updates the Activenpc
 -- dt is the amount of time in seconds since the last update
 function Activenpc:update(dt)
+    if self.prompt then self.prompt:update(dt) end
     self:animation():update(dt)
     --auto controls
     if self.controls==nil then
@@ -116,8 +132,12 @@ function Activenpc:update(dt)
     --manual controls
     end
     self:handleSounds(dt)
-    self.bb:moveTo( self.position.x + self.bb_offset.x,
-                    self.position.y + self.bb_offset.y )
+
+
+    local x1,y1,x2,y2 = self.bb:bbox()
+    self.bb:moveTo( self.position.x + (x2-x1)/2 + self.bb_offset.x,
+                 self.position.y + (y2-y1)/2 + self.bb_offset.y )
+                    print(self.bb_offset.x)
 end
 
 function Activenpc:handleSounds(dt)
