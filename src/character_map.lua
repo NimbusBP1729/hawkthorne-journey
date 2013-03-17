@@ -41,7 +41,7 @@ return {
     },
     profileaway = { -- facing away to either side ( opposite of idle )
         left = {'once', {'12,1'}, 1},
-        right = {'once', {'12,1'}, 1}
+        right = {'once', {'12,2'}, 1}
     },
     
     -- rows 3 & 4

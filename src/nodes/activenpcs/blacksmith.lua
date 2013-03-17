@@ -1,6 +1,7 @@
 local Prompt = require 'prompt'
 local Timer = require 'vendor/timer'
 local sound = require 'vendor/TEsound'
+local Gamestate = require 'vendor/gamestate'
 
 return {
     width = 63,
