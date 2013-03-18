@@ -20,7 +20,6 @@ function Script.new(scene,player,level)
         scene.nodes.buddy.invulnerable = true
         scene.nodes.shirley.health = 2
         scene.nodes.britta.health = 1
-  
         scene.nodes.britta.opacity = 0
         scene.nodes.britta.invulnerable = true
         scene:teleportCharacter(750,nil,scene.nodes.britta)
@@ -88,7 +87,7 @@ function Script.new(scene,player,level)
 
         local lightningB = Projectile.new(nodeB, level.collider)
         level:addNode(lightningB)
-        inspect(lightningB,2)
+        --inspect(lightningB,2)
 
         lightningB:throw(scene.nodes.buddy)
     end},

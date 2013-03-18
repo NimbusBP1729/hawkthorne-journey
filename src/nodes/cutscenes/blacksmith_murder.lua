@@ -32,9 +32,7 @@ function Script.new(scene,player,level)
     {line = "",
     precondition = function()
         player.controls = Manualcontrols.new()
-        print(player.position.x,player.position.y)
         scene:teleportCharacter(440,210,player)
-        print(player.position.x,player.position.y)
     end,
     action = function()
         scene:jumpCharacter(player)

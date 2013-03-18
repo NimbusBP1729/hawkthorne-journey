@@ -75,9 +75,10 @@ function Scene:runScript(script,depth)
     local postcondition = script[depth]["postcondition"] or __NULL__
 
     local size = #script
+    local dial
     --precondition()
     if(depth==size) then
-      self.dialog = dialog.new(line,function ()
+      dial = dialog.new(line,function ()
         precondition()
         action()
         player = player or Player.factory()
@@ -85,14 +86,14 @@ function Scene:runScript(script,depth)
         self:endScene(player)
       end)
     else
-      self.dialog = dialog.new(line,function()
+      dial = dialog.new(line,function()
         precondition()
         action()
         self:runScript(script,depth+1)
       end)
     end
     postcondition()
-    return self.dialog
+    return dial
 end
 
 function Scene:start(player)
@@ -150,9 +151,6 @@ function Scene:update(dt, player)
     end
   end
 
-  if self.dialog then
-    self.dialog:update(dt)
-  end
 end
 
 function Scene:draw()
@@ -164,18 +162,9 @@ function Scene:draw()
     end
   end
   love.graphics.setColor(255, 255, 255, 255)
-
-  if self.dialog then
-    self.dialog:draw()
-  end
-
 end
 
 function Scene:keypressed(button)
-  if self.dialog then
-    self.dialog:keypressed(button)
-  end
-  return true
 end
 
 function Scene:talkCharacter(char,message)
@@ -259,8 +248,6 @@ function Scene:endScene(player)
     tween(2, current.darken, {0, 0, 0, 0}, 'outQuad')
     player.opacity=255
     player.desiredX = nil
-    self.camera.sx = 1
-    self.camera.sy = 1
     player.freeze = false
     player.invulnerable = false
     --move the player to where the perceived character was
