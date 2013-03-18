@@ -26,7 +26,7 @@
    eJxjYBgFgxEE0dj8OCCOB+IEGpnvz8DQ4AehR80fAPOjgeZHAXE0jcwfBRAAAPHoCTA=
   </data>
  </layer>
- <objectgroup name="floorspace" width="24" height="14">
+ <objectgroup color="#005500" name="floorspace" width="24" height="14">
   <object name="dresser" x="68" y="271">
    <properties>
     <property name="height" value="36"/>
@@ -75,7 +75,7 @@
     <property name="to" value="blacksmith"/>
    </properties>
   </object>
-  <object type="sprite" x="462" y="148" width="24" height="48">
+  <object type="sprite" x="456" y="144" width="24" height="48">
    <properties>
     <property name="animation" value="1-4,1"/>
     <property name="height" value="48"/>
@@ -169,5 +169,11 @@
   </object>
   <object type="block" x="24" y="120" width="120" height="48"/>
   <object name="blacksmith" type="activenpc" x="216" y="169" width="49" height="64"/>
+  <object type="scenetrigger" x="408" y="144" width="48" height="48">
+   <properties>
+    <property name="cutscene" value="blacksmith_murder"/>
+   </properties>
+  </object>
  </objectgroup>
+ <objectgroup color="#0000ff" name="blacksmith_murder" width="24" height="14"/>
 </map>

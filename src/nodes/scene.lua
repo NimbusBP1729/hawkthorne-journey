@@ -46,7 +46,11 @@ function Scene.new(node, collider, layer, level)
   scene.finished = false
   
   scene.nodes = nametable(layer, collider)
+  local player = Player.factory()
+  scene.nodes.player = player
   scene.opacity = node.properties.opacity or 255
+  
+  scene.origControls = player.controls
 
   -- dummy camera to prevent tearing
   scene.camera = {
@@ -56,7 +60,7 @@ function Scene.new(node, collider, layer, level)
     sy = 1,
   }
 
-  scene.script = require("nodes/cutscenes/"..node.properties.cutscene).new(scene,Player.factory(),level)
+  scene.script = require("nodes/cutscenes/"..node.properties.cutscene).new(scene,player,level)
 
   return scene
 end
@@ -98,13 +102,11 @@ function Scene:start(player)
   player.opacity = 255
   player.events:poll('jump')
   player.events:poll('halfjump')
+  
+  
+  player.controls = Manualcontrols.new()
 
 
-  self.nodes.britta.opacity = 0
-  self.nodes.britta.invulnerable= true
-  self.nodes.buddy.invulnerable = true
-  self.nodes.shirley.health = 2
-  self.nodes.britta.health = 1
   if self.nodes[player.character.name] then
     self.nodes[player.character.name].character.costume = player.character.costume
     self.nodes[player.character.name].opacity = 0
@@ -142,7 +144,10 @@ function Scene:update(dt, player)
     if v.isPlayer then
       v.boundary = player.boundary
     end
-    v:update(dt)
+    --don't reupdate nodes that are managed by the level
+    if not self.level:hasNode(v) then
+      v:update(dt)
+    end
   end
 
   if self.dialog then
@@ -151,9 +156,12 @@ function Scene:update(dt, player)
 end
 
 function Scene:draw()
-  love.graphics.setColor(255, 255, 255, self.opacity)
+  love.graphics.setColor(0, 255, 0, 255)
   for k,v in pairs(self.nodes) do
-    v:draw()
+    --don't redraw nodes that are managed by the level
+    if not self.level:hasNode(v) then
+      v:draw()
+    end
   end
   love.graphics.setColor(255, 255, 255, 255)
 
@@ -212,8 +220,6 @@ function Scene:teleportCharacter(x,y,char)
     y = y or char.position.y
     self:keyreleasedCharacter('RIGHT',char)
     self:keyreleasedCharacter('LEFT',char)
-    char.position.x = math.abs(x-char.position.x) < 40 and char.position.x  or x
-    char.position.y = math.abs(y-char.position.y) < 40 and char.position.y  or y
     char.position.x = x
     char.position.y = y
 end
@@ -273,6 +279,7 @@ function Scene:endScene(player)
             node.collider:remove(node.attack_box.bb)
         end
     end
+    player.controls = self.origControls
     
 end
 

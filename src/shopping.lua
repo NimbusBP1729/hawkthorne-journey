@@ -77,7 +77,8 @@ function state:enter(previous, player, screenshot, supplierName)
                 local itemNode = require ('items/' .. category .. '/' .. name)
                 item = Item.new(itemNode)
             elseif category=="keys" then
-                --item = self:loadMisc(name)
+                local itemNode = {type = 'key',name = name}
+                item = Item.new(itemNode)
             elseif category=="misc" then
                 --item = self:loadMisc(name)
             else
@@ -271,14 +272,23 @@ function state:draw()
     local y = 77
     for i,category in pairs(self.categories) do
         if i == self.categorySelection and self.window=="categoriesWindow" then
-            love.graphics.setColor( 0  , 255, 0  , 255 )
+            love.graphics.setColor( 0, 255, 0, 255 )
+            love.graphics.line( x-2, y+16*i-2, x+101, y+16*i-2, x+101, y+16*i+10, x-2, y+16*i+10,
+                                x-2, y+16*i-2)
+            love.graphics.line( x+101, y+16*i-2, x+101, y+16*i+10)
+  
+            love.graphics.setColor( 255, 255, 255, 255 )
         elseif i == self.categoryHighlight then
             love.graphics.setColor( 255, 255, 255, 255 )
+            love.graphics.line( x-2, y+16*i-2, x+101, y+16*i-2, x+101, y+16*i+10, x-2, y+16*i+10,
+                                x-2, y+16*i-2)
+            love.graphics.line( x+101, y+16*i-2, x+101, y+16*i+10)
         elseif self.supplier[category] then
             love.graphics.setColor( 180, 180, 180, 255 )
         else
             love.graphics.setColor( 20, 20, 20, 255 )
         end
+
         love.graphics.print(string.upper(category), x, y + 16*i)
     end
     love.graphics.setColor( 255, 255, 255, 255 )
@@ -301,6 +311,9 @@ function state:draw()
 
             if i == self.itemsWindowSelection and self.window=="itemsWindow" then
                 love.graphics.setColor( 0  , 255, 0  , 255 )
+
+                love.graphics.line( x-7, y+22*i-5, x+90, y+22*i-5, x+90, y+22*i+11, x-7, y+22*i+11,
+                                    x-7, y+22*i-5)
             elseif i == self.itemsWindowSelection then
                 love.graphics.setColor( 255 , 255, 255 , 255 )
             else

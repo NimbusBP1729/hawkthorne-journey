@@ -634,7 +634,7 @@ function Level:removeNode(node)
 end
 
 function Level:hasNode(node)
-    return self.nodes[node] and true or false
+    return table.contains(self.nodes,node)
 end
 
 function Level:copyNodes()

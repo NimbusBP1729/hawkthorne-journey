@@ -16,6 +16,9 @@ return {
         {"stick",30,5},
         {"bone",30,500},
     },
+    keys = {
+        {"greendale",1,1},
+    },
     misc = {
         {"life",30,20,
             msg="gives the user an extra life",

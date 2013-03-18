@@ -16,6 +16,12 @@ function Script.new(scene,player,level)
     script = {{line = "Pierce: Oh crap. It's Buddy!",
     precondition = function()
         scene.nodes.britta.opacity = 0
+        scene.nodes.britta.invulnerable= true
+        scene.nodes.buddy.invulnerable = true
+        scene.nodes.shirley.health = 2
+        scene.nodes.britta.health = 1
+  
+        scene.nodes.britta.opacity = 0
         scene.nodes.britta.invulnerable = true
         scene:teleportCharacter(750,nil,scene.nodes.britta)
     end,
