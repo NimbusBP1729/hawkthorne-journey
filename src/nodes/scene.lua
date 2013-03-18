@@ -154,7 +154,7 @@ function Scene:update(dt, player)
 end
 
 function Scene:draw()
-  love.graphics.setColor(0, 255, 0, 255)
+  love.graphics.setColor(255, 255, 255, 255)
   for k,v in pairs(self.nodes) do
     --don't redraw nodes that are managed by the level
     if not self.level:hasNode(v) then
@@ -260,13 +260,13 @@ function Scene:endScene(player)
     end
     -- cleanup time!
     -- if this code is ever used again encapsulate in a function
+    player.controls = self.origControls
     for _,node in pairs(self.nodes) do
-        if node.isPlayer then
+        if node.isPlayer and node ~= player then
             node.collider:remove(node.bb)
             node.collider:remove(node.attack_box.bb)
         end
     end
-    player.controls = self.origControls
     
 end
 

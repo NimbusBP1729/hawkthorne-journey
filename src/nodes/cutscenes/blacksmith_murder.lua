@@ -35,10 +35,13 @@ function Script.new(scene,player,level)
         scene:teleportCharacter(440,210,player)
     end,
     action = function()
-        scene:jumpCharacter(player)
+        scene:moveCharacter(340,250,scene.nodes.pierce)
     end},
     {line = player.character.name..": What's free?",
 
+    precondition = function()
+        scene:teleportCharacter(340,250,player)
+    end,
     action = function()
         sound.playSfx("thiefthief")
     end},
