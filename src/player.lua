@@ -57,6 +57,7 @@ function Player.new(collider)
         events = {
             {name = 'inventory', from = 'normal', to = 'ignoreMovement'},
             {name = 'standard', from = 'ignoreMovement', to = 'normal'},
+            {name = 'cutscene', from = 'ignoreMovement', to = 'normal'},
     }})
 
     plyr.width = 48
@@ -316,7 +317,7 @@ function Player:update( dt )
     local gazing = self.controls:isDown( 'UP' ) and not self.controlState:is('ignoreMovement')
     local movingLeft = self.controls:isDown( 'LEFT' ) and not self.controlState:is('ignoreMovement')
     local movingRight = self.controls:isDown( 'RIGHT' ) and not self.controlState:is('ignoreMovement')
-
+    print(crouching,gazing,movingLeft,movingRight)
 
     if not self.invulnerable then
         self:stopBlink()

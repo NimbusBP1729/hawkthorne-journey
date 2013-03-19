@@ -103,6 +103,7 @@ function Scene:start(player)
   player.opacity = 255
   player.events:poll('jump')
   player.events:poll('halfjump')
+  player.controlState:cutscene()
   
   
   player.controls = Manualcontrols.new()
@@ -146,7 +147,7 @@ function Scene:update(dt, player)
       v.boundary = player.boundary
     end
     --don't reupdate nodes that are managed by the level
-    if not self.level:hasNode(v) then
+    if not self.level:hasNode(v) and not k=="player" then
       v:update(dt)
     end
   end
@@ -157,7 +158,7 @@ function Scene:draw()
   love.graphics.setColor(255, 255, 255, 255)
   for k,v in pairs(self.nodes) do
     --don't redraw nodes that are managed by the level
-    if not self.level:hasNode(v) then
+    if not self.level:hasNode(v) and not k=="player" then
       v:draw()
     end
   end
@@ -184,6 +185,7 @@ function Scene:actionCharacter(action,char,...)
 end
 
 function Scene:keypressedCharacter(button,char)
+    print("foo")
     char.controls:press(button)
     char:keypressed(button)
 end
@@ -267,6 +269,8 @@ function Scene:endScene(player)
             node.collider:remove(node.attack_box.bb)
         end
     end
+    
+    player.controlState:standard()
     
 end
 

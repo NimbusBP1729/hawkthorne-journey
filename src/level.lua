@@ -356,6 +356,7 @@ function Level:update(dt)
     
 
     if self.state == 'active' or self.respawn == true then
+        print("bar")
         self.player:update(dt)
     end
 
