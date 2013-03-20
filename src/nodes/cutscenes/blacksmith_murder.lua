@@ -16,6 +16,7 @@ function Script.new(scene,player,level)
     assert(player.isPlayer)
     assert(level)
     assert(level.isLevel)
+    scene.player = player
 
     
     --initialize NPC
@@ -39,53 +40,26 @@ function Script.new(scene,player,level)
     action = function()
         scene:moveCharacter(430,nil,player)
     end},
-    {line = player.character.name..": What's free?",
-
-    precondition = function()
-        scene:teleportCharacter(430,nil,player)
-    end,
-    action = function()
-        scene:jumpCharacter(player)
-        local weaponNode = {
-            type = "weapon",name = "torch",
-            x = player.position.x,
-            y = player.position.y,
-            width = 24, height = 24,
-            properties = {}
-        }
-        local weapon = Weapon.new(weaponNode,level.collider)
-        level:addNode(weapon)
-        weapon:keypressed('INTERACT',player)
-        
-        local node = { x = player.position.x, y = player.position.y,
-            properties = {
-                sheet = 'images/torch.png',
-                height = 48, width = 24,
-                animation = '1-4,1',
-                doRotation = 'true',
-            }
-        }
-        scene.nodes.torch = Sprite.new(node, collider)
-
-    end},
-    {line = "H",
+    {line = player.character.name..": Neat! Torches are free!",
 
     precondition = function()
         scene:teleportCharacter(430,nil,player)
         scene:jumpCharacter(player)
-        local weaponNode = {
-            type = "weapon",name = "torch",
-            x = player.position.x,
-            y = player.position.y,
-            width = 24, height = 24,
-            properties = {}
-        }
-        level:addNode(Weapon.new(weaponNode,level.collider))
     end,
     action = function()
         sound.playSfx("thiefthief")
     end},
     {line = "Thief, Thief!",
+
+    precondition = function()
+        scene:teleportCharacter(430,nil,player)
+    end,
+    action = function()
+        scene:jumpCharacter(player)
+        player.currently_held:throw()
+
+    end},
+    {line = "How do I drop it?",
 
     precondition = function()
         scene.nodes.blacksmith.opacity = 0
@@ -110,6 +84,11 @@ function Script.new(scene,player,level)
     end}
     }
     return script
+end
+
+function Script:canRun()
+    local player = require('player').factory()
+    return player.currently_held and player.currently_held.isFlammable
 end
 
 return Script

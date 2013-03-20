@@ -60,8 +60,8 @@ function Scene.new(node, collider, layer, level)
     sy = 1,
   }
 
-  scene.script = require("nodes/cutscenes/"..node.properties.cutscene).new(scene,player,level)
-
+  scene.props = require("nodes/cutscenes/"..node.properties.cutscene)
+  scene.script = scene.props.new(scene,player,level)
   return scene
 end
 
@@ -147,7 +147,7 @@ function Scene:update(dt, player)
       v.boundary = player.boundary
     end
     --don't reupdate nodes that are managed by the level
-    if not self.level:hasNode(v) and not k=="player" then
+    if not self.level:hasNode(v) then
       v:update(dt)
     end
   end
@@ -158,7 +158,7 @@ function Scene:draw()
   love.graphics.setColor(255, 255, 255, 255)
   for k,v in pairs(self.nodes) do
     --don't redraw nodes that are managed by the level
-    if not self.level:hasNode(v) and not k=="player" then
+    if not self.level:hasNode(v) then
       v:draw()
     end
   end
@@ -185,7 +185,6 @@ function Scene:actionCharacter(action,char,...)
 end
 
 function Scene:keypressedCharacter(button,char)
-    print("foo")
     char.controls:press(button)
     char:keypressed(button)
 end

@@ -198,10 +198,10 @@ function Weapon:update(dt)
     if not self.player then
         
         if self.dropping then
+            self.velocity = {x = self.velocity.x*dt,
+                            y = self.velocity.y + game.gravity*dt}
             self.position = {x = self.position.x + self.velocity.x*dt,
                             y = self.position.y + self.velocity.y*dt}
-            self.velocity = {x = self.velocity.x*0.1*dt,
-                            y = self.velocity.y + game.gravity*dt}
             self.bb:moveTo(self.position.x,self.position.y)
         end
 
@@ -292,6 +292,18 @@ function Weapon:drop()
                      y=self.player.velocity.y,
     }
     self.player:setSpriteStates('default')
+    self.player.currently_held = nil
+    self.player = nil
+end
+
+--used primarily for cutscenes right now
+function Weapon:throw()
+    self.dropping = true
+    self.collider:setSolid(self.bb)
+    self.velocity = {x=1300,
+                     y=self.player.velocity.y - 100,
+    }
+    self.player:setSpriteStates(self.player.previous_state_set)
     self.player.currently_held = nil
     self.player = nil
 end

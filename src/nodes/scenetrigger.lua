@@ -44,6 +44,7 @@ function SceneTrigger.new(node, collider, layer, level)
   end
   assert(level)
   trigger.scene = scene.new(node, collider, layer, level)
+  trigger.scene.props.canRun = trigger.scene.props.canRun or function() return true end
 
   -- Figure out how to "mix this in"
   trigger.state = machine.create({
@@ -80,7 +81,8 @@ end
 
 
 function SceneTrigger:collide(node, dt, mtv_x, mtv_y)
-  if node and node.character and self.state:can('start') then
+  inspect(self.scene.script,2)
+  if node and node.character and self.state:can('start') and self.scene.props:canRun() then
     local current = gamestate.currentState()
 
     current.scene = self
