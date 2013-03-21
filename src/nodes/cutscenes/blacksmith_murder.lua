@@ -51,35 +51,6 @@ function Script.new(scene,player,level)
     end},
     {line = "Thief, Thief!",
 
-    precondition = function()
-        scene:teleportCharacter(430,nil,player)
-    end,
-    action = function()
-        scene:jumpCharacter(player)
-        player.currently_held:throw()
-
-    end},
-    {line = "How do I drop it?",
-
-    precondition = function()
-        scene.nodes.blacksmith.opacity = 0
-        player.character.direction = 'left'
-    end,
-    action = function()
-        player.character.direction = 'left'
-    end},
-    {line = "END",
-
-    precondition = function()
-        scene.nodes.blacksmith.opacity = 0
-        player.character.direction = 'left'
-    end,
-    action = function()
-        player.character.direction = 'left'
-    end},
-    {line = "END",
-
-
     action = function()
     end}
     }
