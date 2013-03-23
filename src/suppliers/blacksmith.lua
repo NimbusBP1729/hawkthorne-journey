@@ -7,7 +7,7 @@ local healthImage = love.graphics.newImage( "images/tokens/health.png" )
 return {
     weapons = {
         {"mallet",30,20},
-        {"torch",3,500},
+        {"torch",3,100},
         {"sword",30,500},
     },
     materials = {
@@ -17,16 +17,7 @@ return {
         {"bone",30,500},
     },
     misc = {
-        {"life",30,20,
-            msg="gives the user an extra life",
-            action= function(player)
-                player.lives = player.lives + 1
-            end,
-            draw = function(x,y)
-                love.graphics.drawq(lifeImage,lifeQuad,x,y)
-            end,
-        },
-        {"hp",30,500,
+        {"hp",1,30,
             msg="increases the user's maximum hp",
             action= function(player)
                 player.max_health = player.max_health + 1
