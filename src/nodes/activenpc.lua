@@ -83,7 +83,11 @@ end
 -- @return nil
 function Activenpc:draw()
     local anim = self:animation()
-    anim:draw(self.image, self.position.x, self.position.y, 0, (self.direction=="left") and -1 or 1)
+    if self.direction=="right" then
+        anim:draw(self.image, self.position.x, self.position.y, 0, 1, 1)
+    else
+        anim:draw(self.image, self.position.x + self.width, self.position.y, 0, -1, 1)
+    end
     if self.prompt then
         self.prompt:draw(self.position.x + 20, self.position.y - 35)
     end
@@ -106,6 +110,9 @@ end
 -- @param mtv_y amount the node must be moved in the y direction to stop colliding
 -- @return nil
 function Activenpc:collide(node, dt, mtv_x, mtv_y)
+    if self.props.collide then
+        self.props.collide(self,node, dt, mtv_x, mtv_y)
+    end
 end
 
 
@@ -132,20 +139,39 @@ function Activenpc:update(dt)
     --manual controls
     end
     self:handleSounds(dt)
+    
+    self.velocity = self.velocity or {x = 0, y = 0}
+    if self.pacing then
+        if self.position.x < self.minimum_x then
+            self.direction = "right"
+        elseif self.position.x > self.maximum_x then
+            self.direction = "left"
+        end
+        local dir = self.direction == "right" and 1 or -1
+        self.velocity.x = self.pacing_velocity * dir
+    end
 
-
+    self.position.x = self.position.x + self.velocity.x * dt
+    self.position.y = self.position.y + self.velocity.y * dt
     local x1,y1,x2,y2 = self.bb:bbox()
     self.bb:moveTo( self.position.x + (x2-x1)/2 + self.bb_offset.x,
                  self.position.y + (y2-y1)/2 + self.bb_offset.y )
 end
 
+-- plays sounds as necessary, populated by the subclass
 function Activenpc:handleSounds(dt)
     self.lastSoundUpdate = self.lastSoundUpdate + dt
     for _,v in pairs(self.props.sounds) do
-        if self.state==v.state and self:animation().position==v.position and self.lastSoundUpdate > 0.5 then
+        if self.state==v.state and self:animation().position==v.position and self.lastSoundUpdate > 1 then
             sound.playSfx(v.file)
             self.lastSoundUpdate = 0
         end
+    end
+end
+
+function Activenpc:burn()
+    if self.props.burn then
+        self.props.burn(self)
     end
 end
 

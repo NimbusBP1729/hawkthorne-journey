@@ -16,6 +16,9 @@ return {
         },
         talking = {
             'loop',{'2,3','2,4'},0.20,
+        },
+        burning = {
+            'loop',{'1-4,5'},0.20,
         }
     },
     sounds = {
@@ -23,10 +26,16 @@ return {
             state = 'default',
             position = 2,
             file = 'sword_hit',
+        },
+        screaming = {
+            state = 'burning',
+            position = 2,
+            file = 'blacksmithscreaming',
         }
     },
     enter = function(activenpc)
         activenpc.state = 'talking'
+        activenpc.pacing = false
         sound.playSfx("ibuyandsell")
         Timer.add(2.8,function() activenpc.state = 'default' end)
     end,
@@ -42,5 +51,14 @@ return {
         end
         player.freeze = true
         activenpc.prompt = Prompt.new("Would you like to buy a weapon?",callback, options)
-    end
+    end,
+    burn = function(activenpc)
+        activenpc.state = "burning"
+        activenpc.pacing = true
+        --set up some pacing vars
+        activenpc.pacing_velocity = 200
+        activenpc.minimum_x = activenpc.position.x
+        activenpc.maximum_x = activenpc.minimum_x + 200
+    end,
+    
 }

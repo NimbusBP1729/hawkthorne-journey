@@ -147,6 +147,7 @@ function Weapon:collide(node, dt, mtv_x, mtv_y)
     --handles code for burning an object
     if self.isFlammable and node.burn then
         node:burn(self.position.x,self.position.y)
+        self.collider:setGhost(self.bb)
     end
 end
 

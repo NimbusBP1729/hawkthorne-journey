@@ -45,13 +45,14 @@ function Script.new(scene,player,level)
     precondition = function()
         scene:teleportCharacter(430,nil,player)
         scene:jumpCharacter(player)
+        scene.nodes.blacksmith.state = "talking"
     end,
     action = function()
         sound.playSfx("thiefthief")
     end},
     {line = "Thief, Thief!",
-
     action = function()
+        scene.nodes.blacksmith.state = "default"    
     end}
     }
     return script
