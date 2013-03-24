@@ -8,7 +8,6 @@ local Tween = require 'vendor/tween'
 local camera = require 'camera'
 local window = require 'window'
 local sound = require 'vendor/TEsound'
-local controls = require 'controls'
 local transition = require 'transition'
 local HUD = require 'hud'
 local music = {}
@@ -36,6 +35,11 @@ local function load_tileset(name)
     return tileset
 end
 
+--@return true if an NPC is trying to use a door
+local function npcDoorInteracting(node, player)
+    return node.isDoor and player.isPlayer and player.controls.isManualcontrols
+end
+
 local function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
     if shape_a.player and shape_b.player then return end
     local player, node, node_a, node_b
@@ -43,14 +47,20 @@ local function on_collision(dt, shape_a, shape_b, mtv_x, mtv_y)
     if shape_a.player then
         player = shape_a.player
         node = shape_b.node
-        node.player_touched = true
+        --disallow cutscene characters from interacting with doors
+        if npcDoorInteracting(node,player) then return end
+
+        node.player_touched = player
         if node.collide then
             node:collide(player, dt, mtv_x, mtv_y, shape_a)
         end
     elseif shape_b.player then
         player = shape_b.player
         node = shape_a.node
-        node.player_touched = true
+        --disallow cutscene characters from interacting with doors
+        if npcDoorInteracting(node,player) then return end
+
+        node.player_touched = player
         if node.collide then
             node:collide(player, dt, mtv_x, mtv_y, shape_b)
         end
@@ -92,7 +102,7 @@ local function collision_stop(dt, shape_a, shape_b)
         if node.collide_end then
             node:collide_end(player, dt)
         end
-    else
+    elseif node_a and node_b then
         if node_a.collide_end then
             node_a:collide_end(node_b, dt)
         end
@@ -184,11 +194,13 @@ function Level.new(name)
             local layer = level.map.objectgroups[v.properties.cutscene]
             node = NodeClass( v, level.collider, layer, level )
             node.drawHeight = v.height
+            node.width = node.width or v.width
             level:addNode(node)
         elseif NodeClass then
             v.objectlayer = 'nodes'
             node = NodeClass.new( v, level.collider )
             node.drawHeight = v.height
+            node.width = node.width or v.width
             level:addNode(node)
         end
 
@@ -464,15 +476,16 @@ function Level:floorspaceNodeDraw()
         if node.draw then
             local node_position = node.position and node.position or ( ( node.x and node.y ) and {x=node.x,y=node.y} or ( node.node and {x=node.node.x,y=node.node.y} or false ) )
             assert( node_position, 'Error! Node has to have a position!' )
-            assert( node.height and node.width, 'Error! Node must have a height and a width property!' )
+            node.drawHeight = node.drawHeight or node.height
+            assert( node.drawHeight, 'Error! Node of type:'..(node.type or '<nil>')..' must define a height in the tmx file!' )
             local node_center = node_position.x + ( node.width / 2 )
             local node_depth = ( node.node and node.node.properties and node.node.properties.depth ) and node.node.properties.depth or 0
             local node_direction = ( node.node and node.node.properties and node.node.properties.direction ) and node.node.properties.direction or false
             -- base is, by default, offset by the depth
-            local node_base = node_position.y + (node.drawHeight or node.height) - node_depth
+            local node_base = node_position.y + (node.drawHeight) - node_depth
             -- adjust the base by the players position
             -- if on floor and not behind or in front
-            if fp.offset == 0 and node_direction and node_base < fp_base and node_position.y + (node.drawHeight or node.height) > fp_base then
+            if fp.offset == 0 and node_direction and node_base < fp_base and node_position.y + (node.drawHeight) > fp_base then
                 node_base = fp_base - 3
                 if ( node_direction == 'left' and player_center < node_center ) or
                    ( node_direction == 'right' and player_center > node_center ) then
@@ -560,8 +573,8 @@ end
 
 function Level:updatePan(dt)
     if self.player.isClimbing then return end
-    local up = controls.isDown( 'UP' ) and not self.player.controlState:is('ignoreMovement')
-    local down = controls.isDown( 'DOWN' ) and not self.player.controlState:is('ignoreMovement')
+    local up = self.player.controls:isDown( 'UP' ) and not self.player.controlState:is('ignoreMovement')
+    local down = self.player.controls:isDown( 'DOWN' ) and not self.player.controlState:is('ignoreMovement')
 
     if up and self.player.velocity.x == 0 then
         self.pan_hold_up = self.pan_hold_up + dt

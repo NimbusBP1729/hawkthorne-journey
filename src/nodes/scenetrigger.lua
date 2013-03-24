@@ -33,7 +33,7 @@ SceneTrigger:include(machine.mixin({
 }))
 
 
-function SceneTrigger:initialize(node, collider, layer)
+function SceneTrigger:initialize(node, collider, layer, level)
   assert(node.properties.cutscene, "A cutscene to trigger is required")
   self.isTrigger = true --eventually replace me
   self.x = node.x
@@ -45,8 +45,13 @@ function SceneTrigger:initialize(node, collider, layer)
     return
   end
 
-  local scene = require('nodes/cutscenes/' .. node.properties.cutscene)
-  self.scene = scene.new(node, collider, layer)
+  local scene = require('nodes/cutscenes/'..node.properties.cutscene)
+  if scene.isScript then
+    scene = require('nodes/scene')
+  end
+  assert(level)
+  self.scene = scene.new(node, collider, layer, level)
+  self.scene.props.canRun = self.scene.props.canRun or function() return true end
 
   -- Figure out how to "mix this in"
   -- so much work
@@ -74,7 +79,7 @@ end
 
 
 function SceneTrigger:collide(node, dt, mtv_x, mtv_y)
-  if node and node.character and self:can('start') then
+  if node and node.character and self:can('start') and self.scene.props:canRun() then
     local current = gamestate.currentState()
 
     current.scene = self

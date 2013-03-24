@@ -1,3 +1,5 @@
+--FIXME: must use the global dialog
+
 local Board = require "board"
 local Gamestate = require "vendor/gamestate"
 local window = require "window"

@@ -40,6 +40,7 @@ function Weapon.new(node, collider, plyr, weaponItem)
     --position that the hand should be placed with respect to any frame
     weapon.hand_x = props.hand_x
     weapon.hand_y = props.hand_y
+    weapon.rotation = node.properties.rotation or 0
 
     --setting up the sheet
     local colAmt = props.frameAmt
@@ -111,10 +112,15 @@ function Weapon:draw()
             scalex = -1
         end
     end
-
+ 
     local animation = self.animation
-    if not animation then return end
-    animation:draw(self.sheet, math.floor(self.position.x), self.position.y, 0, scalex, 1)
+    if self.rotation == 0 or self.player then
+        if not animation then return end
+        animation:draw(self.sheet, math.floor(self.position.x), self.position.y, 0, scalex, 1)
+    else
+        animation:draw( self.sheet,  math.floor(self.position.x)+self.bbox_offset_x, self.position.y+self.bbox_offset_y, self.rotation, 1, 1, self.hand_x, self.hand_y)
+    end
+
 end
 
 ---
@@ -143,6 +149,7 @@ function Weapon:collide(node, dt, mtv_x, mtv_y)
     --handles code for burning an object
     if self.isFlammable and node.burn then
         node:burn(self.position.x,self.position.y)
+        self.collider:setGhost(self.bb)
     end
 end
 
@@ -194,10 +201,10 @@ function Weapon:update(dt)
     if not self.player then
         
         if self.dropping then
+            self.velocity = {x = self.velocity.x*dt,
+                            y = self.velocity.y + game.gravity*dt}
             self.position = {x = self.position.x + self.velocity.x*dt,
                             y = self.position.y + self.velocity.y*dt}
-            self.velocity = {x = self.velocity.x*0.1*dt,
-                            y = self.velocity.y + game.gravity*dt}
             self.bb:moveTo(self.position.x,self.position.y)
         end
 
@@ -241,7 +248,7 @@ end
 function Weapon:keypressed( button, player)
     if self.player then return end
 
-    if button == 'UP' then
+    if button == 'INTERACT' then
         --the following invokes the constructor of the specific item's class
         local Item = require 'items/item'
         local itemNode = require ('items/weapons/'..self.name)
@@ -287,6 +294,18 @@ function Weapon:drop()
                      y=self.player.velocity.y,
     }
     self.player:setSpriteStates('default')
+    self.player.currently_held = nil
+    self.player = nil
+end
+
+--used primarily for cutscenes right now
+function Weapon:throw()
+    self.dropping = true
+    self.collider:setSolid(self.bb)
+    self.velocity = {x=1300,
+                     y=self.player.velocity.y - 100,
+    }
+    self.player:setSpriteStates(self.player.previous_state_set)
     self.player.currently_held = nil
     self.player = nil
 end

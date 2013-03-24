@@ -100,7 +100,7 @@
   </object>
   <object type="climbable" x="559" y="172" width="15" height="89"/>
   <object name="rock" type="material" x="1776" y="240" width="24" height="24"/>
-  <object type="door" x="0" y="0" width="24" height="264">
+  <object type="door" x="0" y="96" width="24" height="168">
    <properties>
     <property name="instant" value="true"/>
     <property name="level" value="forest-2"/>
@@ -108,7 +108,7 @@
    </properties>
   </object>
   <object name="next" type="door" x="1848" y="216" width="24" height="48"/>
-  <object type="npc" x="840" y="216" width="48" height="48">
+  <object type="npc" x="1282" y="214" width="48" height="48">
    <properties>
     <property name="person" value="townsperson"/>
    </properties>
@@ -121,6 +121,11 @@
   <object type="npc" x="624" y="216" width="48" height="48">
    <properties>
     <property name="person" value="oldman"/>
+   </properties>
+  </object>
+  <object type="scenetrigger" x="816" y="-48" width="24" height="384">
+   <properties>
+    <property name="cutscene" value="gilbert_entrance"/>
    </properties>
   </object>
  </objectgroup>
@@ -150,5 +155,15 @@
    <polygon points="0,0 25,-23 49,-23 70,0"/>
   </object>
   <object x="912" y="239" width="71" height="12"/>
+ </objectgroup>
+ <objectgroup color="#0000ff" name="gilbert_entrance" width="60" height="14">
+  <object name="jeff" type="character" x="633" y="117" width="24" height="48"/>
+  <object name="abed" type="character" x="1032" y="216" width="24" height="48"/>
+  <object name="troy" type="character" x="936" y="183" width="24" height="48"/>
+  <object name="shirley" type="character" x="960" y="216" width="24" height="48"/>
+  <object name="pierce" type="character" x="827" y="215" width="24" height="48"/>
+  <object name="annie" type="character" x="864" y="216" width="24" height="48"/>
+  <object name="gilbert" type="character" x="192" y="216" width="24" height="48"/>
+  <object name="britta" type="character" x="756" y="216" width="48" height="48"/>
  </objectgroup>
 </map>

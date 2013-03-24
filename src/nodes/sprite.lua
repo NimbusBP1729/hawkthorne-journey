@@ -31,6 +31,9 @@ function Sprite.new(node, collider)
     sprite.animation = p.animation or false
     sprite.foreground = p.foreground == 'true'
     sprite.flip = p.flip == 'true'
+    sprite.doRotation = p.doRotation
+    sprite.rotationSpeed = p.rotationSpeed or  0.2
+    sprite.elapsedTime = 0
 
     if p.height and p.width then
         sprite.height = p.height
@@ -73,16 +76,18 @@ function Sprite.new(node, collider)
 end
 
 function Sprite:update(dt)
+    self.elapsedTime = self.elapsedTime + dt
     if self.animation then
         self.animation:update(dt)
     end
 end
 
 function Sprite:draw()
+    local rot = self.doRotation and self.elapsedTime or 0
     if self.animation then
-        self.animation:draw(self.sheet, self.x, self.y, 0, self.flip and -1 or 1, 1, self.flip and self.width or 0)
+        self.animation:draw(self.sheet, self.x, self.y, rot, self.flip and -1 or 1, 1, self.flip and self.width or 0)
     else
-        love.graphics.draw(self.sheet, self.x, self.y, 0, self.flip and -1 or 1, 1, self.flip and self.width or 0)
+        love.graphics.draw(self.sheet, self.x, self.y, rot, self.flip and -1 or 1, 1, self.flip and self.width or 0)
     end
 end
 
