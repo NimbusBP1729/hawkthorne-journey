@@ -19,6 +19,7 @@ function Weapon.new(node, collider, plyr, weaponItem)
     setmetatable(weapon, Weapon)
     
     weapon.name = node.name
+    weapon.node = node
 
     local props = require( 'nodes/weapons/' .. weapon.name )
     weapon.isRangeWeapon = props.isRangeWeapon
@@ -111,15 +112,14 @@ function Weapon:draw()
         if self.player.character.direction=='left' then
             scalex = -1
         end
+    elseif self.node.properties and self.node.properties.flip then
+        scalex = -1
     end
  
     local animation = self.animation
-    if self.rotation == 0 or self.player then
-        if not animation then return end
-        animation:draw(self.sheet, math.floor(self.position.x), self.position.y, 0, scalex, 1)
-    else
-        animation:draw( self.sheet,  math.floor(self.position.x)+self.bbox_offset_x, self.position.y+self.bbox_offset_y, self.rotation, 1, 1, self.hand_x, self.hand_y)
-    end
+
+    if not animation then return end
+    animation:draw(self.sheet, math.floor(self.position.x), self.position.y, 0, scalex, 1)
 
 end
 
@@ -205,8 +205,17 @@ function Weapon:update(dt)
                             y = self.velocity.y + game.gravity*dt}
             self.position = {x = self.position.x + self.velocity.x*dt,
                             y = self.position.y + self.velocity.y*dt}
-            self.bb:moveTo(self.position.x,self.position.y)
         end
+
+        local framePos = 1
+        if self.node.properties and self.node.properties.flip then
+            self.bb:moveTo(self.position.x - self.bbox_offset_x[framePos] - self.bbox_width/2,
+                           self.position.y + self.bbox_offset_y[framePos] + self.bbox_height/2)
+        else
+            self.bb:moveTo(self.position.x + self.bbox_offset_x[framePos] + self.bbox_width/2,
+                           self.position.y + self.bbox_offset_y[framePos] + self.bbox_height/2)
+        end
+
 
     else
         --the weapon is being used by a player
@@ -254,6 +263,9 @@ function Weapon:keypressed( button, player)
         local itemNode = require ('items/weapons/'..self.name)
         local item = Item.new(itemNode)
         if player.inventory:addItem(item) then
+            if self.node.properties.owner then
+                player.hasStolen = true
+            end
             self.collider:remove(self.bb)
             self.containerLevel:removeNode(self)
             self.dead = true

@@ -262,12 +262,6 @@ function Scene:endScene(player)
     -- cleanup time!
     -- if this code is ever used again encapsulate in a function
     player.controls = self.origControls
-    for _,node in pairs(self.nodes) do
-        if node.isPlayer and node ~= player then
-            node.collider:remove(node.bb)
-            node.collider:remove(node.attack_box.bb)
-        end
-    end
     
     player.controlState:standard()
     

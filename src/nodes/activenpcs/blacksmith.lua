@@ -12,7 +12,7 @@ return {
     bb_height = 49,    
     animations = {
         default = {
-            'loop',{'1-4,1'},0.20,
+            'loop',{'1-4,1'},0.40,
         },
         talking = {
             'loop',{'2,3','2,4'},0.20,
@@ -24,7 +24,7 @@ return {
     sounds = {
         hammer = {
             state = 'default',
-            position = 2,
+            position = 1,
             file = 'sword_hit',
         },
         screaming = {
@@ -40,6 +40,7 @@ return {
         Timer.add(2.8,function() activenpc.state = 'default' end)
     end,
     onInteract = function(activenpc, player)
+        if activenpc.state=="burning" then return end
         local options = {"YES","NO"}
         local callback = function(result)
             activenpc.prompt = nil
@@ -62,5 +63,10 @@ return {
         activenpc.minimum_x = activenpc.position.x
         activenpc.maximum_x = activenpc.minimum_x + 200
     end,
+    collide = function(activenpc,node)
+        if node.isPlayer and activenpc.state=="burning" then
+            node:die(1)
+        end
+    end
     
 }
