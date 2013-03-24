@@ -21,11 +21,6 @@
    eJxjYBgFgxEEkanPhoHhADHq4iBqE8i0ZhQMU4Ar/RCbrkYaAAD8twRB
   </data>
  </layer>
- <layer name="newStairs" width="24" height="14">
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFgxEE0dj8OCCOB+IEGpnvz8DQ4AehR80fAPOjgeZHAXE0jcwfBRAAAPHoCTA=
-  </data>
- </layer>
  <objectgroup color="#005500" name="floorspace" width="24" height="14">
   <object name="dresser" x="68" y="271">
    <properties>
@@ -56,7 +51,17 @@
    </properties>
    <polygon points="-21,-4 81,-4 101,15 -5,15"/>
   </object>
-  <object x="408" y="259" width="71" height="3">
+  <object x="405" y="253" width="73" height="9">
+   <properties>
+    <property name="blocks" value="true"/>
+   </properties>
+  </object>
+  <object x="229" y="222" width="61" height="17">
+   <properties>
+    <property name="blocks" value="true"/>
+   </properties>
+  </object>
+  <object x="152" y="246" width="57" height="9">
    <properties>
     <property name="blocks" value="true"/>
    </properties>
@@ -65,7 +70,7 @@
    <properties>
     <property name="primary" value="true"/>
    </properties>
-   <polygon points="0,0 64,-63 133,-63 133,-56 181,-56 181,-96 432,-96 528,0"/>
+   <polygon points="0,0 96,-96 432,-96 528,0"/>
   </object>
  </objectgroup>
  <objectgroup name="nodes" width="24" height="14">
@@ -75,8 +80,7 @@
     <property name="to" value="blacksmith"/>
    </properties>
   </object>
-  <object name="torch" type="weapon" x="474" y="155" width="24" height="48">
-  </object>
+  <object name="torch" type="weapon" x="474" y="155" width="24" height="48"/>
   <object type="sprite" x="240" y="192" width="96" height="24">
    <properties>
     <property name="animation" value="1-2,1"/>
@@ -166,6 +170,11 @@
   <object name="murder" type="scenetrigger" x="431" y="239" width="48" height="4">
    <properties>
     <property name="cutscene" value="blacksmith_murder"/>
+   </properties>
+  </object>
+  <object type="sprite" x="139" y="115" width="63" height="136">
+   <properties>
+    <property name="sheet" value="images/ladder.png"/>
    </properties>
   </object>
  </objectgroup>

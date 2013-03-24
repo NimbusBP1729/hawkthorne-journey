@@ -339,10 +339,12 @@ function Player:update( dt )
         self.stopped = false
     end
     
-    if self.character.state == 'crouch' then
-        self.collider:setGhost(self.top_bb)
-    else
-        self.collider:setSolid(self.top_bb)
+    if self.collider._shape_ids[self.top_bb] then
+        if self.character.state == 'crouch' then
+            self.collider:setGhost(self.top_bb)
+        else
+            self.collider:setSolid(self.top_bb)
+        end
     end
 
 

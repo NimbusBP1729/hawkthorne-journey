@@ -13,11 +13,11 @@ function Script.new(scene,player,level)
     assert(player.isPlayer)
     assert(level)
     --assert(level.isLevel,level.name or '<nil>'.." may be a gamestate, but not a bona fide level")
-    script = {{line = "Pierce: Oh crap. It's Buddy!",
+    script = {{line = "Pierce: Oh crap. It's Gilbert!",
     precondition = function()
         scene.nodes.britta.opacity = 0
         scene.nodes.britta.invulnerable= true
-        scene.nodes.buddy.invulnerable = true
+        scene.nodes.gilbert.invulnerable = true
         scene.nodes.shirley.health = 2
         scene.nodes.britta.health = 1
         scene.nodes.britta.opacity = 0
@@ -33,7 +33,7 @@ function Script.new(scene,player,level)
         scene:moveCharacter(900,nil,scene.nodes.troy)
         scene:moveCharacter(800,nil,scene.nodes.annie)
         scene:moveCharacter(620,nil,scene.nodes.jeff)
-        scene:moveCharacter(600,nil,scene.nodes.buddy)
+        scene:moveCharacter(600,nil,scene.nodes.gilbert)
     end},
 
     {line = "Pierce: Well, well, well. Looks like someone's one step behind",
@@ -44,7 +44,7 @@ function Script.new(scene,player,level)
         scene:teleportCharacter(900,nil,scene.nodes.troy)
         scene:teleportCharacter(800,nil,scene.nodes.annie)
         scene:teleportCharacter(620,nil,scene.nodes.jeff)
-        scene:teleportCharacter(600,nil,scene.nodes.buddy)
+        scene:teleportCharacter(600,nil,scene.nodes.gilbert)
     end,
     action = function ()
         scene:moveCharacter(840,nil,scene.nodes.pierce)
@@ -52,32 +52,32 @@ function Script.new(scene,player,level)
         scene.nodes.pierce.desireDirection = 'left'
     end},
 
-    {line = "Buddy: While you were shopping I gained enough levels to do this... ",
+    {line = "Gilbert: While you were shopping I gained enough levels to do this... ",
     precondition = function()
         scene:teleportCharacter(840,nil,scene.nodes.pierce)
         scene:teleportCharacter(900,nil,scene.nodes.shirley)
     end,
     action = function ()
         --scene:moveCharacter(840,nil,scene.nodes.pierce)
-        scene:jumpCharacter(scene.nodes.buddy)
+        scene:jumpCharacter(scene.nodes.gilbert)
         scene:moveCharacter(1000,nil,scene.nodes.pierce)
-        -- make buddy do his level attavk
-        scene:actionCharacter("attack",scene.nodes.buddy)
+        -- make gilbert do his level attavk
+        scene:actionCharacter("attack",scene.nodes.gilbert)
         -- generate a lightning bolt
         --FIXME: lightning nodes should be using nodeA format, not nodeB
         local tileWidth, tileHeight = 24, 24
         -- local nodeA = {
             -- type = 'projectile',
             -- name = 'gilbertlightning',
-            -- x = scene.nodes.buddy.position.x,
-            -- y = scene.nodes.buddy.position.y,
+            -- x = scene.nodes.gilbert.position.x,
+            -- y = scene.nodes.gilbert.position.y,
             -- width = 120,
             -- height = 90,
             -- properties = {},
         -- }
         nodeB = require( 'nodes/projectiles/gilbertlightning' )
-        nodeB.x = scene.nodes.buddy.position.x
-        nodeB.y = scene.nodes.buddy.position.y
+        nodeB.x = scene.nodes.gilbert.position.x
+        nodeB.y = scene.nodes.gilbert.position.y
         nodeB.properties = nodeB.properties or {}
             
         -- local lightningA = Projectile.new(nodeA, level.collider)
@@ -89,7 +89,7 @@ function Script.new(scene,player,level)
         level:addNode(lightningB)
         --inspect(lightningB,2)
 
-        lightningB:throw(scene.nodes.buddy)
+        lightningB:throw(scene.nodes.gilbert)
     end},
 
     {line = "Troy: he's throwing lightning",
@@ -110,7 +110,7 @@ function Script.new(scene,player,level)
 
     {line = "Troy: ...and I'm naked.",
    action = function ()
-        scene:moveCharacter(670,nil,scene.nodes.buddy)
+        scene:moveCharacter(670,nil,scene.nodes.gilbert)
         scene.nodes.shirley.opacity = 255
         tween(2, scene.nodes.shirley, {opacity=0}, 'outQuad')
         --TODO: add potion sprite
@@ -122,20 +122,20 @@ function Script.new(scene,player,level)
         player.character.name)
         .." made.",
     precondition = function()
-        scene:teleportCharacter(670,nil,scene.nodes.buddy)
+        scene:teleportCharacter(670,nil,scene.nodes.gilbert)
     end,
     action = function()
         scene:trackCharacter("britta")
         --scene:trackCharacter("jeff9)
-        scene:moveCharacter(660,nil,scene.nodes.buddy)
+        scene:moveCharacter(660,nil,scene.nodes.gilbert)
         scene:moveCharacter(400,nil,scene.nodes.britta)
     end},
 
     {line = "Britta: Right, right, right",
     precondition = function()
-        scene:teleportCharacter(660,nil,scene.nodes.buddy)
+        scene:teleportCharacter(660,nil,scene.nodes.gilbert)
         scene:teleportCharacter(400,nil,scene.nodes.britta)
-        scene.nodes.buddy.character.direction = 'left'
+        scene.nodes.gilbert.character.direction = 'left'
     end,
     action = function()
         --generate a potion sprite(not technically functional)
@@ -152,19 +152,19 @@ function Script.new(scene,player,level)
         -- local lightNode = {
             -- type = 'projectile',
             -- name = 'gilbertlightning',
-            -- x = scene.nodes.buddy.position.x,
-            -- y = scene.nodes.buddy.position.y,
+            -- x = scene.nodes.gilbert.position.x,
+            -- y = scene.nodes.gilbert.position.y,
             -- width = 24,
             -- height = 24,
             -- properties = {},
         -- }
         local lightNode =require('nodes/projectiles/rainbowbeam')
-        lightNode.x = scene.nodes.buddy.position.x
-        lightNode.y = scene.nodes.buddy.position.y
+        lightNode.x = scene.nodes.gilbert.position.x
+        lightNode.y = scene.nodes.gilbert.position.y
         lightNode.properties = {}
 
         local lightning = Projectile.new(lightNode, level.collider)
-        lightning:throw(scene.nodes.buddy)
+        lightning:throw(scene.nodes.gilbert)
         level:addNode(lightning)
     end},
 
@@ -173,27 +173,27 @@ function Script.new(scene,player,level)
         --scene:trackCharacter("jeff")
         scene.nodes.britta.opacity = 255
         tween(2, scene.nodes.britta, {opacity=0}, 'outQuad')
-        scene:moveCharacter(400,nil,scene.nodes.buddy)
+        scene:moveCharacter(400,nil,scene.nodes.gilbert)
         scene:moveCharacter(550,nil,scene.nodes.troy)
     end},
 
-    {line = "Buddy: This'll be fun.",
+    {line = "Gilbert: This'll be fun.",
     precondition = function()
-        --if(math.abs(400-scene.nodes.buddy.position.x)>40) then
-            scene:teleportCharacter(400,nil,scene.nodes.buddy)
+        --if(math.abs(400-scene.nodes.gilbert.position.x)>40) then
+            scene:teleportCharacter(400,nil,scene.nodes.gilbert)
         --end
     end,
     action = function()
         --shitty removal since no one wants  to use the other way
         --table.remove(level.nodes,#level.nodes-1)
-        scene.nodes.buddy.character.state = 'holdjump'
+        scene.nodes.gilbert.character.state = 'holdjump'
     end},
 
-    {line = "Buddy: What the hell?",
+    {line = "Gilbert: What the hell?",
     action = function()
         scene:trackCharacter("jeff")
-        scene.nodes.buddy.invulnerable = false
-        scene:actionCharacter("die",scene.nodes.buddy)
+        scene.nodes.gilbert.invulnerable = false
+        scene:actionCharacter("die",scene.nodes.gilbert)
         level:removeNode(scene.potionSprite)
 
     end},
