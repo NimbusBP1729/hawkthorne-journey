@@ -27,7 +27,6 @@ function Script.new(scene,player,level)
             scene.nodes[v.node.name] = v
         end
     end
-    
     --initialize player's clone
     
     --assert(level.isLevel,level.name or '<nil>'.." may be a gamestate, but not a bona fide level")
@@ -35,6 +34,7 @@ function Script.new(scene,player,level)
     {line = player.character.name..": Free torches!!",
     
     precondition = function()
+        player.hasStolen = false
         player.freeze = false
         player.controls = Manualcontrols.new()
         scene.nodes.blacksmith.state = "talking"

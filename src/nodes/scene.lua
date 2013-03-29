@@ -44,14 +44,13 @@ function Scene.new(node, collider, layer, level)
   scene.y = node.y
   scene.level = level
   scene.finished = false
-  
-  scene.nodes = nametable(layer, collider)
-  local player = Player.factory()
-  scene.nodes.player = player
-  scene.opacity = node.properties.opacity or 255
-  
-  scene.origControls = player.controls
 
+  scene.layer = layer
+  scene.collider = collider
+  scene.node = node
+  
+  local player = Player.factory()
+  
   -- dummy camera to prevent tearing
   scene.camera = {
     tx = 0,
@@ -59,7 +58,8 @@ function Scene.new(node, collider, layer, level)
     sx = 1,
     sy = 1,
   }
-
+  scene.nodes = nametable(layer, collider)
+  
   scene.props = require("nodes/cutscenes/"..node.properties.cutscene)
   scene.script = scene.props.new(scene,player,level)
   return scene
@@ -97,6 +97,13 @@ function Scene:runScript(script,depth)
 end
 
 function Scene:start(player)
+  local player = Player.factory()
+  self.nodes.player = player
+  self.opacity = self.node.properties.opacity or 255
+  
+  self.origControls = player.controls
+
+
   --local cx, cy = 
   player = player or Player.factory()
   player.freeze = true

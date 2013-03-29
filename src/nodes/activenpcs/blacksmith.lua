@@ -64,7 +64,8 @@ return {
         activenpc.maximum_x = activenpc.minimum_x + 200
     end,
     collide = function(activenpc,node)
-        if node.isPlayer and activenpc.state=="burning" then
+        if node.isPlayer and activenpc.state=="burning" and 
+          math.abs(activenpc.position.y+activenpc.height - node.position.y-node.height) < 20 then
             node:die(1)
         end
     end
