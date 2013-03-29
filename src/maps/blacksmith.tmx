@@ -51,7 +51,7 @@
    </properties>
    <polygon points="-21,-4 81,-4 101,15 -5,15"/>
   </object>
-  <object x="405" y="253" width="73" height="9">
+  <object x="407" y="256" width="71" height="6">
    <properties>
     <property name="blocks" value="true"/>
    </properties>
@@ -61,7 +61,7 @@
     <property name="blocks" value="true"/>
    </properties>
   </object>
-  <object x="152" y="246" width="57" height="9">
+  <object x="214" y="226" width="75" height="14">
    <properties>
     <property name="blocks" value="true"/>
    </properties>

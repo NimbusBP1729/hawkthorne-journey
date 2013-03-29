@@ -74,7 +74,7 @@ end
 
 function Activenpc:enter( previous )
     if self.props.enter then
-        self.props.enter(self)
+        self.props.enter(self, previous)
     end
 end
 

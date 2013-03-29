@@ -17,6 +17,7 @@ Weapon.isWeapon = true
 function Weapon.new(node, collider, plyr, weaponItem)
     local weapon = {}
     setmetatable(weapon, Weapon)
+    plyr = plyr.isPlayer and plyr or nil
     
     weapon.name = node.name
     weapon.node = node
@@ -95,7 +96,7 @@ function Weapon.new(node, collider, plyr, weaponItem)
                             props.swingAudioClip or 
                             nil
     
-    weapon.action = 'wieldaction'
+    weapon.action = props.action or 'wieldaction'
     weapon.dropping = false
     
     return weapon
