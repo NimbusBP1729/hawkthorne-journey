@@ -17,7 +17,7 @@ Weapon.isWeapon = true
 function Weapon.new(node, collider, plyr, weaponItem)
     local weapon = {}
     setmetatable(weapon, Weapon)
-    plyr = plyr.isPlayer and plyr or nil
+    plyr = (plyr~=nil and plyr.isPlayer) and plyr or nil
     
     weapon.name = node.name
     weapon.node = node

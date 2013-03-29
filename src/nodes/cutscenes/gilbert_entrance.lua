@@ -27,9 +27,9 @@ function Script.new(scene,player,level)
     action = function()
         player.character.direction = 'left'
         scene.nodes.pierce.desireDirection = 'left'
-        scene:moveCharacter(900,nil,scene.nodes.abed)
+        scene:moveCharacter(880,nil,scene.nodes.abed)
         scene:moveCharacter(850,nil,scene.nodes.pierce)
-        scene:moveCharacter(920,nil,scene.nodes.shirley)
+        scene:moveCharacter(940,nil,scene.nodes.shirley)
         scene:moveCharacter(900,nil,scene.nodes.troy)
         scene:moveCharacter(800,nil,scene.nodes.annie)
         scene:moveCharacter(620,nil,scene.nodes.jeff)
@@ -38,9 +38,9 @@ function Script.new(scene,player,level)
 
     {line = "Pierce: Well, well, well. Looks like someone's one step behind",
     precondition = function()
-        scene:teleportCharacter(900,nil,scene.nodes.abed)
+        scene:teleportCharacter(880,nil,scene.nodes.abed)
         scene:teleportCharacter(850,nil,scene.nodes.pierce)
-        scene:teleportCharacter(920,nil,scene.nodes.shirley)
+        scene:teleportCharacter(940,nil,scene.nodes.shirley)
         scene:teleportCharacter(900,nil,scene.nodes.troy)
         scene:teleportCharacter(800,nil,scene.nodes.annie)
         scene:teleportCharacter(620,nil,scene.nodes.jeff)
@@ -49,7 +49,7 @@ function Script.new(scene,player,level)
     action = function ()
         scene:moveCharacter(840,nil,scene.nodes.pierce)
         scene:moveCharacter(900,nil,scene.nodes.shirley)
-        scene.nodes.pierce.desireDirection = 'left'
+        scene.nodes.pierce.desiredDirection = 'left'
     end},
 
     {line = "Gilbert: While you were shopping I gained enough levels to do this... ",
